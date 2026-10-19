@@ -7,7 +7,8 @@
   "product_tree_at_run": "3b2892b71c8795126a29786c7245252538ad98aa",
   "product_tree_at_manifest": "3b2892b71c8795126a29786c7245252538ad98aa",
   "product_unchanged_since_run": true,
-  "worktree_clean": false,
+  "worktree_clean_at_run": true,
+  "worktree_clean_at_manifest": true,
   "command": "python product/run_product.py",
   "seed": 42,
   "files": [

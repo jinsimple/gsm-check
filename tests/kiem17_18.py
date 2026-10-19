@@ -7,6 +7,10 @@
    repo ton tai, va sha256 trong manifest KHOP ban sao luu."""
 import ast, glob, hashlib, io, json, os, sys
 
+if len(sys.argv) < 4:
+    print('Dung: python kiem17_18.py <repo> <thu_muc_sao_luu_ngoai_repo> <run_id>')
+    print('  <thu_muc_sao_luu_ngoai_repo>: co chu dinh KHONG nam trong repo (Q12/Q20).')
+    sys.exit(2)
 ROOT, BACKUP, EV = sys.argv[1], sys.argv[2], sys.argv[3]
 os.chdir(ROOT)
 FAIL = 0
@@ -146,7 +150,13 @@ if not os.path.exists(_mp):
 man = json.load(io.open(_mp, encoding='utf-8'))
 
 # ============ KIEM 18 ============
-print('\n=== KIEM 18 — manifest khop ban sao luu ngoai repo ===')
+print('\n=== KIEM 18 -- manifest khop ban sao luu ngoai repo ===')
+if not os.path.isdir(BACKUP):
+    print('  [SKIPPED] khong tim thay thu muc sao luu ngoai repo: %s' % BACKUP)
+    print('            Day la thu muc CO CHU DINH khong nam trong repo (Q12/Q20),')
+    print('            nen chi may co ban sao luu do moi chay duoc kiem 18.')
+    print('            SKIPPED khac FAIL: khong co gi de doi chieu, khong phai sai lech.')
+    sys.exit(0)
 bad18 = []
 # Quet 0 file thi bao PASS la dung loai loi reviewer da bat o kiem 14: mot lenh
 # kiem khong co gi de kiem thi phai FAIL, khong phai PASS.

@@ -34,7 +34,7 @@ Bằng chứng cổng đã đổi nhiều lần trong quá trình làm (`064336`
 | **Kiểm 19 — nguyên tắc phủ nhánh (Q19)** | **FAIL 1 mục (j)**, PASS 9/10 — xem mục 4b |
 | Kiểm 20 — nhánh trần hệ số giờ | **PASS 5/5** |
 
-Bộ kiểm đã được commit vào `tests/` (trước khi security chạy, theo quyết định Bách 19/10) — tái lập được, không còn nằm ngoài repo.
+Bộ kiểm đã được commit vào `tests/` (trước khi security chạy, theo quyết định Bách 19/10). **Mã** tái lập được từ repo. Kiểm 17, 18, 19 cần thêm **thư mục sao lưu ngoài repo** và log của lần chạy bằng chứng — hai thứ cố ý không vào git (Q12/Q20) — nên chỉ chạy lại được trên máy giữ bản sao lưu đó; thiếu thư mục đó thì kiểm 18 báo **SKIPPED có lý do**, không phải lỗi.
 
 ## 4. Nguyên tắc phủ nhánh (Q19) — ba nhánh chết đã chạy thật
 
@@ -53,7 +53,15 @@ Cách làm: **giữ** hộp toạ độ chính (tài xế không dời), thêm h
 
 **Kiểm 21 (chẩn đoán, cùng khuôn kiểm 15/kiểm 20) xác nhận code đúng khi bị buộc phải hoà** — cả hai ca (hoà `trips_today` khác nhau; hoà cả hai) đều PASS. Nhưng **điều đó không làm nhánh thật chạy**: kiểm 19 mục j vẫn **FAIL**, vì số lần hoà thật trên dữ liệu mặc định là 0.
 
-**Đây là điểm G2a chưa đóng, cần Bách quyết:** có đưa dữ liệu hoà thật vào `mock_data.json` không — cùng loại quyết định như cách sửa `gen_mock` ở T09e (lead không tự chọn một cách rồi giao `coder-product` làm). Hệ quả nếu không sửa: nếu thứ tự phá hoà bị sửa sau này thì **không dòng log nào, không lệnh kiểm nào, và cả M10 cũng không phát hiện**.
+**Đây là điểm G2a chưa đóng, cần Bách quyết giữa hai lựa chọn** (pm đề xuất, khác nhau ở G4):
+
+| | Cách A — đưa hoà thật vào dữ liệu | Cách B — ghi Q19 có một ngoại lệ |
+|---|---|---|
+| Làm gì | Hai tài xế **cùng toạ độ** → mọi chuyến đều hoà với cặp đó, tất định, hình học thuần | Giữ dữ liệu nguyên; ghi Q19 có đúng 1 ngoại lệ, lý do *khoảng cách float nên hoà thật không xuất hiện tự nhiên*, bằng chứng = kiểm 21 |
+| Được | Q19 **không ngoại lệ nào** | Không đổi dữ liệu lần nữa ngay trước cổng |
+| Mất | Đổi `mock_data.json` lần nữa ngay trước cổng | Q19 mất tính "không ngoại lệ" — sau khi kiểm 20 vừa gỡ ngoại lệ cuối cùng ở trần hệ số |
+
+Hệ quả nếu **không chọn cách nào** (để nguyên): nếu thứ tự phá hoà bị sửa sau này thì **không dòng log nào, không lệnh kiểm nào, và cả M10 cũng không phát hiện**.
 
 ## 5. Ba lỗi tự tìm ra và tự sửa trong quá trình G2a
 
@@ -86,6 +94,6 @@ Không lỗi nào nằm trong `product/`. Chi tiết đầy đủ ở `docs/TASK
 
 ## 8. Đề xuất
 
-**Ba điều kiện hình thức của G2a đều ĐẠT** (mục 1): A chạy được, log đủ, `reviewer` hết mục Chặn. Bằng chứng cổng đầy đủ và tái lập được.
+**Ba điều kiện hình thức của G2a đều ĐẠT** (mục 1): A chạy được, log đủ, `reviewer` hết mục Chặn. Bằng chứng cổng đầy đủ; mã kiểm tái lập được từ repo, ba lệnh kiểm cần thêm bản sao lưu ngoài repo (mục 3).
 
 **Nhưng bộ kiểm không "mọi lệnh kiểm kỹ thuật ĐẠT" — có 1 mục FAIL đã biết và đã khai báo** (kiểm 19 mục j, nhánh phá hoà). Đề xuất: **Bách duyệt G2a với FAIL này được ghi nhận rõ**, không phải G2a "sạch tuyệt đối" — cùng cách R6 được giữ là "mở lại" ở mục 6 thay vì gọi là đã xử lý. Bốn việc ở mục 7 không chặn G2a nhưng cần trả lời trước khi làm G3 (B xây và chạy trên A sạch), và mục 7.1 nên trả lời sớm nhất vì nó còn ảnh hưởng tới chính `mock_data.json`.

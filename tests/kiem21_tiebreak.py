@@ -10,6 +10,10 @@
    commit lam baseline."""
 import copy, io, json, os, sys
 
+if len(sys.argv) < 2:
+    print('Dung: python kiem21_tiebreak.py <duong_dan_tuyet_doi_repo>')
+    print('  Vi du: python tests/kiem21_tiebreak.py E:/path/to/gsm-sandbox')
+    sys.exit(2)
 ROOT = sys.argv[1]
 os.chdir(ROOT)
 sys.path.insert(0, os.path.join(ROOT, 'product'))

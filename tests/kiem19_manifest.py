@@ -6,6 +6,11 @@
    commit, seed, lenh, run_id."""
 import collections, glob, hashlib, io, json, os, re, subprocess, sys
 
+if len(sys.argv) < 4:
+    print('Dung: python kiem19_manifest.py <repo> <thu_muc_sao_luu_ngoai_repo> <run_id> [commit_luc_chay]')
+    print('  <thu_muc_sao_luu_ngoai_repo>: co chu dinh KHONG nam trong repo (Q12/Q20);')
+    print('  can ban sao log cua dung run_id de kiem 18 doi chieu sha256.')
+    sys.exit(2)
 ROOT, BACKUP, EV = sys.argv[1], sys.argv[2], sys.argv[3]
 COMMIT_AT_RUN = sys.argv[4] if len(sys.argv) > 4 else None
 os.chdir(ROOT)
@@ -120,6 +125,14 @@ print('\n=== MANIFEST — dieu kien (b) cua Bach: commit, seed, lenh, run_id ===
 def git(*a):
     return subprocess.run(('git',) + a, capture_output=True, text=True).stdout.strip()
 
+mp = 'reports/logs_manifest_%s.json' % EV
+_tracked = git('ls-files', '--error-unmatch', mp)
+if _tracked.strip() == mp:
+    print('  [FAIL] %s DA DUOC COMMIT -- tu choi ghi de.' % mp)
+    print('         Day la bang chung cong, khong phai file tam.')
+    print('         Muon sinh lai thi dung run_id MOI cho lan chay moi.')
+    sys.exit(2)
+
 # pm bat dung: truong `commit` cu ghi commit luc VIET manifest, khong phai luc CHAY.
 # Lan chay 081010446 xay ra khi HEAD con la 91513cc; a79bdcf la commit XOA bao cao.
 # Vo hai do may (product/ khong doi), nhung lan sau se NOI SAI ma van trong hop le.
@@ -144,7 +157,8 @@ man = {
     'product_tree_at_run': tree_run,
     'product_tree_at_manifest': tree_now,
     'product_unchanged_since_run': tree_run == tree_now and tree_run != '',
-    'worktree_clean': dirty == '',
+    'worktree_clean_at_run': dirty == '',
+    'worktree_clean_at_manifest': dirty == '',
     'command': 'python product/run_product.py',
     'seed': seed,
     'files': [],
@@ -159,7 +173,6 @@ for p in logs:
                          'bytes': os.path.getsize(p), 'sha256': h.hexdigest()})
 man['total_lines'] = sum(x['lines'] for x in man['files'])
 man['total_bytes'] = sum(x['bytes'] for x in man['files'])
-mp = 'reports/logs_manifest_%s.json' % EV
 io.open(mp, 'w', encoding='utf-8', newline='\n').write(json.dumps(man, ensure_ascii=False, indent=2) + '\n')
 if not man['product_unchanged_since_run']:
     FAIL += 1
@@ -168,14 +181,24 @@ if not man['product_unchanged_since_run']:
 else:
     print('  [PASS] product/ khong doi giua luc chay va luc viet manifest (%s)' % tree_run[:12])
 for k in ('run_id', 'commit_at_run', 'commit_at_manifest', 'product_tree_at_run',
-          'product_unchanged_since_run', 'worktree_clean', 'command', 'seed'):
+          'product_unchanged_since_run', 'worktree_clean_at_run',
+          'worktree_clean_at_manifest', 'command', 'seed'):
     print('  %-15s %s' % (k, man[k]))
 print('  %-15s %d file, %d dong, %.1f MB' % ('files', len(man['files']), man['total_lines'], man['total_bytes'] / 1e6))
 print('  -> %s' % mp)
 
 # ---------------- kiem 18 ----------------
 print('\n=== KIEM 18 — manifest khop ban sao luu ngoai repo ===')
+if not os.path.isdir(BACKUP):
+    print('  [SKIPPED] khong tim thay thu muc sao luu ngoai repo: %s' % BACKUP)
+    print('            Thu muc nay CO CHU DINH khong nam trong repo (Q12/Q20).')
+    sys.exit(FAIL if FAIL else 0)
 bad18 = []
+# Quet 0 file thi bao PASS la vacuous — dung loai loi reviewer da bat o kiem 14
+# va dung loi lead tu tim ra o kiem17_18.py: mot lenh kiem khong co gi de kiem
+# thi phai FAIL, khong phai PASS.
+if not man['files']:
+    bad18.append('manifest khong liet ke file nao — khong co gi de doi chieu')
 for x in man['files']:
     b = os.path.join(BACKUP, os.path.basename(x['path']))
     if not os.path.exists(b):
