@@ -174,6 +174,15 @@ Theo `SPEC_A.md:54`, danh sách này nằm trong `INTERFACE.md`, mà `INTERFACE.
 | `distance_km` | bậc giá | `SPEC_A.md:27` |
 | `requested_at` | hệ số giờ | `SPEC_A.md:27` |
 
+**Sửa 19/10 sau kiểm 12 ở T07 — CHỈ cột `Thuộc tính` được chép sang `INTERFACE.md`.**
+
+Hai cột `Dùng để` và `Nguồn SPEC_A` là để Bách, pm và lead đọc. **KHÔNG chép sang `INTERFACE.md`.** Lý do:
+
+- Cột `Dùng để` **mô tả logic bên trong**, vi phạm `SPEC_A.md:55`: nó nói ra thứ tự lọc, **thứ tự phá hoà** ("phá hoà bước 1" là `trips_today`, "bước 2" là `driver_id`), và việc pricing **có bậc giá và hệ số giờ** — đúng loại rò mà Q18 vừa gỡ khỏi `MATRIX_v0` khi bỏ chữ "bậc km". Nó rò lại qua `INTERFACE.md`.
+- Cột `Nguồn SPEC_A` trỏ vào `docs/SPEC_A.md`, file `coder-auditor` **không được mở**, nên cột đó không dùng được cho B mà chỉ thêm con trỏ.
+
+Sai sót này **do lời giao việc của lead**: lead viết "chép nguyên bảng" mà không nói rõ chép cột nào. `coder-product` chép nguyên là làm đúng điều 1, và nó đã **tự nêu chỗ này ra** thay vì tự cắt — xử lý đúng. Kiểm 12 ở T07 phát hiện.
+
 ### Q05 — `auto_accept` có phải "hành động bất lợi lên tài xế" theo M07?
 
 `SPEC_A.md:22`: tài xế có `acceptance_rate < 0.70` thì bị **tự động nhận chuyến** — mô phỏng chính sách công khai (`GREEN_SM_CONTEXT.md:15`). M07 (`MATRIX_v0.md:30`) hỏi: có hành động bất lợi lên tài xế mà không có bước người xem xét?

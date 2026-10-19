@@ -126,13 +126,13 @@ T02–T06 (coder-product) → T07 (lead chạy 14 lệnh kiểm) → T08 (review
 | T01d | G1 | Bách trả lời Q17 (bằng chứng cho phát hiện dạng vắng mặt) | Bách → lead | DECISIONS.md Q17 | Q17 chốt | Bách chọn (A) hoặc (B) | **completed** | Bách chọn **(A)** 19/10, kèm 3 câu quy tắc |
 | T01e | G1 | Thêm 3 câu Q17(A) vào **phần Quy ước** `MATRIX_v0.md` theo chỉ định của Bách, dịch lại toàn bộ dẫn chiếu bị lệch +3, chạy lại kiểm chéo — **tất cả trong CÙNG một commit** | lead | DECISIONS.md Q17 = (A) | MATRIX_v0.md + DECISIONS.md | script kiểm chéo ra 0 sai | **completed** | lệch +3 từ dòng 13; đã dịch lại; kiểm chéo 0 sai |
 | T01f | G1 | **Yêu cầu số 2 của Bách:** rà 18 câu, bổ sung mọi quyết định ảnh hưởng B vào `MATRIX_v0.md`; ghi rõ câu nào **cố ý không** bổ sung | lead | DECISIONS.md toàn bộ | mục "Chi tiết quy tắc cho agent kiểm thử" trong MATRIX_v0.md + Q18 | đối chiếu 18 câu, không sót | **completed** | bổ sung Q11, Q07, Q10, Q12; cố ý giữ kín Q03, Q04, Q06, Q13, Q08, Q09, Q14 |
-| T02 | G2a | `product/data/gen_mock.py` + 3 file JSON mock (seed 42) | coder-product | SPEC_A §1, DECISIONS | drivers/customers/rides.json | `python product/data/gen_mock.py` rồi chạy lại, so `sha256` 2 lần | pending | |
-| T03 | G2a | `product/config/matching.json` + `pricing.json` (có `version`) | coder-product | SPEC_A §2–3, DECISIONS Q03/Q04 | 2 file config | `python -c "import json;[json.load(open(f))['version'] for f in ...]"` | pending | |
-| T04 | G2a | `product/matching.py` — `match()` + log từng ứng viên | coder-product | SPEC_A §2, DECISIONS Q02/Q05/Q06/Q10/Q12 | matching.py, logs/matching_*.jsonl | chạy qua run_product; đếm dòng log / số quyết định | pending | |
+| T02 | G2a | `product/data/gen_mock.py` + 3 file JSON mock (seed 42) | coder-product | SPEC_A §1, DECISIONS | drivers/customers/rides.json | `python product/data/gen_mock.py` rồi chạy lại, so `sha256` 2 lần | **completed** | `283b299`; kiểm 2 PASS: 2 lần chạy ra `89aadc78` / `ea898f24` / `a94fdf64` giống hệt |
+| T03 | G2a | config có `version` | coder-product | SPEC_A §2–3, DECISIONS Q03/Q04 | **3** file config | đọc mọi file `product/config/*.json`, in `version` | **completed** | `36937f4` + `283b299`; kiểm 7 PASS: matching 0.1, pricing 0.1, **mock_data 0.1** (file thứ 3, xem ghi chú dưới) |
+| T04 | G2a | `product/matching.py` — `match()` + log từng ứng viên | coder-product | SPEC_A §2, DECISIONS Q02/Q05/Q06/Q10/Q12 | matching.py, logs/matching_*.jsonl | chạy qua run_product; đếm dòng log / số quyết định | **completed** | `63e2ecd`; kiểm 13 PASS: **200 dòng `candidate_eval` mỗi chuyến × 1.000 chuyến = 200.000**, đủ 4 lý do `not_idle` 98.000 / `wrong_vehicle_type` 33.192 / `out_of_radius` 32.328 / `kept_as_candidate` 36.480 |
 | T04b | G2a | **Đo thật**: số dòng log, dung lượng 1 lần chạy, **tổng dung lượng qua 8 lần chạy dự kiến**; thay mọi số [Suy đoán] ở DECISIONS Q12 | lead | logs/*.jsonl | số đo ghi vào cột Bằng chứng | `wc -l` + `du -sh logs/` | pending | |
-| T05 | G2a | `product/pricing.py` — `fare()` + log từng bậc km | coder-product | SPEC_A §3, DECISIONS Q03/Q04/Q10 | pricing.py, logs/pricing_*.jsonl | kiểm tay 3 mốc quãng đường ở 3 khung giờ | pending | |
-| T06 | G2a | `product/run_product.py` + `docs/INTERFACE.md` | coder-product | SPEC_A §4–5, DECISIONS Q10 | reports/product_run_*.json, INTERFACE.md | `python product/run_product.py` | pending | |
-| T07 | G2a | **Lead tự chạy đủ 14 lệnh kiểm** ở bảng "Kế hoạch G2a", gồm kiểm 12 đọc `INTERFACE.md` bằng mắt và kiểm 13 đếm ứng viên bị loại | lead | T02–T06 | kết quả từng lệnh dán vào cột Bằng chứng | 14 lệnh kiểm, không nhận báo cáo suông | pending | |
+| T05 | G2a | `product/pricing.py` — `fare()` + log từng bậc km | coder-product | SPEC_A §3, DECISIONS Q03/Q04/Q10 | pricing.py, logs/pricing_*.jsonl | 23 ca kể cả biên, so bảng tính tay | **completed** | `c9b0243`; kiểm 9 PASS **23/23** ca khớp bảng tính tay, gồm cặp giờ 6 → 108.000 và giờ 7 → 144.000 |
+| T06 | G2a | `product/run_product.py` + `docs/INTERFACE.md` | coder-product | SPEC_A §4–5, DECISIONS Q10 | reports/product_run_*.json, INTERFACE.md | `python product/run_product.py` | **completed** nhưng INTERFACE.md **chưa đạt kiểm 12** | `13e5718` + `1559d80`; kiểm 1 PASS exit=0; kiểm 3 PASS 2 lần chạy giống hệt; **kiểm 12 FAIL — xem bảng dưới** |
+| T07 | G2a | **Lead tự chạy đủ 14 lệnh kiểm** | lead | T02–T06 | bảng kết quả dưới | 14 lệnh kiểm, không nhận báo cáo suông | **13/14 PASS, kiểm 12 FAIL** | `run_id=20261019T064336`; xem 2 bảng dưới |
 | T08 | G2a | Review `product/` theo checklist (security CHƯA chạy) | reviewer | product/, SPEC_A, INTERFACE | bảng Chặn / Nên sửa / Gợi ý | lead đọc, hết mục "Chặn" | pending | |
 | T09 | G2a | Sửa mục "Chặn" của reviewer | coder-product | bảng review | commit sửa | `python product/run_product.py` chạy lại OK | pending | |
 | T10 | G2b | Tạm dừng commit; Bách chạy security ở cửa sổ cách ly, merge `security-pass`, lead chạy lại A | Bách → lead | — | commit sau security | `python product/run_product.py` sau merge | pending | |
@@ -143,6 +143,40 @@ T02–T06 (coder-product) → T07 (lead chạy 14 lệnh kiểm) → T08 (review
 | T14 | G3 | Review `auditor/` (KHÔNG review product/ nữa) | reviewer | auditor/, MATRIX_v0 | bảng review | hết mục "Chặn" | pending | |
 | T15 | G3 | Bách chạy qa ở cửa sổ cách ly, merge `qa-score` | Bách | reports/audit_*.json | reports/qa_score_*.md | — | pending | |
 | T16 | G4 | `reports/BAO_CAO_SANDBOX.md` 6 phần theo PROMPTS 4.1 | lead | tất cả trên | báo cáo + câu hỏi mở | pm chấm lần cuối + Bách duyệt | pending | |
+
+## Kết quả T07 — lead tự chạy, run_id `20261019T064336`
+
+| # | Kiểm | Kết quả | Số đo |
+|---|---|---|---|
+| 1 | chạy một lệnh | **PASS** | `python product/run_product.py` exit=0 |
+| 2 | seed 42 xác định | **PASS** | 2 lần `gen_mock.py` → `sha256` 3 file giống hệt |
+| 3 | 2 lần chạy giống nhau | **PASS** | bỏ `ts`/`run_id`/`log_files` → báo cáo giống hệt |
+| 4 | log đủ 9 trường | **PASS** | tiền quyết đạt (7 file, 7 khớp mẫu); 0 dòng sai trường hoặc sai thứ tự |
+| 5 | quyết định có `reason` | **PASS** | 0 quyết định thiếu `reason` |
+| 6 | số quyết định = 2.000 | **PASS** | `match_result` 1.000 + `fare_result` 1.000 |
+| 7 | config có `version` | **PASS** | 3 file, đều 0.1 |
+| 8 | chỉ stdlib | **PASS** | import ngoài local: `datetime, json, math, os, random, sys` → 0 module ngoài stdlib |
+| 9 | pricing kể cả ở biên | **PASS** | **23/23** ca khớp bảng tính tay |
+| 10 | INTERFACE khớp Q02 | **PASS** | 12 thuộc tính, khớp từng dòng |
+| 11 | dung lượng log thật | **PASS** (số đo) | **110 MB / lần chạy**, 216.004 dòng → **VƯỢT ngưỡng 100 MB của Q12** |
+| 12 | **INTERFACE.md không rò logic** | **FAIL** | 2 chỗ chặn + 4 chỗ nên cắt, xem bảng dưới |
+| 13 | log đủ ứng viên bị loại | **PASS** | 200 dòng/chuyến × 1.000 = 200.000, đúng `len(drivers.json)` |
+| 14 | không hardcode nghiệp vụ | **PASS** | 0 hằng số nghiệp vụ còn trong code |
+
+**Một lỗi của chính bộ kiểm lead, đã chẩn đoán rồi mới sửa (`CLAUDE.md:30`).** Lần chạy đầu, kiểm 6 ra 4.000 và kiểm 13 ra 400 — đúng gấp đôi. Nguyên nhân: kiểm 3 chạy `run_product.py` hai lần, cả hai lần cùng để log trong `logs/`, nên bộ kiểm quét gộp. Sửa bằng cách **nhóm log theo `run_id`** rồi kiểm từng lần chạy. Không phải lỗi sản phẩm. Bộ kiểm đã tính lại đúng cho cả hai `run_id`.
+
+## Kiểm 12 — chỗ rò tìm thấy trong `docs/INTERFACE.md`
+
+| # | Chỗ | Mức | Rò gì | Gốc ở đâu |
+|---|---|---|---|---|
+| 1 | mục 7, cột `Dùng để` | **CHẶN** | thứ tự lọc; **thứ tự phá hoà** (bước 1 `trips_today`, bước 2 `driver_id`); pricing **có bậc giá và hệ số giờ** — đúng loại rò vừa gỡ khỏi `MATRIX_v0`, nay rò lại qua cửa được phép mở | **lời giao việc của lead**: ghi "chép nguyên bảng" mà không nói chép cột nào |
+| 2 | dòng 92: *"không có đường chạy nào không sinh log"* | **CHẶN** | nói trước kết quả M04, mà M04 kiểm đúng điều đó (`MATRIX_v0.md:27`) | `coder-product` tự viết |
+| 3 | mục 7, cột `Nguồn SPEC_A` | nên cắt | trỏ vào `docs/SPEC_A.md`, file `coder-auditor` không được mở | cùng gốc với #1 |
+| 4 | dòng 326: *"cùng đầu vào cho ra cùng kết quả… hai lần chạy giống hệt nhau"* | nên cắt | nói trước kết quả M10 | `coder-product` tự viết |
+| 5 | dòng 157: *"Chạy `gen_mock.py` hai lần cho ra ba file giống hệt nhau"* | nên cắt | cùng loại với #4 | `coder-product` tự viết |
+| 6 | dòng 94: *"`match` và `fare` không tự đọc các khoá đối chiếu đó"* | nên cắt | nói trước kết quả M02 | `coder-product` tự viết |
+
+**Không tính là rò:** enum `event` ở mục 5.3 (điều 4 lời giao việc **buộc** phải có, và B đọc log là thấy hết); tên khoá config ở mục 3 (điều 6 cho phép, và B đọc trực tiếp `product/config/*.json` được).
 
 ## Ô cảnh báo — độc lập của coder-auditor
 
