@@ -1,0 +1,5 @@
+__pycache__/
+*.pyc
+.DS_Store
+# Đáp án lỗi KHÔNG bao giờ nằm trong repo
+DEFECTS_KEY*
