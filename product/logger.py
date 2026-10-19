@@ -3,7 +3,8 @@
 Rang buoc cung CLAUDE.md §3: moi dong log co du 9 truong
 ts, run_id, module, func, event, inputs, outputs, decision, reason.
 Duong dan: logs/<module>_<run_id>.jsonl
-run_id: YYYYmmddTHHMMSS theo UTC, dung chung cho moi module trong 1 lan chay.
+run_id: YYYYmmddTHHMMSSfff theo UTC (co milli giay), dung chung cho moi module
+trong 1 lan chay.
 
 [Suy luan] Day la sandbox mo phong, khong phai san pham that.
 """
@@ -11,6 +12,7 @@ run_id: YYYYmmddTHHMMSS theo UTC, dung chung cho moi module trong 1 lan chay.
 import atexit
 import json
 import os
+import time
 from datetime import datetime, timezone
 
 # Thu tu 9 truong bat buoc. Hang so nay DUOC DUNG de dung tung ban ghi log
@@ -31,6 +33,11 @@ REPO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 LOG_DIR = os.path.join(REPO_ROOT, "logs")
 
 _PROCESS_RUN_ID = None
+_LAST_RUN_ID = None
+
+# Do phan giai cua run_id: milli giay. Khong phai tham so nghiep vu.
+_RUN_ID_MS_DIGITS = 3
+_RUN_ID_RETRY_SLEEP_S = 0.001
 
 
 def rel(path):
@@ -57,9 +64,26 @@ def enable_utf8_stdout():
             pass
 
 
+def _format_run_id(now):
+    millis = now.microsecond // 1000
+    return now.strftime("%Y%m%dT%H%M%S") + "%0*d" % (_RUN_ID_MS_DIGITS, millis)
+
+
 def make_run_id():
-    """run_id dinh dang YYYYmmddTHHMMSS theo UTC."""
-    return datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%S")
+    """run_id dinh dang YYYYmmddTHHMMSSfff theo UTC, co milli giay.
+
+    Hai lan goi lien tiep KHONG BAO GIO tra ve cung mot gia tri: neu trung
+    milli giay thi cho sang milli giay ke tiep. Nho vay hai lan chay lien tiep
+    cua cung mot script khong bao gio dung cung ten file log, va mode "x" cua
+    JsonlLogger chi con la luoi an toan chu khong phai cai bay.
+    """
+    global _LAST_RUN_ID
+    run_id = _format_run_id(datetime.now(timezone.utc))
+    while run_id == _LAST_RUN_ID:
+        time.sleep(_RUN_ID_RETRY_SLEEP_S)
+        run_id = _format_run_id(datetime.now(timezone.utc))
+    _LAST_RUN_ID = run_id
+    return run_id
 
 
 def process_run_id():
@@ -82,8 +106,9 @@ class JsonlLogger:
     """Mot logger ung voi mot module, ghi ra logs/<module>_<run_id>.jsonl.
 
     File mo bang mode "x": neu file da ton tai thi vo ngay bang FileExistsError
-    thay vi ghi de im lang bang chung cua lan chay truoc. run_id chi co do phan
-    giai 1 giay, nen hai lan chay trong cung mot giay se dung cung ten file.
+    thay vi ghi de im lang bang chung cua lan chay truoc. Day la luoi an toan,
+    khong phai duong chay binh thuong: make_run_id() da bao dam hai lan goi lien
+    tiep khong trung nhau.
     """
 
     def __init__(self, module, run_id, log_dir=None, autoflush=False):

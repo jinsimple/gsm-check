@@ -241,9 +241,9 @@ Mỗi phần tử của `results`:
 
 - Định dạng **JSON Lines**: mỗi dòng là một đối tượng JSON độc lập, mã hóa UTF-8, kết thúc dòng `\n`.
 - Đường dẫn: `logs/<module>_<run_id>.jsonl`
-- `run_id` dạng `YYYYmmddTHHMMSS` theo **UTC**, **giống nhau cho mọi module trong cùng một lần chạy**.
+- `run_id` dạng `YYYYmmddTHHMMSSfff` theo **UTC** — ngày giờ tới giây, cộng **3 chữ số milli giây**, tổng cộng 18 ký tự. Ví dụ: `20261019T075320123`. **Giống nhau cho mọi module trong cùng một lần chạy.**
 - Mỗi lần chạy sinh file mới. `logs/*.jsonl` nằm trong `.gitignore`, nên log **không vào git**.
-- `run_id` chỉ có độ phân giải **1 giây**. File log mở bằng mode `"x"`, và `reports/product_run_<run_id>.json` cũng vậy: nếu file của `run_id` đó đã tồn tại thì lần chạy sau **báo `FileExistsError`** chứ không ghi đè. Hai lần chạy liên tiếp phải cách nhau ít nhất 1 giây.
+- File log mở bằng mode `"x"`, và `reports/product_run_<run_id>.json` cũng vậy: nếu file của `run_id` đó đã tồn tại thì **báo `FileExistsError`** chứ không ghi đè bằng chứng của lần chạy trước. Hai lần chạy liên tiếp sinh `run_id` khác nhau, nên đường chạy bình thường không chạm tới lỗi này.
 
 Giá trị `module` đang có:
 
@@ -261,7 +261,7 @@ Mỗi dòng log là một đối tượng JSON gồm chín trường, theo thứ
 | # | Trường | Kiểu | Ghi chú |
 |---|---|---|---|
 | 1 | `ts` | `str` | ISO 8601 UTC, thời điểm ghi dòng log |
-| 2 | `run_id` | `str` | `YYYYmmddTHHMMSS` theo UTC |
+| 2 | `run_id` | `str` | `YYYYmmddTHHMMSSfff` theo UTC, xem 5.1 |
 | 3 | `module` | `str` | xem bảng 5.1 |
 | 4 | `func` | `str` | tên hàm đã ghi dòng log |
 | 5 | `event` | `str` | xem enum 5.3 |
