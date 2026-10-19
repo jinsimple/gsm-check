@@ -145,8 +145,17 @@ tree_now = git('rev-parse', commit_now + ':product')
 tree_run = git('rev-parse', commit_run + ':product')
 seed = json.load(io.open('product/config/mock_data.json', encoding='utf-8')).get('seed')
 logs = sorted(glob.glob('logs/*_%s.jsonl' % EV))
+# 0 file log khop thi FAIL va KHONG VIET GI — pm chi ra lenh kiem truoc day van
+# ghi ra mot manifest hinh dang bang chung cho mot lan chay chua tung xay ra
+# (file do khong duoc commit, nhung van la mot file "that" nam trong reports/).
+# Thoat TRUOC khi ghi, khong phai ghi roi moi fail.
+if not logs:
+    print('  [FAIL] khong co file log nao khop run_id=%s trong logs/ -- khong viet manifest.' % EV)
+    print('\n' + '=' * 70)
+    print('KET QUA: %d nhom FAIL' % (FAIL + 1))
+    sys.exit(1)
 man = {
-    'schema_version': '0.3',
+    'schema_version': '0.4',
     'note': 'Manifest log cua lan chay bang chung. logs/*.jsonl va reports/product_run_*.json '
             'KHONG vao git (DECISIONS Q12, Q20). File nay la bang chung kiem chung duoc cho ban '
             'sao luu ngoai repo. Bang chung dang log khong kem @commit — ngoai le da chuan thuan '

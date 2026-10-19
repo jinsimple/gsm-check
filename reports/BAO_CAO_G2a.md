@@ -17,7 +17,7 @@
 | `run_id` bằng chứng | `20261019T143340880` |
 | `commit_at_run` | `d9f1f27` |
 | `product_tree_at_run` | `3b2892b` |
-| Manifest đã commit | `reports/logs_manifest_20261019T143340880.json` — `schema_version 0.3`, 5 trường tái lập (Q12 điều kiện (b)) |
+| Manifest đã commit | `reports/logs_manifest_20261019T143340880.json` — `schema_version 0.4` (nâng từ 0.3 vì `worktree_clean` tách thành `_at_run`/`_at_manifest`), 6 trường tái lập (Q12 điều kiện (b)) |
 | Bản sao lưu ngoài repo | 3 log + report, `sha256` khớp manifest (kiểm 18) |
 | Log trong git | **không** — `logs/*.jsonl` ignore (Q12/Q20) |
 
