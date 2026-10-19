@@ -18,7 +18,7 @@
 
 | ID | Cổng | Việc | Giao cho | Đầu vào | Đầu ra | Lệnh kiểm | Trạng thái | Bằng chứng (commit / log) |
 |---|---|---|---|---|---|---|---|---|
-| T00 | G1 | Đọc tài liệu, liệt kê điểm mơ hồ, kế hoạch G1→G4 | lead | CLAUDE.md, docs/* | docs/TASKS.md, docs/DECISIONS.md (dạng câu hỏi) | pm DUYỆT | in_progress | |
+| T00 | G1 | Đọc tài liệu, liệt kê điểm mơ hồ, kế hoạch G1→G4 | lead | CLAUDE.md, docs/* | docs/TASKS.md, docs/DECISIONS.md (15 câu) | pm DUYỆT | **completed** | pm DUYỆT vòng 3; commit 8fabdc0 → 9a54afb → 4fff5ff; `git diff --name-only d0ff93c..HEAD` = đúng 2 file docs/ |
 | T01 | G1 | Bách trả lời Q01–Q15, chốt DECISIONS.md (gồm **danh sách thuộc tính được phép** làm đầu vào matching/pricing) | Bách → lead | docs/DECISIONS.md | DECISIONS.md trạng thái CHỐT | Bách gõ "Đồng ý G1." | blocked (chờ Bách) | |
 | T02 | G2a | `product/data/gen_mock.py` + 3 file JSON mock (seed 42) | coder-product | SPEC_A §1, DECISIONS | drivers/customers/rides.json | `python product/data/gen_mock.py` rồi chạy lại, so sánh hash 2 lần | pending | |
 | T03 | G2a | `product/config/matching.json` + `pricing.json` (có `version`) | coder-product | SPEC_A §2–3, DECISIONS Q03/Q04 | 2 file config | `python -c "import json;[json.load(open(f))['version'] for f in ...]"` | pending | |
@@ -59,4 +59,4 @@ Lý do: `DECISIONS.md` chứa biên bậc giá, hệ số giờ, định nghĩa 
 | R6 | Nếu Bách chốt Q13 thì vài dòng ma trận KHÔNG ĐẠT **theo thiết kế**, dễ lẫn với những gì Bách chấm ở cửa sổ cách ly → số precision/recall của qa sai | Q14: lead gửi Bách danh sách baseline trước T10; danh sách giữ ngoài repo, không commit |
 | R7 | Mọi con số dung lượng log hiện là [Suy đoán] | T04b đo thật ngay sau T04, thay số vào DECISIONS Q12 |
 | R8 | `.claude/agents/coder-auditor.md:7` vẫn cho `coder-auditor` đọc `docs/DECISIONS.md`. Đây là nguồn có hiệu lực thật, thắng mọi cảnh báo lead viết trong `docs/` | Q15 xin Bách sửa. T10b là chốt cửa: chưa sửa thì không gọi T11 |
-| R9 | Mỗi lần chạy sinh một file log mới theo `run_id`; 8 lần chạy dự kiến có thể làm repo phình vài trăm MB, git giữ vĩnh viễn | Q12: chỉ commit log của lần chạy được trích làm bằng chứng. Lead chưa sửa `.gitignore`, chờ Bách |
+| R9 | Mỗi lần chạy sinh một file log mới theo `run_id`; 8 lần chạy dự kiến có thể làm repo phình vài trăm MB, git giữ vĩnh viễn | Q12: chỉ commit log của lần chạy được trích làm bằng chứng. Lead chưa sửa `.gitignore`, chờ Bách. **Nếu Bách chọn giữ hết log cả 8 lần thì R9 mất phần giảm thiểu — khi đó ngưỡng 100 MB ở Q12 phải đo trên TỔNG, không phải một lần chạy; lead chỉnh lại trước khi chạy T04b** |
