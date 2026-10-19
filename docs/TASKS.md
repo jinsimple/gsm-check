@@ -7,10 +7,11 @@
 | | |
 |---|---|
 | **Cổng đang mở** | **G2a — mọi lệnh kiểm kỹ thuật đã ĐẠT, chờ Bách duyệt báo cáo** |
-| **Vừa xong** | **T09f hoàn tất, 0 mục Chặn.** `reviewer` review toàn bộ phạm vi T09e + T09e-b (`64b4791`…`6728d3b`): seed riêng không đụng drivers/customers, không hardcode, tên khoá trung tính (`grep` xác nhận 0 kết quả), log trước `raise`, `INTERFACE.md` đủ và không rò logic, 2 hàm thuần không cần log riêng |
+| **Vừa xong** | **pm chấm báo cáo G2a lần 1: SỬA RỒI GỬI LẠI.** pm tìm ra **nhánh chết thứ tư** — `tie_break` 960/960 `no_tie`, quy tắc phá hoà `SPEC_A.md:32` chưa chạy thật. Lead xác minh đúng, thêm **kiểm 21** (chẩn đoán, khuôn kiểm 15/20) + **mục j** vào kiểm 19 (nay FAIL đúng mục j). Sửa 2 chỗ ảo giác khác trong báo cáo (câu khẳng định động cơ không kiểm được; trạng thái nhận chỉ thị 21:01). Báo cáo đã sửa, gửi lại pm |
 | **`run_id` bằng chứng** | `20261019T143340880`, `commit_at_run` `d9f1f27`, `product_tree` `3b2892b` |
-| **Bước tiếp theo** | Soạn **báo cáo G2a**, gửi `pm` chấm, rồi trình Bách |
-| **Lệnh kiểm của bước tiếp theo** | — (soạn tài liệu, không có lệnh kiểm; `pm` chấm bằng đọc) |
+| **Bước tiếp theo** | Chờ pm chấm lại báo cáo G2a đã sửa. Nếu pm duyệt → trình Bách |
+| **Lệnh kiểm của bước tiếp theo** | — (chờ pm đọc lại; không có lệnh máy) |
+| **Việc mới cần Bách** | Mục 7.1 báo cáo G2a: có đưa dữ liệu hoà thật vào `mock_data.json` để đóng mục j không — **không chặn G2a**, chặn G3 (M10) |
 | **Sau đó** | Chờ Bách duyệt G2a. Lead **không** tự tuyên bố G2a qua |
 
 ### ⛔ Cổng đang chờ Bách — KHÔNG tự vượt

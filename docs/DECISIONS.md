@@ -365,6 +365,25 @@ Log chẩn đoán ghi vào `run_id` riêng **`K20DIAG`**, không phải `run_id`
 
 Lead thêm **kiểm 19** vào bộ kiểm: khẳng định mỗi nhánh quyết định có **≥ 1** lần chạy thật trong log của lần chạy bằng chứng — nhánh không ghép được tài xế, bốn bậc giá đều có chuyến **được tính tiền**, ba mức hệ số giờ, cả hai giá trị `auto_accept`, và bốn lý do loại ứng viên. Lý do làm thành lệnh kiểm: lead vừa tự chứng minh ở Q12 rằng **một quyết định không có lệnh kiểm thì bằng như không có**. Thêm **kiểm 20** canh nhánh trần hệ số (xem ô xung đột ở trên).
 
+#### Nhánh chết thứ tư — pm phát hiện, cùng hình dạng với hai bậc giá đã sửa
+
+**pm đếm log bằng chứng: `tie_break` ghi 960/960 dòng đều `no_tie`.** Quy tắc phá hoà ở `SPEC_A.md:32` (*"Hòa → `trips_today` thấp hơn → `driver_id` nhỏ hơn (để kết quả xác định)"*) **chưa quyết định điều gì lần nào** trên `rides.json` hiện tại — khoảng cách haversine là float nên hoà thật gần như không xảy ra.
+
+**Lead đã nhận nhầm `tie_break` là không thuộc diện thiếu**, với lý do *"nó ghi log mọi chuyến"*. Lý do đó đúng cho `auto_accept_eval` (549/411, cả hai kết quả thật) nhưng **sai cho `tie_break`**: ghi log bước đánh giá mỗi chuyến không có nghĩa là nhánh **rẽ** đã chạy. Hệ quả nặng hơn việc đếm nhánh: nếu thứ tự phá hoà bị sửa thì **không dòng log nào, không lệnh kiểm nào, và cả M10 cũng không phát hiện** — vì không có hoà thì thứ tự không bao giờ quyết định gì.
+
+**Kiểm 21 — chẩn đoán, theo đúng khuôn kiểm 15 và kiểm 20 đã được chấp nhận.** Gọi `match()` trực tiếp với hai tài xế đặt **cùng toạ độ điểm đón** (khoảng cách bằng nhau tuyệt đối, không phụ thuộc may rủi float gần-bằng), trong `run_id` chẩn đoán `K21DIAG`. **Không** đổi `mock_data.json`, không đổi dữ liệu mặc định, không commit làm baseline.
+
+| Ca | Bố trí | Kỳ vọng | Kết quả |
+|---|---|---|---|
+| 1 | hoà khoảng cách, `trips_today` khác (5 vs 2) | chọn `trips_today` thấp hơn | **PASS** — `D9001` (trips=2) được chọn |
+| 2 | hoà khoảng cách **và** hoà `trips_today` (3 vs 3) | chọn `driver_id` nhỏ hơn | **PASS** — `D9003` được chọn |
+
+Code **đúng** ở cả hai ca, và log `tie_break` ghi nhận hoà thật (`tie_broken_by_trips_today`, `tie_broken_by_driver_id`), không chỉ `no_tie`.
+
+**Nhưng kiểm 21 PASS không đóng được nhánh chết — nó chỉ chứng minh code đúng KHI bị buộc phải hoà, không làm số lần hoà thật trên `rides.json` tăng lên khỏi 0.** Việc có nên đưa dữ liệu hoà thật vào `mock_data.json` hay không là câu cho Bách, không phải việc lead tự quyết — giống cách T09e cần Bách duyệt cách sửa `gen_mock`, không phải thứ lead tự chọn rồi giao `coder-product` làm.
+
+→ Thêm **mục j** vào kiểm 19: *"nhánh phá hoà trong `match()` có hoà thật trên dữ liệu bằng chứng, không chỉ chẩn đoán"* — hiện **[Chưa xác minh trên dữ liệu mặc định]**, chờ Bách quyết có đưa hoà thật vào `mock_data.json` không.
+
 ### Q20 — `reports/product_run_*.json` (Bách chốt 19/10)
 
 **Ignore, cùng quy tắc với `logs/*.jsonl`.** Bằng chứng mà B cần thì B **chép nguyên văn vào log của chính B** — đúng quy tắc Bách đã chốt ở điểm 4 của Q17.

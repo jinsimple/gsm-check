@@ -86,6 +86,29 @@ if not ok200:
 print('  [%s] i. %-55s %s dong/chuyen (drivers=%d)'
       % ('PASS' if ok200 else 'FAIL', 'candidate_eval van du moi tai xe, ke ca chuyen ngoai vung', vals, ndrv))
 
+# muc j — pm phat hien (DECISIONS Q19): nhanh pha hoa trong match() chua bao
+# gio chay THAT tren du lieu bang chung. tie_break ghi log moi chuyen nhung
+# luon la 'no_tie' -> ghi log moi chuyen KHONG co nghia la nhanh re da chay.
+# Day la nhan biet, khong phai chan doan: chan doan rieng o tests/kiem21_tiebreak.py
+# (goi match() truc tiep, KHONG dung mock_data.json). Muc j luon FAIL cho toi
+# khi Bach quyet co dua hoa thuc vao du lieu mac dinh hay khong.
+tie_reasons = collections.Counter()
+for o in rows('matching'):
+    if o.get('event') == 'tie_break':
+        tie_reasons[o.get('reason')] += 1
+co_hoa_that = bool(tie_reasons) and set(tie_reasons) != {'no_tie'}
+if not co_hoa_that:
+    bad.append('j')
+print('  [%s] j. %-55s %s'
+      % ('PASS' if co_hoa_that else 'FAIL',
+         'nhanh pha hoa trong match() co hoa THAT (SPEC_A.md:32)',
+         dict(tie_reasons) or '(khong co dong tie_break)'))
+if not co_hoa_that:
+    print('       -> chan doan rieng: tests/kiem21_tiebreak.py (goi match() truc tiep,')
+    print('          KHONG dung mock_data.json) da xac nhan code DUNG khi bi buoc hoa.')
+    print('          Muc nay FAIL vi so lan hoa THAT tren du lieu mac dinh van la 0.')
+    print('          Dua hoa thuc vao du lieu la quyet dinh cua Bach, khong phai lead tu lam.')
+
 if bad:
     FAIL += 1
     print('\n  => KIEM 19 FAIL o muc: %s' % ', '.join(bad))

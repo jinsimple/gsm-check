@@ -3,11 +3,11 @@
   "note": "Manifest log cua lan chay bang chung. logs/*.jsonl va reports/product_run_*.json KHONG vao git (DECISIONS Q12, Q20). File nay la bang chung kiem chung duoc cho ban sao luu ngoai repo. Bang chung dang log khong kem @commit — ngoai le da chuan thuan trong Quy uoc MATRIX_v0.",
   "run_id": "20261019T143340880",
   "commit_at_run": "d9f1f277d11342f2ae3c0fc35ef680c48f85c6c2",
-  "commit_at_manifest": "d9f1f277d11342f2ae3c0fc35ef680c48f85c6c2",
+  "commit_at_manifest": "2e786cd4658dd91ef37a94911a31aeee263cda96",
   "product_tree_at_run": "3b2892b71c8795126a29786c7245252538ad98aa",
   "product_tree_at_manifest": "3b2892b71c8795126a29786c7245252538ad98aa",
   "product_unchanged_since_run": true,
-  "worktree_clean": true,
+  "worktree_clean": false,
   "command": "python product/run_product.py",
   "seed": 42,
   "files": [

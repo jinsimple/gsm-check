@@ -21,7 +21,7 @@
 | Bản sao lưu ngoài repo | 3 log + report, `sha256` khớp manifest (kiểm 18) |
 | Log trong git | **không** — `logs/*.jsonl` ignore (Q12/Q20) |
 
-Bằng chứng cổng đã đổi **năm** lần trong quá trình làm (`064336` → `075936693` → `081010446` → `142131055` → `142545373`/`143340880`), mỗi lần vì code hoặc dữ liệu đổi thật — không lần nào chọn lại vì kết quả không như ý.
+Bằng chứng cổng đã đổi nhiều lần trong quá trình làm (`064336` → `075936693` → `081010446` → `142131055` → `143340880`). **Ba lần chạy gần nhất có manifest đã commit, mỗi lần một `product_tree_at_run` khác nhau** — `6f73768`, `eec8271`, `3b2892b` — nên việc code thật sự đổi giữa các lần là kiểm chứng được từ ngoài bằng `git rev-parse <commit>:product`, không cần tin lời lead. Hai lần chạy trước đó có từ khi cơ chế manifest chưa tồn tại, không đối chiếu được theo cách này.
 
 ## 3. Kết quả bộ kiểm — chạy lại toàn bộ trên bằng chứng cuối
 
@@ -31,7 +31,7 @@ Bằng chứng cổng đã đổi **năm** lần trong quá trình làm (`064336
 | Kiểm 12 — `INTERFACE.md` không rò logic, bằng mắt | **PASS** (T09f, reviewer xác nhận lại) |
 | Kiểm 17 — mọi đường thoát có log trước đó | **PASS** — 44 `return`/`raise`, 29 miễn có nguồn gốc |
 | Kiểm 18 — manifest khớp bản sao lưu | **PASS** 3/3 `sha256` |
-| **Kiểm 19 — nguyên tắc phủ nhánh (Q19)** | **PASS cả 9 mục a–i** |
+| **Kiểm 19 — nguyên tắc phủ nhánh (Q19)** | **FAIL 1 mục (j)**, PASS 9/10 — xem mục 4b |
 | Kiểm 20 — nhánh trần hệ số giờ | **PASS 5/5** |
 
 Bộ kiểm đã được commit vào `tests/` (trước khi security chạy, theo quyết định Bách 19/10) — tái lập được, không còn nằm ngoài repo.
@@ -46,6 +46,14 @@ Bộ kiểm đã được commit vào `tests/` (trước khi security chạy, th
 | Quãng đường max | 11,60 km | **39,18 km** |
 
 Cách làm: **giữ** hộp toạ độ chính (tài xế không dời), thêm hai nhóm chuyến nhỏ (điểm đón ngoài vùng 4%; điểm đến xa 4%) — 920/1.000 chuyến giữ nguyên nguyên giá trị cũ, nên baseline so sánh trước/sau còn dùng được. Mọi tham số nằm trong `product/config/mock_data.json` (v0.2); tên khoá/biến/log **chỉ tả hình học dữ liệu**, không tả quan hệ với kết quả của A (T09e-b, sau khi `coder-product` tự nêu một tên khoá chưa trung tính).
+
+## 4b. Nhánh chết thứ tư — pm phát hiện, chưa đóng được ở G2a
+
+**`tie_break` ghi 960/960 dòng đều `no_tie`.** Quy tắc phá hoà `SPEC_A.md:32` (*"để kết quả xác định"*) chưa quyết định điều gì lần nào trên `rides.json` hiện tại — khoảng cách haversine là float nên hoà thật gần như không xảy ra. Lead đã xếp nhầm nhánh này là không thuộc diện thiếu (lý do *"ghi log mọi chuyến"* đúng cho `auto_accept_eval` nhưng sai cho `tie_break`: ghi log bước đánh giá không có nghĩa là nhánh **rẽ** đã chạy).
+
+**Kiểm 21 (chẩn đoán, cùng khuôn kiểm 15/kiểm 20) xác nhận code đúng khi bị buộc phải hoà** — cả hai ca (hoà `trips_today` khác nhau; hoà cả hai) đều PASS. Nhưng **điều đó không làm nhánh thật chạy**: kiểm 19 mục j vẫn **FAIL**, vì số lần hoà thật trên dữ liệu mặc định là 0.
+
+**Đây là điểm G2a chưa đóng, cần Bách quyết:** có đưa dữ liệu hoà thật vào `mock_data.json` không — cùng loại quyết định như cách sửa `gen_mock` ở T09e (lead không tự chọn một cách rồi giao `coder-product` làm). Hệ quả nếu không sửa: nếu thứ tự phá hoà bị sửa sau này thì **không dòng log nào, không lệnh kiểm nào, và cả M10 cũng không phát hiện**.
 
 ## 5. Ba lỗi tự tìm ra và tự sửa trong quá trình G2a
 
@@ -66,14 +74,18 @@ Không lỗi nào nằm trong `product/`. Chi tiết đầy đủ ở `docs/TASK
 | Q21 thiếu bước 6 | Không có lần chạy B trên A có lỗi → TB-01/02/03 không tính được | G3 |
 | `tests/` + `reports/` + checklist xếp loại | **Bách đã duyệt**, đã thực hiện | đã đóng |
 | `CLAUDE.md §5` bảng cổng | Còn ghi G2b trước G3, trái trình tự Q21 | cần Bách sửa, không tự sửa |
-| Chỉ thị 21:01 phần gốc | lead chưa nhận văn bản có mục A/B/C/D | đang chờ Bách gửi |
+| Nhánh phá hoà (mục 4b) | Chưa chạy thật trên dữ liệu mặc định; cần Bách quyết có đưa vào `mock_data.json` không | G3 (M10 không kiểm được nhánh chưa chạy) |
+| Chỉ thị 21:01 — chỉ nhận một phần | Lead đã nhận **nội dung mục B** (Bách trích trực tiếp vào câu trả lời ngày 19/10 dùng cho Q21: *"B xây và chạy trên A sạch → reviewer hết mục Chặn → tag b-freeze → báo tôi → tôi mới merge security-pass"*) và đã áp dụng đúng vào Q21. **Chưa xác nhận nhận được mục A, C, D** hay văn bản gốc đầy đủ — Bách cho biết đã gửi 19/10, có thể là chuyện giao nhận giữa các tab chứ không phải Bách quên |
 
 ## 7. Việc cần Bách quyết, không chặn G2a
 
-1. Bổ sung **bước 6 vào Q21** + ngoại lệ dạng *loại* cho quy tắc 1 (G2b) — để T14c chạy được.
-2. Cập nhật thứ tự **G2b/G3** trong `CLAUDE.md §5` theo Q21.
-3. Gửi lại phần gốc của **chỉ thị 21:01**.
+1. **Quyết định chính của mục này: có đưa dữ liệu hoà thật vào `mock_data.json` để đóng mục j của kiểm 19 không** (mục 4b). Không chặn G2a nhưng để ngỏ thì M10 không kiểm được đúng nhánh này ở G3.
+2. Bổ sung **bước 6 vào Q21** + ngoại lệ dạng *loại* cho quy tắc 1 (G2b) — để T14c chạy được.
+3. Cập nhật thứ tự **G2b/G3** trong `CLAUDE.md §5` theo Q21.
+4. Xác nhận/gửi lại **mục A, C, D** của chỉ thị 21:01 nếu còn nội dung lead chưa nhận.
 
 ## 8. Đề xuất
 
-**G2a đủ điều kiện để Bách duyệt.** Mọi lệnh kiểm kỹ thuật ĐẠT, `reviewer` hết mục Chặn, bằng chứng cổng đầy đủ và tái lập được. Ba việc ở mục 7 không chặn G2a nhưng cần trả lời trước khi làm G3 (B xây và chạy trên A sạch).
+**Ba điều kiện hình thức của G2a đều ĐẠT** (mục 1): A chạy được, log đủ, `reviewer` hết mục Chặn. Bằng chứng cổng đầy đủ và tái lập được.
+
+**Nhưng bộ kiểm không "mọi lệnh kiểm kỹ thuật ĐẠT" — có 1 mục FAIL đã biết và đã khai báo** (kiểm 19 mục j, nhánh phá hoà). Đề xuất: **Bách duyệt G2a với FAIL này được ghi nhận rõ**, không phải G2a "sạch tuyệt đối" — cùng cách R6 được giữ là "mở lại" ở mục 6 thay vì gọi là đã xử lý. Bốn việc ở mục 7 không chặn G2a nhưng cần trả lời trước khi làm G3 (B xây và chạy trên A sạch), và mục 7.1 nên trả lời sớm nhất vì nó còn ảnh hưởng tới chính `mock_data.json`.

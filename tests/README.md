@@ -23,8 +23,9 @@ Mọi script nhận **đường dẫn tuyệt đối** làm đối số, không 
 |---|---|---|
 | `t07b_check.py` | `<repo> <run_id>` | 15 lệnh kiểm máy: chạy được, seed xác định, 9 trường log, `reason`, số quyết định, `version` config, chỉ stdlib, **24 ca giá tính tay**, `INTERFACE` khớp Q02, dung lượng log, log đủ ứng viên bị loại, không hardcode hằng số nghiệp vụ (quét **hết** `product/**/*.py`), `sha256` dữ liệu trong log |
 | `kiem17_18.py` | `<repo> <thư mục sao lưu> <run_id>` | **kiểm 17** — mọi đường thoát `return`/`raise` trên đường quyết định có log trước đó (vế 2 của M04), bằng AST không bằng regex. **kiểm 18** — manifest khớp bản sao lưu ngoài repo |
-| `kiem19_manifest.py` | `<repo> <thư mục sao lưu> <run_id> [commit_lúc_chạy]` | **kiểm 19** — mỗi nhánh quyết định chạy ≥ 1 lần (9 mục a–i). Và sinh **manifest `schema_version` 0.3** |
+| `kiem19_manifest.py` | `<repo> <thư mục sao lưu> <run_id> [commit_lúc_chạy]` | **kiểm 19** — mỗi nhánh quyết định chạy ≥ 1 lần (10 mục a–j; **j hiện FAIL**: nhánh phá hoà trong `match()` chưa hoà thật trên dữ liệu bằng chứng — xem `kiem21_tiebreak.py`). Và sinh **manifest `schema_version` 0.3** |
 | `kiem20_cap.py` | `<repo>` | **kiểm 20** — nhánh trần hệ số giờ, bằng bản sao config **trong bộ nhớ**; không sửa `product/config/pricing.json` |
+| `kiem21_tiebreak.py` | `<repo>` | **kiểm 21** — chẩn đoán nhánh phá hoà trong `match()`, gọi trực tiếp với dữ liệu dựng tay; không sửa `mock_data.json`. PASS chỉ chứng minh code đúng **khi bị buộc hoà**, không chứng minh nhánh đã chạy thật trên `rides.json` |
 | `verify_refs.py` | `<repo>` | mọi dẫn chiếu `file:dòng` trong `docs/` còn trỏ đúng chỗ, **và** không có dẫn chiếu nào chưa được đăng ký |
 
 ## Ba nguyên tắc dựng bộ kiểm này
