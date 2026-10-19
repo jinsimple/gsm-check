@@ -133,9 +133,10 @@ T02–T06 (coder-product) → T07 (lead chạy 14 lệnh kiểm) → T08 (review
 | T05 | G2a | `product/pricing.py` — `fare()` + log từng bậc km | coder-product | SPEC_A §3, DECISIONS Q03/Q04/Q10 | pricing.py, logs/pricing_*.jsonl | 23 ca kể cả biên, so bảng tính tay | **completed** | `c9b0243`; kiểm 9 PASS **23/23** ca khớp bảng tính tay, gồm cặp giờ 6 → 108.000 và giờ 7 → 144.000 |
 | T06 | G2a | `product/run_product.py` + `docs/INTERFACE.md` | coder-product | SPEC_A §4–5, DECISIONS Q10 | reports/product_run_*.json, INTERFACE.md | `python product/run_product.py` | **completed** | `13e5718` + `1559d80`, sửa kiểm 12 ở `7bfd149`; kiểm 1 PASS exit=0; kiểm 3 PASS; kiểm 12 PASS sau khi sửa |
 | T07 | G2a | **Lead tự chạy đủ 14 lệnh kiểm** | lead | T02–T06 | bảng kết quả dưới | 14 lệnh kiểm, không nhận báo cáo suông | **14/14 PASS** | `run_id=20261019T064336`, sau sửa `7bfd149`; xem 2 bảng dưới |
-| T08 | G2a | Review `product/` theo checklist (security CHƯA chạy) | reviewer | product/, SPEC_A, INTERFACE | bảng Chặn / Nên sửa / Gợi ý | lead đọc, hết mục "Chặn" | pending | |
+| T08 | G2a | Review `product/` theo checklist (security CHƯA chạy) | reviewer | product/, SPEC_A, INTERFACE | bảng Chặn / Nên sửa / Gợi ý | lead đọc, hết mục "Chặn" | **completed** | **KHÔNG CÓ MỤC CHẶN**; 5 Nên sửa + 10 Gợi ý; lead tự xác minh tận dòng 7 chỗ then chốt, đúng hết |
 | T09a | G2a | Sửa 6 chỗ rò `INTERFACE.md` do kiểm 12 phát hiện | coder-product | bảng kiểm 12 | docs/INTERFACE.md | lead đọc lại diff + `grep` + chạy lại kiểm 10 | **completed** | `7bfd149`; chỉ sửa 1 file, `git diff cb97490..HEAD` = đúng `docs/INTERFACE.md`; `run_product.py` exit=0 sau sửa |
-| T09b | G2a | Sửa mục "Chặn" của reviewer | coder-product | bảng review T08 | commit sửa | `python product/run_product.py` chạy lại OK | pending | chờ T08 |
+| T09b | G2a | Sửa 14 mục từ T08 + 2 mục pm: rò logic A1–A3, nhánh thoát không log B1–B4, bằng chứng tự khẳng định C1–C6, ghi `note` D1–D2 | coder-product | bảng review T08, bảng chấm pm | commit sửa | lead chạy lại 14 lệnh kiểm + kiểm 15 | in_progress | không có mục Chặn nào, nên đây là Nên sửa/Gợi ý |
+| T07b | G2a | **Kiểm 15** — lần chạy chẩn đoán cho nhánh `no_driver_in_radius`: gọi `match()` với dữ liệu tài xế thật nhưng `radius_km` rất nhỏ, **không** đổi config mặc định, **không** commit làm baseline | lead | T09b xong | 1 dòng log `decision="no_match"` làm bằng chứng nhánh đó chạy thật | gọi `match()` trực tiếp, đọc dòng log sinh ra | pending | ý của pm + reviewer; chờ T09b |
 | T10 | G2b | Tạm dừng commit; Bách chạy security ở cửa sổ cách ly, merge `security-pass`, lead chạy lại A | Bách → lead | — | commit sau security | `python product/run_product.py` sau merge | pending | |
 | T10b | G3 | **Chốt cửa trước T11, 2 việc:** (1) đọc lại `.claude/agents/coder-auditor.md:7`, xác nhận `docs/DECISIONS.md` vẫn không nằm trong danh sách được đọc; (2) xác nhận **Q17 đã được Bách trả lời**. Thiếu bất kỳ việc nào → **dừng, báo Bách**, không gọi T11 | lead | .claude/agents/coder-auditor.md, DECISIONS Q17 | xác nhận ghi vào cột Bằng chứng | `sed -n '7p' .claude/agents/coder-auditor.md` + đọc Q17 | pending | dòng 7 **đã sửa** ở G1 theo Q15 |
 | T11 | G3 | `auditor/matrix.json` + `auditor/rules/m01..m12` + `run_audit.py` | coder-auditor | **CHỈ** docs/MATRIX_v0.md + docs/INTERFACE.md (xem ô cảnh báo dưới bảng) | reports/audit_<commit>.json/.md | `python auditor/run_audit.py` ra đủ 12 dòng; **mỗi phát hiện có `file:dòng` riêng** (Q16) | pending | |
@@ -193,6 +194,47 @@ Commit `7bfd149`, chỉ sửa `docs/INTERFACE.md`. Lead kiểm: `git diff cb9749
 Và một chỗ nó **làm mềm thay vì cắt**: mục 5.2 *"Mọi dòng log, **không trừ dòng nào**, có đúng chín trường"* → *"Mỗi dòng log là một đối tượng JSON gồm chín trường"*. Lead đồng ý: bảng 9 trường là schema nên phải giữ (điều 4 buộc có), còn cụm "không trừ dòng nào" là lời bảo đảm, không phải schema.
 
 **Một chỗ lead QUYẾT GIỮ — là lựa chọn, không phải sót.** `docs/INTERFACE.md:5` còn tham chiếu `SPEC_A.md:54-55` — tham chiếu `SPEC_A` duy nhất còn lại. `coder-product` nêu ra để lead quyết, và lead giữ, vì: nó trỏ vào quy định về **phạm vi của chính file INTERFACE.md**, không trỏ vào thuộc tính hay bước tính nào, nên đọc nó không đoán được gì về bên trong `product/`; và việc `docs/SPEC_A.md` tồn tại thì B vốn đã biết từ `CLAUDE.md §4`. Đổi lại là mất nguồn dẫn mà không được thêm gì.
+
+## T08 — review `product/`: KHÔNG CÓ MỤC CHẶN
+
+reviewer xác nhận điều kiện vai trước khi làm: lead báo **security CHƯA chạy** nên lần này nó được review `product/`.
+
+**Đạt, không cần làm gì:** thứ tự SPEC_A §2 (`matching.py:102-113` lọc → `sorted(key=(distance_km, trips_today, driver_id))` ở `:174-177`); `auto_accept` so nghiêm ngặt `<` nên `0.7 < 0.7` ra False; trần hệ số là `min` không phải `max` (`pricing.py:173`); giờ lấy **như đã viết** kèm offset, không quy UTC (`pricing.py:43`) — đúng Q04; `match` thuần, không đổi `status` — đúng Q06; whitelist Q02 đúng 10 + 2, không đọc `customer_id`/`segment`; không lời gọi mạng, không `subprocess`/`eval`/`exec`/`getenv`, không secret, không dữ liệu cá nhân thật; không `set()`/`listdir`/`glob`/`hash()`.
+**Q13 đạt:** reviewer quét `human|review|alert|canh_bao|override|escalat|mitigat|impact|matrix|M01..M12` trên toàn `product/` → **0 kết quả**. `matching.json` đúng 5 khoá. A không bị vá theo MATRIX.
+
+**Bảy chỗ lead tự xác minh tận dòng, reviewer đúng hết:**
+
+| Chỗ | Lead xác minh bằng gì | Vì sao quan trọng |
+|---|---|---|
+| `INTERFACE.md` mục 5.3 cột "Số dòng mỗi lần chạy" | `sed -n '270,280p'` | **Rò thứ 7.** "1 cho mỗi ứng viên được xét" nói ra mọi tài xế đều bị xét; "0 hoặc 1 mỗi chuyến" nói ra `tie_break`/`auto_accept_eval` có điều kiện; "1 cho mỗi phần tử của `tiers`" nói ra `fare` lặp toàn bộ bậc. Cả lead và `coder-product` đều bỏ sót |
+| `run_product.py:46-47` | `sed` | `return False` thoát không log, **chạy ở mọi lần chạy bình thường**. M04 kiểm đúng chữ "có nhánh `return` không gọi log" → B sẽ báo là phát hiện thật trên A sạch, lẫn vào mẫu số precision của qa |
+| `pricing.py:54`, `:101` | `sed` | `raise ValueError` thoát không log, đều là quyết định về dữ liệu nghiệp vụ đọc từ config |
+| `logger.py:53` + `:69` | `grep` | `run_id` phân giải **1 giây** + mode `"w"` → hai lần chạy cùng giây **ghi đè im lặng**. Nguy vì Quy ước `MATRIX_v0` bắt B tự chạy sinh log mới trước khi kiểm |
+| `run_product.py:187` | `grep` | `n_decisions = 2 * len(results)` suy ra từ công thức, không đếm từ log → bằng chứng M04 tự khẳng định chính nó |
+| `pricing.py:92-95` | chạy thật `fare(0.0)` | ra 30.000đ, trong khi Q03 định nghĩa bậc `(0;2]` **không gồm 0** |
+| `logger.py:15` | `grep` | `REQUIRED_FIELDS` khai báo mà không chỗ nào dùng — hằng số chết trông như cơ chế đang hoạt động |
+
+**Hai điểm mù của chính bộ kiểm lead, do reviewer phát hiện:**
+
+1. **Kiểm 14 bỏ sót `2` trong `n_decisions = 2 * len(results)`.** Bộ lọc của lead whitelist 0, 1, 2 là "chỉ số vô hại", nhưng `2` ở đây là **hằng số định nghĩa nghiệp vụ** của Q10 nằm trong code.
+2. **Bảng 23 ca của kiểm 9 thiếu ca 0 km** — dù pm đã buộc lead thêm giá trị biên. Lead thêm biên `2.0 / 2.1 / 12.0 / 12.1 / 25.0 / 25.1` nhưng không nghĩ tới biên **dưới** của bậc đầu.
+
+## pm tự đính chính — đổi cách viết báo cáo G4 và cách giao T11
+
+pm từng xếp việc nhắc chữ "bậc km" là PHÁ ĐỘC LẬP, nay nói nhận định đó **nặng hơn thực tế**, và lead đồng ý. Lý do: **M05 (`MATRIX_v0.md:28`) và M06 (`MATRIX_v0.md:29`) buộc B phải đọc `product/config/*.json`**, nên mọi **giá trị** trong config — biên bậc, hệ số, ngưỡng — vốn đã nằm trong tầm mắt hợp pháp của B. MATRIX hay INTERFACE có nhắc chữ "bậc" hay không thì **không giấu được** những giá trị đó.
+
+Việc đổi M11 sang phân vị vẫn giữ, nhưng **lý do đúng là lý do phương pháp**: phân vị không giả định cấu trúc giá nào, nên quy tắc M11 vẫn chạy được kể cả khi cấu trúc giá khác đi. Không phải vì nó giấu được điều gì. **Báo cáo G4 phải nói đúng lý do này.**
+
+| | Nội dung |
+|---|---|
+| **B vốn đã thấy hợp pháp** | mọi giá trị trong `product/config/*.json`; schema dữ liệu; toàn bộ nội dung log; `CLAUDE.md` |
+| **Thật sự phải giữ kín** | thuật toán và thứ tự bên trong `product/*.py`; **phán quyết dự kiến của từng dòng ma trận** |
+
+Bảy chỗ đã cắt đều thuộc nhóm thứ hai — nên cắt **đúng**. Hệ quả cho T11: **đừng cắt thêm tên khoá config hay schema; cắt quá tay cũng là lỗi.**
+
+## Kỷ luật commit — pm nhắc, lead nhận
+
+`git add -A` là cách lead commit nhầm `reports/product_run_*.json` (408 KB). Lần này vô hại và còn dùng được làm bằng chứng cổng vì `SPEC_A §4` vốn đòi file đó. Nhưng `.gitignore` chỉ chặn `logs/*.jsonl`, nên `git add -A` sẽ nuốt bất cứ thứ gì rơi vào thư mục làm việc. **Từ G2b trở đi: commit bằng đường dẫn tường minh, không `git add -A`.**
 
 ## Ô cảnh báo — độc lập của coder-auditor
 
