@@ -6,12 +6,12 @@
 
 | | |
 |---|---|
-| **Cổng đang mở** | **G2a** |
-| **Vừa xong** | T09e + T09e-b xong (commit `d9f1f27`/`6728d3b`). Đã gọi `reviewer` cho T09f — **agent dừng giữa việc do hết hạn mức session** (`rate_limit`, reset 01:40 giờ Thái/VN 20/10). `agentId` nội bộ: `a6e2763bfa1ba709f` — **nối lại bằng SendMessage tới chính agent này, không tạo agent mới** (nó đã có phần việc đã làm, chưa rõ đã viết gì ra ngoài transcript — coi như **chưa có kết quả nào** cho tới khi nó tự báo lại) |
+| **Cổng đang mở** | **G2a — mọi lệnh kiểm kỹ thuật đã ĐẠT, chờ Bách duyệt báo cáo** |
+| **Vừa xong** | **T09f hoàn tất, 0 mục Chặn.** `reviewer` review toàn bộ phạm vi T09e + T09e-b (`64b4791`…`6728d3b`): seed riêng không đụng drivers/customers, không hardcode, tên khoá trung tính (`grep` xác nhận 0 kết quả), log trước `raise`, `INTERFACE.md` đủ và không rò logic, 2 hàm thuần không cần log riêng |
 | **`run_id` bằng chứng** | `20261019T143340880`, `commit_at_run` `d9f1f27`, `product_tree` `3b2892b` |
-| **Bước tiếp theo** | **Nối lại T09f** khi hạn mức reset (≈01:40). Lệnh: `SendMessage(to: agentId cũ, message: "tiếp tục, báo trạng thái đã làm tới đâu")`. Review `product/` của `reviewer`, Bách yêu cầu riêng: *"Reviewer kiểm lại trước khi đóng G2a"* |
-| **Lệnh kiểm của bước tiếp theo** | bảng review của `reviewer` **hết mục "Chặn"** |
-| **Sau đó** | trình Bách **báo cáo G2a**. `pm` chấm ở mốc này |
+| **Bước tiếp theo** | Soạn **báo cáo G2a**, gửi `pm` chấm, rồi trình Bách |
+| **Lệnh kiểm của bước tiếp theo** | — (soạn tài liệu, không có lệnh kiểm; `pm` chấm bằng đọc) |
+| **Sau đó** | Chờ Bách duyệt G2a. Lead **không** tự tuyên bố G2a qua |
 
 ### ⛔ Cổng đang chờ Bách — KHÔNG tự vượt
 
@@ -162,7 +162,7 @@ T02–T06 (coder-product) → T07 (lead chạy 14 lệnh kiểm) → T08 (review
 | T09b | G2a | Sửa 14 mục từ T08 + 2 mục pm | coder-product | bảng review T08, bảng chấm pm | commit sửa | lead chạy lại toàn bộ bộ kiểm | **completed** | `2ca9a03`, 8 file +220/−75; lead chạy lại 15 kiểm, 13 PASS |
 | T09c | G2a | `run_id` chống trùng | coder-product | chẩn đoán kiểm 2 | `run_id` 18 ký tự có milli giây | `gen_mock.py` 2 lần liên tiếp, lần 2 exit=0 | **completed** | `284461a`; 2 lần liên tiếp đều exit=0, hash giống hệt; vòng lặp 2.000 lần gọi ra 2.000 giá trị khác nhau |
 | T09e | G2a | ✅ **completed — xem ô "Kết quả T09e" dưới bảng.** Phủ nhánh — sửa `gen_mock.py` + `mock_data.json`** theo Q19 và cách B Bách duyệt: giữ hộp toạ độ, 3–5% điểm đón ngoài vùng, **thêm** 3–5% chuyến điểm đến xa cho hai bậc `(12;25]` và `>25`. Tham số vào config, **trong `data/`+`config/` chỉ ghi tham số trung tính**, lý do chỉ ở SPEC_A/DECISIONS. Thêm `sys.argv` + `seed` vào log `run_start` | coder-product | DECISIONS Q19, SPEC_A §1 | commit sửa + **bảng so trước/sau** | lead chạy lại **toàn bộ** bộ kiểm + kiểm 19 (9 mục a–i) | **completed** | `64b4791`→`10e8ff8`; lead chạy lại **toàn bộ** bộ kiểm: 15/15 + kiểm 17, 18, 19 (9/9), 20 đều PASS. `run_id` bằng chứng **20261019T142131055** |
-| T09f | G2a | **Reviewer kiểm lại trước khi đóng G2a** — Bách yêu cầu riêng sau T09e | reviewer | product/ sau T09e | bảng review | hết mục "Chặn" | pending | chỉ review `product/`, vì chưa merge `security-pass` (Q21) |
+| T09f | G2a | **Reviewer kiểm lại trước khi đóng G2a** — Bách yêu cầu riêng sau T09e | reviewer | product/ sau T09e | bảng review | hết mục "Chặn" | **completed** | **0 mục Chặn**, 6/6 mục kiểm "Không có vấn đề" + 1 mục bổ sung (9 trường log). Đây là lượt review `product/` **CUỐI CÙNG** của reviewer — sau merge `security-pass` chỉ còn review `auditor/` |
 | T07b | G2a | **Kiểm 15** — chẩn đoán nhánh `no_driver_in_radius` | lead | T09b | dòng log quyết định làm bằng chứng | gọi `match()` với `radius_km=0.0001`, dữ liệu tài xế thật | **PASS** | `match()` → `{driver_id: None, auto_accept: False, reason: 'no_driver_in_radius'}`; 203 dòng log, **đúng 1** dòng quyết định, `reason='no_driver_in_radius'` |
 | T07c | G2a | **Kiểm 16** — log `data_loaded` phải có `sha256` 3 file dữ liệu + version `mock_data.json` | lead | T09b (C6) | bằng chứng dữ liệu nào đã dùng | đối chiếu sha256 trong log với hash file thật | **PASS** | 3 sha256 trong log, khớp hash 3 file dữ liệu |
 | T10 | G2b | **Chỉ chạy SAU T14b** (Q21: B đóng băng trước, security merge sau). Tạm dừng commit; Bách chạy security ở cửa sổ cách ly, merge `security-pass`, lead chạy lại A. **Xem ô "Việc của lead ở G2b" ngay dưới bảng — chỉ 1 lệnh, không chẩn đoán** | Bách → lead | — | commit sau security | **CHỈ** `python product/run_product.py`, **chỉ xem exit code**. Không chạy lệnh kiểm nào khác | pending | |
