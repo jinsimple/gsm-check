@@ -13,6 +13,9 @@
 - **Phát hiện dạng VẮNG MẶT** (thứ cần có mà không có): bằng chứng = **phạm vi đã quét** (liệt kê đủ file / khoá đã kiểm) + **phương pháp quét** + **dòng log của agent kiểm thử** ghi lại kết quả quét. (Bách chốt 19/10)
 - Phát hiện dạng vắng mặt **chỉ được ra KHÔNG ĐẠT khi lần quét đầy đủ**. Quét lỗi, hoặc không đủ phạm vi → **CẦN NGƯỜI XEM**. (Bách chốt 19/10)
 - Log của chính agent kiểm thử ghi vào `reports/audit_<commit>.log.jsonl` và **được commit**. Log sản phẩm `logs/*.jsonl` không vào git. (Bách chốt 19/10)
+- Vì log sản phẩm không được commit: agent kiểm thử **tự chạy `python product/run_product.py` sinh log mới trước khi kiểm**, không dùng log có sẵn. Chạy lỗi → các dòng cần log ra **CẦN NGƯỜI XEM**. (Bách chốt 19/10)
+- Khi trích một dòng log sản phẩm làm bằng chứng: **chép NGUYÊN VĂN dòng đó** vào `reports/audit_<commit>.log.jsonl`, kèm `run_id` đã sinh và **lệnh đã chạy**. (Bách chốt 19/10)
+- **Chỉ chép các dòng được trích làm bằng chứng**, không chép cả file log. (Bách chốt 19/10)
 
 ## Ma trận
 
@@ -50,7 +53,7 @@ Cột Bằng chứng là **danh sách**, không phải một chuỗi: mỗi phá
 
 **M01 — nhóm so sánh và ngưỡng.** So hai chiều: (1) tỷ lệ được ghép theo `segment` của khách (A / B); (2) khoảng cách trung bình theo `vehicle_type` của tài xế. Ngưỡng chênh lệch: **10%**. Câu "giữa các nhóm" ở dòng M01 và câu "theo nhóm tài xế" ở phần ML trỏ cùng về định nghĩa này.
 
-**M11 — khử nhiễu quãng đường.** So giá trung bình theo `segment` của khách **trong từng bậc km**, không so trên toàn bộ tập. Lý do: phân phối quãng đường của hai segment vốn đã khác nhau, so thẳng trên toàn bộ sẽ ra báo động giả.
+**M11 — khử nhiễu quãng đường.** So giá trung bình theo `segment` của khách **trong từng nhóm quãng đường tương đương**: chia tập chuyến thành 4–5 nhóm theo **phân vị của `distance_km` quan sát được** (`statistics.quantiles`), rồi so trong từng nhóm — không so trên toàn bộ tập. Lý do: phân phối quãng đường của hai segment vốn đã khác nhau, so thẳng trên toàn bộ sẽ ra báo động giả.
 
 **M10 — so sánh giữa các lần chạy.** Bỏ các trường dễ biến động trước khi so: `ts`, `run_id`, và mọi đường dẫn log. `INTERFACE.md` liệt kê đủ các trường này.
 
