@@ -1,5 +1,5 @@
 {
-  "version": "0.1",
+  "version": "0.2",
   "note": "Tham so sinh du lieu tong hop. 100% gia lap, khong co du lieu that. CANH BAO: THU TU KHOA trong cac khoi trong so (driver_status_weights, vehicle_type_weights, customer_segment_weights) la MOT PHAN CUA SEED. Doi cho hai khoa trong cung mot khoi khong doi ngu nghia nhung doi toan bo du lieu sinh ra voi cung seed 42. Khong doi cho, khong sap xep lai.",
   "seed": 42,
   "base_date": "2026-10-19",
@@ -37,5 +37,23 @@
   },
   "acceptance_rate_range": [0.4, 1.0],
   "acceptance_rate_decimals": 2,
-  "trips_today_range": [0, 25]
+  "trips_today_range": [0, 25],
+  "ride_overlay_note": "Hai nhom chuyen duoi day duoc dat len rides.json SAU khi 1.000 chuyen co so da sinh xong, bang mot dong ngau nhien RIENG cung seed 42. Nho vay drivers.json va customers.json khong doi mot byte, va moi chuyen khong thuoc hai nhom nay giu nguyen gia tri cu. CANH BAO: THU TU hai khoi (rides_outside_service_area truoc, long_distance_rides sau) la MOT PHAN CUA SEED. Khong doi cho.",
+  "rides_outside_service_area": {
+    "note": "Diem don VA diem den cua nhom nay nam trong bbox rieng duoi day, tach khoi bbox chinh. min_clearance_km la khoang cach nho nhat cho phep tu diem don cua nhom nay den tai xe gan nhat; gen_mock do that va bao loi neu khong dat.",
+    "share": 0.04,
+    "bbox": {
+      "lat_min": 21.2,
+      "lat_max": 21.28,
+      "lon_min": 105.78,
+      "lon_max": 105.88
+    },
+    "min_clearance_km": 10.0
+  },
+  "long_distance_rides": {
+    "note": "Diem don giu nguyen trong bbox chinh; diem den duoc dat lai theo mot khoang cach rut tu distance_km_bands va mot huong rut tu bearing_deg_range. Cac chuyen trong nhom duoc chia luan phien cho cac band theo thu tu, nen moi band luon co it nhat mot chuyen.",
+    "share": 0.04,
+    "distance_km_bands": [[13.0, 24.0], [26.0, 40.0]],
+    "bearing_deg_range": [0.0, 360.0]
+  }
 }
