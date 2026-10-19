@@ -90,6 +90,8 @@ Cả hai phương án đều dùng được. Điều không dùng được là �
 
 → **Lead KHÔNG sửa `MATRIX_v0.md` lúc này**, làm đúng như Q15: chờ Bách chọn. Câu này **chặn T11** (gọi `coder-auditor`, 21/10), **không chặn G1**.
 
+**Ghi chú kỹ thuật, không đổi nội dung quyết định của Bách.** Nếu Bách chọn (A) thì câu mới **chèn vào cuối file, sau dòng 42**, cạnh câu cùng chủ đề về định dạng bằng chứng — **không** chèn vào giữa phần Quy ước. Lý do: bullet Quy ước là dòng 8–12, bảng ma trận bắt đầu ở dòng 18, file hết ở dòng 42; chèn vào bất cứ đâu phía trên bảng sẽ làm lệch +1 **toàn bộ** dẫn chiếu phía sau, kể cả `:25` và `:29` nằm trong chính Q17 này. Chèn ở cuối file thì **lệch 0 dòng**. Việc này đã ghi thành T01e trong `docs/TASKS.md`, trạng thái blocked chờ Bách.
+
 ### Q01 — Ma trận: 12 dòng hay 15 control?
 
 `MATRIX_v0.md:4` ghi: *"Nếu PM đã có danh sách 15 control riêng, thay vào đây trước cổng G1."* Ma trận hiện có **12 dòng (M01–M12)**. Cả A và B đều phụ thuộc con số này; đổi sau G1 nghĩa là làm lại `auditor/`.
