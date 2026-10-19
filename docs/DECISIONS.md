@@ -243,6 +243,28 @@ Cách commit log bằng chứng: **không đổi tên file** (giữ đúng `logs
 Cột Source của báo cáo trỏ tới đúng file đó kèm `@commit`. Các lần chạy khác vẫn nằm trên đĩa cho auditor đọc nhưng không vào git. Phần giảm thiểu của R9 đang hoạt động, nên ngưỡng 100 MB ở trên vẫn tính cho **một lần chạy**, không phải tổng.
 → T04b sẽ ghi vào TASKS.md: số lần chạy thực tế, dung lượng một lần chạy, và tổng dung lượng sau khi đo.
 
+### Q21 — Đóng băng B (`b-freeze`) và thứ tự cổng (Bách chốt 19/10)
+
+Lead tìm ra chỗ hở: `CHECKLIST_KIEM_TOAN.md` dẫn chiếu `(Q21)` và **TB-07** lấy bằng chứng là tag `b-freeze`, nhưng cả Q21 lẫn tag đều **chưa tồn tại** (`grep` toàn `docs/` trừ checklist → 0 kết quả; `git tag` → không tag nào). pm xác minh độc lập và xác nhận. TB-07 là **dòng duy nhất** chứng minh B không bị chỉnh sau khi thấy kết quả trên A có lỗi — hở này **không sửa lại được sau G3**.
+
+**Bách chốt trình tự:**
+
+| # | Việc | Ai |
+|---|---|---|
+| 1 | B được xây **và chạy** trên **A sạch** | `coder-auditor` → lead |
+| 2 | `reviewer` review `auditor/`, hết mục **Chặn** | `reviewer` |
+| 3 | Gắn tag **`b-freeze`** | lead |
+| 4 | Báo Bách | lead |
+| 5 | **Bách mới merge `security-pass`** | Bách |
+
+**Hệ quả quan trọng: thứ tự cổng đổi so với `CLAUDE.md §5`.** Bảng cổng ghi G2b (security) **ngày 20/10**, G3 (B chạy) **ngày 21/10**. Trình tự Q21 đảo lại: **B phải xây, chạy và đóng băng xong trước khi security merge.**
+
+Vì sao trình tự này đúng hơn: nếu security merge trước, thì B được xây trong một repo **đã có lỗi cài sẵn**, và `coder-auditor` có thể vô tình dò ra lỗi trong lúc xây — lúc đó không ai phân biệt được B **phát hiện** lỗi hay B **được xây quanh** lỗi. Tag `b-freeze` đặt trước merge làm ranh giới đó kiểm chứng được từ ngoài bằng `git log auditor/`: không commit nào vào `auditor/` sau tag.
+
+**Lead đã báo Bách rằng bảng cổng `CLAUDE.md §5` cần cập nhật theo trình tự này** — lead không tự sửa `CLAUDE.md`.
+
+→ **Quy tắc "Việc của lead ở G2b" (6 quy tắc, R12) áp từ bước 5**, tức từ lúc Bách merge `security-pass`, không phải từ ngày 20/10.
+
 ### Q22 — Bốn điểm trước đây chờ chị Ánh, nay nhóm tự chốt (Bách chỉ thị 19/10)
 
 **Bối cảnh Bách chốt: chị Ánh KHÔNG cung cấp thêm thông tin nào. Nhóm tự nghiên cứu và tự chốt mọi thứ.** Mọi chỗ trước đây ghi "hỏi chị Ánh" nay dùng quyết định ở `docs/CHECKLIST_KIEM_TOAN.md` §7.
