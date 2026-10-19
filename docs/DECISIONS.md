@@ -211,10 +211,30 @@ Lần gửi trước lead đề xuất chỉ log ứng viên đã qua lọc `sta
 
 | | Điều kiện | Lead tự đánh giá | pm kiểm |
 |---|---|---|---|
-| (a) | Không thêm thông tin về **cách A hoạt động** vào `MATRIX_v0`/`INTERFACE` (Q18) | Manifest nằm ở `reports/`, **không** phải file `coder-auditor` được mở. Nội dung chỉ có tên file, số dòng, số byte, `sha256`, commit, seed, lệnh, `run_id` — không có gì về thuật toán hay thứ tự bên trong | chờ |
-| (b) | Mỗi lần chạy ghi đủ **commit, seed, lệnh, `run_id`** để tái lập | Đã bổ sung 4 trường đó vào manifest. `seed` cũng đã có trong log `data_loaded` kèm `sha256` 3 file dữ liệu (kiểm 16) | chờ |
-| (c) | Không cần commit log sản phẩm | `git ls-files logs/` chỉ có `.gitkeep`. Kiểm 18 chứng minh bản sao lưu khớp `sha256` manifest | chờ |
-| (d) | Dùng được khi chạy B trên **hai commit khác nhau** của `product/` | Manifest mang tên theo `run_id` và ghi commit bên trong, nên hai lần chạy ở hai commit cho hai manifest riêng, không ghi đè nhau. Đã có tiền lệ thật: bằng chứng cổng đã thay 3 lần (`064336` → `075936693` → `081010446`) đúng vì code đổi | chờ |
+| (a) | Không thêm thông tin về **cách A hoạt động** vào `MATRIX_v0`/`INTERFACE` (Q18) | Manifest nằm ở `reports/`, **không** phải file `coder-auditor` được mở. Nội dung chỉ có tên file, số dòng, số byte, `sha256`, commit, seed, lệnh, `run_id` — không có gì về thuật toán hay thứ tự bên trong | **ĐẠT.** pm tự chạy `git diff` xác nhận `2391d10` chỉ sửa đúng file manifest; nội dung không có gì về thuật toán. pm cân một nghi vấn về trường `lines` và kết luận **không phải rò**, kèm ranh giới đề nghị dùng cho cả G3: *một đặc tả hay một bất biến được bảo đảm thì là rò; một quan sát về một lần chạy cụ thể thì không* |
+| (b) | Mỗi lần chạy ghi đủ **commit, seed, lệnh, `run_id`** để tái lập | Đã bổ sung 4 trường đó vào manifest. `seed` cũng đã có trong log `data_loaded` kèm `sha256` 3 file dữ liệu (kiểm 16) | **ĐẠT CÓ ĐIỀU KIỆN → nay ĐẠT.** pm bắt được **ngữ nghĩa trường `commit` sai**: manifest ghi commit lúc **viết**, không phải lúc **chạy**. Lần này vô hại **do may**. **Lead đã sửa** — xem ô dưới bảng |
+| (c) | Không cần commit log sản phẩm | `git ls-files logs/` chỉ có `.gitkeep`. Kiểm 18 chứng minh bản sao lưu khớp `sha256` manifest | **ĐẠT.** pm **tự xác minh**, không nhận báo cáo: `git ls-files` → chỉ `.gitkeep` + manifest; và pm **tự băm lại cả ba file log trên đĩa** — `sha256`, số dòng, số byte khớp cả ba |
+| (d) | Dùng được khi chạy B trên **hai commit khác nhau** của `product/` | Manifest mang tên theo `run_id` và ghi commit bên trong, nên hai lần chạy ở hai commit cho hai manifest riêng, không ghi đè nhau. Đã có tiền lệ thật: bằng chứng cổng đã thay 3 lần (`064336` → `075936693` → `081010446`) đúng vì code đổi | **ĐẠT.** Manifest theo `run_id` nên hai lần chạy không ghi đè; tiền lệ thật là bằng chứng cổng đã thay ba lần. `product_tree` ở (b) càng làm chắc, vì phân biệt được "đổi code" với "đổi tài liệu" |
+
+**→ Bốn điều kiện ĐẠT hết. Phương án manifest được áp dụng.**
+
+#### Điều kiện (b): lỗi pm bắt được và bản sửa
+
+pm kiểm ra manifest ghi `commit: a79bdcf`, trong khi **chính `a79bdcf` là commit xoá** `reports/product_run_20261019T081010446.json` — tức lần chạy đó xảy ra **trước** `a79bdcf`. Trường `commit` đang ghi commit lúc **viết manifest**, không phải lúc **chạy**.
+
+Lead xác minh lại cả hai nửa và pm đúng cả hai: commit lúc chạy thật là **`560597b`** (commit `product/` cuối trước khi bằng chứng được commit ở `908471a`), và lần này **vô hại do may** — `git diff --name-only 560597b 2391d10 -- product/` rỗng. Nhưng lần sau có một commit chạm `product/` nằm giữa hai mốc thì **manifest sẽ nói sai về code đã sinh ra log mà vẫn trông hợp lệ**. Đúng loại lỗi tệ nhất: sai âm thầm.
+
+**Đã sửa, manifest lên `schema_version` 0.3.** Tách một trường mơ hồ thành năm trường nói thật:
+
+| Trường | Giá trị ở bằng chứng hiện tại | Nói gì |
+|---|---|---|
+| `commit_at_run` | `560597b…` | commit lúc **bắt đầu chạy** |
+| `commit_at_manifest` | `2391d10…` | commit lúc **viết manifest** |
+| `product_tree_at_run` | `6f73768…` | **hash cây của riêng `product/`** tại lúc chạy — ý của pm |
+| `product_tree_at_manifest` | `6f73768…` | cùng hash tại lúc viết |
+| `product_unchanged_since_run` | `true` | **khẳng định kiểm được**: code sinh ra log không đổi |
+
+Hai commit **khác nhau** mà hai `product_tree` **giống nhau** — đúng điều pm chỉ ra, nay hiện thành số thay vì ẩn đi. Và `product_tree` chỉ đổi khi `product/` thật sự đổi, nên mọi commit chỉ sửa `docs/` không còn làm nhiễu bằng chứng. Manifest **FAIL to** nếu hai hash lệch, nên quy tắc này cũng được canh bằng lệnh kiểm chứ không bằng chữ.
 
 Phần cũ vẫn giữ: `.gitignore` có `logs/*.jsonl` từ vòng 1.
 
@@ -251,12 +271,27 @@ Bằng chứng từ log: `fare_tier` ghi 4.000 dòng, nhưng bậc `t3` và `t4`
 
 Nhưng để nó chạy thì phải **thêm một khung giờ có hệ số > 1.3 vào config** — mà `SPEC_A` §3 không có khung nào như vậy. Tức Q19 đòi thêm, còn **Q13 cấm thêm thứ SPEC_A không có**. Hai nguyên tắc của Bách kéo ngược nhau ở đúng chỗ này.
 
-→ **Lead đề xuất:** giữ quyết định Q04 (trần 1.3 là tham số hiện không ràng buộc, ghi rõ trong báo cáo), và ghi trần hệ số là **ngoại lệ duy nhất, có lý do, của nguyên tắc Q19** — lý do là Q13. Không thêm khung giờ nào.
-→ **Cần Bách xác nhận** hoặc ghi đè. Việc này **không chặn** G2a vì nó không đổi code.
+→ **Lead đề xuất ban đầu:** ghi trần hệ số là **ngoại lệ duy nhất, có lý do, của nguyên tắc Q19**.
+
+**pm gỡ được xung đột, KHÔNG cần ngoại lệ nào — bằng tiền lệ của chính lead.** Kiểm 15 đã làm đúng việc này: gọi `match()` trực tiếp với `radius_km=0.0001` trong một logger chẩn đoán riêng, không đổi config mặc định, không commit làm baseline — và Bách đã chấp nhận. Trần hệ số làm được y như vậy: gọi `fare()` với một **bản sao trong bộ nhớ** của `pricing.json` có `max_time_coef` thấp hơn hệ số cao điểm. Nó **không** thêm gì vào config mặc định nên **không chạm Q13**; nó chứng minh `min()` chọn đúng vế nên **thoả Q19**.
+
+**Lead đã làm thật, không chỉ đồng ý trên giấy — kiểm 20, PASS 5/5:**
+
+| Khẳng định | Số đo |
+|---|---|
+| trần ràng buộc → `time_coef` = `max_time_coef` | `1.0` (hệ số khung cao điểm 1.2) |
+| trần không ràng buộc → `time_coef` = hệ số khung | `1.2` |
+| giá khi bị trần < giá khi không trần | **120.000 < 144.000 VND** |
+| log có **cả hai** nhánh `cap_applied` và `cap_not_binding` | cả hai có mặt |
+| `product/config/pricing.json` **không** bị sửa (Q13) | `max_time_coef` còn `1.3` |
+
+Log chẩn đoán ghi vào `run_id` riêng **`K20DIAG`**, không phải `run_id` bằng chứng — nên nó không làm bẩn baseline.
+
+→ **Xung đột Q13↔Q19 đóng. Nguyên tắc Q19 không có ngoại lệ nào.** pm nói đúng lý do nên chọn cách này: *"một nguyên tắc không có ngoại lệ nào thì dễ bảo vệ hơn nhiều ở G4"*. Quyết định Q04 vẫn giữ: trần 1.3 là tham số **hiện không ràng buộc trên config mặc định**, và báo cáo ghi rõ điều đó — nhưng nay kèm bằng chứng là nhánh ấy **có chạy đúng** khi bị ràng buộc.
 
 #### Nguyên tắc Q19 được canh bằng lệnh kiểm, không chỉ bằng chữ
 
-Lead thêm **kiểm 19** vào bộ kiểm: khẳng định mỗi nhánh quyết định có **≥ 1** lần chạy thật trong log của lần chạy bằng chứng — nhánh không ghép được tài xế, bốn bậc giá đều có chuyến **được tính tiền**, ba mức hệ số giờ, cả hai giá trị `auto_accept`, và bốn lý do loại ứng viên. Lý do làm thành lệnh kiểm: lead vừa tự chứng minh ở Q12 rằng **một quyết định không có lệnh kiểm thì bằng như không có**.
+Lead thêm **kiểm 19** vào bộ kiểm: khẳng định mỗi nhánh quyết định có **≥ 1** lần chạy thật trong log của lần chạy bằng chứng — nhánh không ghép được tài xế, bốn bậc giá đều có chuyến **được tính tiền**, ba mức hệ số giờ, cả hai giá trị `auto_accept`, và bốn lý do loại ứng viên. Lý do làm thành lệnh kiểm: lead vừa tự chứng minh ở Q12 rằng **một quyết định không có lệnh kiểm thì bằng như không có**. Thêm **kiểm 20** canh nhánh trần hệ số (xem ô xung đột ở trên).
 
 ### Q20 — `reports/product_run_*.json` (Bách chốt 19/10)
 
