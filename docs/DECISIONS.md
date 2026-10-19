@@ -144,7 +144,7 @@ pm đã trả lời: **pm không có danh sách 15 control nào**, không có ng
 
 ### Q02 — Ai chốt "danh sách thuộc tính được phép"? (ảnh hưởng M02 và M11)
 
-Theo `SPEC_A.md:54`, danh sách này nằm trong `INTERFACE.md`, mà `INTERFACE.md` do **coder-product** viết. Người bị chấm tự viết tiêu chí chấm mình thì **M02 không bao giờ phát hiện được gì**.
+Theo `SPEC_A.md:65`, danh sách này nằm trong `INTERFACE.md`, mà `INTERFACE.md` do **coder-product** viết. Người bị chấm tự viết tiêu chí chấm mình thì **M02 không bao giờ phát hiện được gì**.
 
 **Bách CHỐT 19/10: đồng ý.** Lead chốt danh sách tại G1 trong file này, lấy từ SPEC_A. `coder-product` **chép nguyên** sang `INTERFACE.md`, không thêm bớt; muốn thêm thuộc tính phải xin lead. Bách cho sửa `SPEC_A` mục 5 và bảng vai `CLAUDE.md §3` cho khớp, commit cùng file này.
 
@@ -156,36 +156,36 @@ Theo `SPEC_A.md:54`, danh sách này nằm trong `INTERFACE.md`, mà `INTERFACE.
 
 | Thuộc tính | Dùng để | Nguồn SPEC_A |
 |---|---|---|
-| `ride.vehicle_type` | lọc đúng loại xe | `SPEC_A.md:19` |
-| `ride.pickup_lat` | tính haversine | `SPEC_A.md:20` |
-| `ride.pickup_lon` | tính haversine | `SPEC_A.md:20` |
-| `driver.status` | lọc `idle` | `SPEC_A.md:19` |
-| `driver.vehicle_type` | lọc đúng loại xe | `SPEC_A.md:19` |
-| `driver.lat` | tính haversine | `SPEC_A.md:20` |
-| `driver.lon` | tính haversine | `SPEC_A.md:20` |
-| `driver.trips_today` | phá hoà bước 1 | `SPEC_A.md:21` |
-| `driver.acceptance_rate` | so với `auto_accept_threshold` | `SPEC_A.md:22` |
-| `driver.driver_id` | phá hoà bước 2 và trả kết quả — không dùng để tính gì khác | `SPEC_A.md:17,21` |
+| `ride.vehicle_type` | lọc đúng loại xe | `SPEC_A.md:30` |
+| `ride.pickup_lat` | tính haversine | `SPEC_A.md:31` |
+| `ride.pickup_lon` | tính haversine | `SPEC_A.md:31` |
+| `driver.status` | lọc `idle` | `SPEC_A.md:30` |
+| `driver.vehicle_type` | lọc đúng loại xe | `SPEC_A.md:30` |
+| `driver.lat` | tính haversine | `SPEC_A.md:31` |
+| `driver.lon` | tính haversine | `SPEC_A.md:31` |
+| `driver.trips_today` | phá hoà bước 1 | `SPEC_A.md:32` |
+| `driver.acceptance_rate` | so với `auto_accept_threshold` | `SPEC_A.md:33` |
+| `driver.driver_id` | phá hoà bước 2 và trả kết quả — không dùng để tính gì khác | `SPEC_A.md:28,32` |
 
 `pricing` được đọc đúng 2 thuộc tính:
 
 | Thuộc tính | Dùng để | Nguồn SPEC_A |
 |---|---|---|
-| `distance_km` | bậc giá | `SPEC_A.md:27` |
-| `requested_at` | hệ số giờ | `SPEC_A.md:27` |
+| `distance_km` | bậc giá | `SPEC_A.md:38` |
+| `requested_at` | hệ số giờ | `SPEC_A.md:38` |
 
 **Sửa 19/10 sau kiểm 12 ở T07 — CHỈ cột `Thuộc tính` được chép sang `INTERFACE.md`.**
 
 Hai cột `Dùng để` và `Nguồn SPEC_A` là để Bách, pm và lead đọc. **KHÔNG chép sang `INTERFACE.md`.** Lý do:
 
-- Cột `Dùng để` **mô tả logic bên trong**, vi phạm `SPEC_A.md:55`: nó nói ra thứ tự lọc, **thứ tự phá hoà** ("phá hoà bước 1" là `trips_today`, "bước 2" là `driver_id`), và việc pricing **có bậc giá và hệ số giờ** — đúng loại rò mà Q18 vừa gỡ khỏi `MATRIX_v0` khi bỏ chữ "bậc km". Nó rò lại qua `INTERFACE.md`.
+- Cột `Dùng để` **mô tả logic bên trong**, vi phạm `SPEC_A.md:66`: nó nói ra thứ tự lọc, **thứ tự phá hoà** ("phá hoà bước 1" là `trips_today`, "bước 2" là `driver_id`), và việc pricing **có bậc giá và hệ số giờ** — đúng loại rò mà Q18 vừa gỡ khỏi `MATRIX_v0` khi bỏ chữ "bậc km". Nó rò lại qua `INTERFACE.md`.
 - Cột `Nguồn SPEC_A` trỏ vào `docs/SPEC_A.md`, file `coder-auditor` **không được mở**, nên cột đó không dùng được cho B mà chỉ thêm con trỏ.
 
 Sai sót này **do lời giao việc của lead**: lead viết "chép nguyên bảng" mà không nói rõ chép cột nào. `coder-product` chép nguyên là làm đúng điều 1, và nó đã **tự nêu chỗ này ra** thay vì tự cắt — xử lý đúng. Kiểm 12 ở T07 phát hiện.
 
 ### Q05 — `auto_accept` có phải "hành động bất lợi lên tài xế" theo M07?
 
-`SPEC_A.md:22`: tài xế có `acceptance_rate < 0.70` thì bị **tự động nhận chuyến** — mô phỏng chính sách công khai (`GREEN_SM_CONTEXT.md:15`). M07 (`MATRIX_v0.md:30`) hỏi: có hành động bất lợi lên tài xế mà không có bước người xem xét?
+`SPEC_A.md:33`: tài xế có `acceptance_rate < 0.70` thì bị **tự động nhận chuyến** — mô phỏng chính sách công khai (`GREEN_SM_CONTEXT.md:15`). M07 (`MATRIX_v0.md:30`) hỏi: có hành động bất lợi lên tài xế mà không có bước người xem xét?
 
 **Bách CHỐT 19/10: `auto_accept` thuộc phạm vi M07. KHÔNG thêm cờ người xem xét vào A.**
 
@@ -205,12 +205,64 @@ Lần gửi trước lead đề xuất chỉ log ứng viên đã qua lọc `sta
 
 **Giữ hay dọn log giữa các lần chạy.** `CLAUDE.md §3` đặt tên `logs/<module>_<run_id>.jsonl` theo từng `run_id`, nên **mỗi lần chạy sinh một file mới**. Kế hoạch hiện có ít nhất **8 lần chạy**: T02 hai lần (so hash), T04b, T07, T09, T10 sau merge, T13 ba lần. Nhân với dung lượng một lần chạy thì repo phình lên vài trăm MB, và **git giữ vĩnh viễn — xoá sau cũng không nhỏ lại**.
 
-**Bách CHỐT 19/10: đồng ý sửa `.gitignore`. ĐÃ SỬA** trong commit này: thêm mẫu `logs/*.jsonl`.
+**Bách CHỐT 19/10 vòng 2 — DUYỆT CÓ ĐIỀU KIỆN phương án manifest của pm.** Không đưa log sản phẩm vào git chút nào; thay bằng manifest nhỏ đã commit + bản sao lưu ngoài repo + cơ chế Q17 (B chép nguyên văn dòng được trích vào log của B, file đó được commit).
+
+**Bốn điều kiện Bách đặt ra. pm kiểm, đạt hết mới áp dụng. Kết quả kiểm ghi vào đây:**
+
+| | Điều kiện | Lead tự đánh giá | pm kiểm |
+|---|---|---|---|
+| (a) | Không thêm thông tin về **cách A hoạt động** vào `MATRIX_v0`/`INTERFACE` (Q18) | Manifest nằm ở `reports/`, **không** phải file `coder-auditor` được mở. Nội dung chỉ có tên file, số dòng, số byte, `sha256`, commit, seed, lệnh, `run_id` — không có gì về thuật toán hay thứ tự bên trong | chờ |
+| (b) | Mỗi lần chạy ghi đủ **commit, seed, lệnh, `run_id`** để tái lập | Đã bổ sung 4 trường đó vào manifest. `seed` cũng đã có trong log `data_loaded` kèm `sha256` 3 file dữ liệu (kiểm 16) | chờ |
+| (c) | Không cần commit log sản phẩm | `git ls-files logs/` chỉ có `.gitkeep`. Kiểm 18 chứng minh bản sao lưu khớp `sha256` manifest | chờ |
+| (d) | Dùng được khi chạy B trên **hai commit khác nhau** của `product/` | Manifest mang tên theo `run_id` và ghi commit bên trong, nên hai lần chạy ở hai commit cho hai manifest riêng, không ghi đè nhau. Đã có tiền lệ thật: bằng chứng cổng đã thay 3 lần (`064336` → `075936693` → `081010446`) đúng vì code đổi | chờ |
+
+Phần cũ vẫn giữ: `.gitignore` có `logs/*.jsonl` từ vòng 1.
 
 Cách commit log bằng chứng: **không đổi tên file** (giữ đúng `logs/<module>_<run_id>.jsonl` theo `CLAUDE.md §3`), mà force-add đúng file được trích bằng `git add -f` kèm đường dẫn file đó.
 
 Cột Source của báo cáo trỏ tới đúng file đó kèm `@commit`. Các lần chạy khác vẫn nằm trên đĩa cho auditor đọc nhưng không vào git. Phần giảm thiểu của R9 đang hoạt động, nên ngưỡng 100 MB ở trên vẫn tính cho **một lần chạy**, không phải tổng.
 → T04b sẽ ghi vào TASKS.md: số lần chạy thực tế, dung lượng một lần chạy, và tổng dung lượng sau khi đo.
+
+### Q19 — Nguyên tắc phủ nhánh (Bách chốt 19/10, ghi đè khuyến nghị của lead)
+
+Lead đề nghị ghi `n_unmatched = 0` là khoảng trống đã biết. **Bách không đồng ý** và đặt nguyên tắc:
+
+> **Mọi nhánh quyết định của A phải được chạy ít nhất một lần trên mock data.**
+
+Bách chỉ thị: sửa `gen_mock` để khoảng **3–5%** chuyến có điểm đón nằm ngoài vùng có tài xế; cập nhật `SPEC_A` mục 1 cho khớp; `reviewer` kiểm lại trước khi đóng G2a.
+
+**Lead áp nguyên tắc này lên TOÀN BỘ A và tìm ra không phải một mà ba nhánh chưa bao giờ chạy.** Đo trên `run_id=20261019T081010446`:
+
+| Nhánh | Số lần chạy | Nguyên nhân |
+|---|---|---|
+| `no_driver_in_radius` | **0** | Bách đã nêu |
+| Bậc giá `(12;25]` tính tiền | **0** | quãng đường dài nhất chỉ **11,60 km** (hộp toạ độ ~9×10 km) |
+| Bậc giá `>25` tính tiền | **0** | cùng lý do |
+
+Bằng chứng từ log: `fare_tier` ghi 4.000 dòng, nhưng bậc `t3` và `t4` **luôn** ra `tier_not_reached` (1.000/1.000 mỗi bậc). Phân bố quãng đường: min 0,14 — p50 4,80 — max **11,60** km.
+
+**Hệ quả nếu để nguyên: một nửa bậc giá chết trên dữ liệu này.** Bằng chứng log của M05 và M11 chưa bao giờ chạm hai bậc đó, và 24 ca tính tay của lead là thứ **duy nhất** chứng minh chúng chạy đúng. Nên lead xử lý cả ba nhánh trong cùng một lần sửa `gen_mock`, không chỉ nhánh Bách nêu — đó là hệ quả trực tiếp của chính nguyên tắc Bách đặt ra.
+
+**Ba nhánh KHÔNG thuộc diện thiếu**, lead đã kiểm log để không sửa oan: `tie_break`, `auto_accept_eval`, `time_coef_cap` đều ghi log **mọi chuyến** (1.000 dòng mỗi loại) vì chúng log bước đánh giá, không chỉ log nhánh được chọn.
+
+#### Một xung đột giữa Q19 và Q13 — cần Bách quyết
+
+**Trần hệ số 1.3 vẫn không bao giờ chạm** (0/1.000 chuyến), vì hệ số cao nhất trong `pricing.json` là 1.2. Đây là một nhánh quyết định (`min(raw, max_time_coef)` chọn một trong hai vế), nên theo Q19 thì nó phải được chạy.
+
+Nhưng để nó chạy thì phải **thêm một khung giờ có hệ số > 1.3 vào config** — mà `SPEC_A` §3 không có khung nào như vậy. Tức Q19 đòi thêm, còn **Q13 cấm thêm thứ SPEC_A không có**. Hai nguyên tắc của Bách kéo ngược nhau ở đúng chỗ này.
+
+→ **Lead đề xuất:** giữ quyết định Q04 (trần 1.3 là tham số hiện không ràng buộc, ghi rõ trong báo cáo), và ghi trần hệ số là **ngoại lệ duy nhất, có lý do, của nguyên tắc Q19** — lý do là Q13. Không thêm khung giờ nào.
+→ **Cần Bách xác nhận** hoặc ghi đè. Việc này **không chặn** G2a vì nó không đổi code.
+
+#### Nguyên tắc Q19 được canh bằng lệnh kiểm, không chỉ bằng chữ
+
+Lead thêm **kiểm 19** vào bộ kiểm: khẳng định mỗi nhánh quyết định có **≥ 1** lần chạy thật trong log của lần chạy bằng chứng — nhánh không ghép được tài xế, bốn bậc giá đều có chuyến **được tính tiền**, ba mức hệ số giờ, cả hai giá trị `auto_accept`, và bốn lý do loại ứng viên. Lý do làm thành lệnh kiểm: lead vừa tự chứng minh ở Q12 rằng **một quyết định không có lệnh kiểm thì bằng như không có**.
+
+### Q20 — `reports/product_run_*.json` (Bách chốt 19/10)
+
+**Ignore, cùng quy tắc với `logs/*.jsonl`.** Bằng chứng mà B cần thì B **chép nguyên văn vào log của chính B** — đúng quy tắc Bách đã chốt ở điểm 4 của Q17.
+
+Đã thực hiện: thêm `reports/product_run_*.json` vào `.gitignore`, và bỏ file đã commit ra khỏi git. **Manifest `reports/logs_manifest_<run_id>.json` vẫn commit** — nó là file nhỏ và là bằng chứng kiểm chứng được cho bản sao lưu.
 
 ### Q14 — Tách "KHÔNG ĐẠT theo thiết kế" khỏi những gì Bách chấm ở cửa sổ cách ly
 
@@ -234,12 +286,12 @@ Mỗi phát hiện phải có bằng chứng **`file:dòng` riêng**, không ch�
 
 | # | Điểm mơ hồ / mâu thuẫn | Nguồn | Đề xuất của lead |
 |---|---|---|---|
-| Q03 | Bậc giá hở giữa km 2 và km 3; không nói km lẻ tính thế nào | `SPEC_A.md:35-38` | Bậc liên tục theo km thực (giữ phần lẻ): `(0;2]` = 30.000đ trọn gói; `(2;12]` = 15.000đ/km; `(12;25]` = 14.000đ/km; `>25` = 12.000đ/km. Không làm tròn quãng đường. |
-| Q04 | Hệ số giờ: biên đóng/mở không rõ; khoảng 6h–7h không được nhắc; trần 1.3 không bao giờ chạm vì hệ số cao nhất là 1.2 | `SPEC_A.md:39-42` | Lấy giờ nguyên 0–23 từ `requested_at`: giờ 0–6 → 0.9; giờ 7–9 và 17–19 → 1.2; còn lại → 1.0. Trần 1.3 **vẫn để trong config** và báo cáo ghi rõ đây là tham số hiện không ràng buộc. |
-| Q06 | `match(ride, drivers, config)` là hàm thuần → một tài xế có thể được ghép cho cả 1.000 chuyến | `SPEC_A.md:15` | Giữ hàm thuần, **mỗi chuyến độc lập**, không cập nhật `status` sau khi ghép. Ghi là **giới hạn mô phỏng đã biết** trong báo cáo G4. |
+| Q03 | Bậc giá hở giữa km 2 và km 3; không nói km lẻ tính thế nào | `SPEC_A.md:46-49` | Bậc liên tục theo km thực (giữ phần lẻ): `(0;2]` = 30.000đ trọn gói; `(2;12]` = 15.000đ/km; `(12;25]` = 14.000đ/km; `>25` = 12.000đ/km. Không làm tròn quãng đường. |
+| Q04 | Hệ số giờ: biên đóng/mở không rõ; khoảng 6h–7h không được nhắc; trần 1.3 không bao giờ chạm vì hệ số cao nhất là 1.2 | `SPEC_A.md:50-53` | Lấy giờ nguyên 0–23 từ `requested_at`: giờ 0–6 → 0.9; giờ 7–9 và 17–19 → 1.2; còn lại → 1.0. Trần 1.3 **vẫn để trong config** và báo cáo ghi rõ đây là tham số hiện không ràng buộc. |
+| Q06 | `match(ride, drivers, config)` là hàm thuần → một tài xế có thể được ghép cho cả 1.000 chuyến | `SPEC_A.md:26` | Giữ hàm thuần, **mỗi chuyến độc lập**, không cập nhật `status` sau khi ghép. Ghi là **giới hạn mô phỏng đã biết** trong báo cáo G4. |
 | Q07 | M10 chạy 3 lần so kết quả, nhưng `ts` và `run_id` luôn khác nhau giữa các lần | `MATRIX_v0.md:33` | So sánh sau khi bỏ `ts`, `run_id` và đường dẫn log. `INTERFACE.md` phải liệt kê rõ các trường dễ biến động này. |
 | Q08 | M08 đòi "tài liệu đánh giá tác động trong docs/" — SPEC không giao cho ai viết | `MATRIX_v0.md:31` | Theo nguyên tắc Q13: **không viết** → M08 ra KHÔNG ĐẠT như một phát hiện thật, ghi vào báo cáo G4 là khoảng trống đã biết. **Lead KHÔNG sửa `MATRIX_v0.md`** để thêm quy tắc nhận dạng — auditor tự nghĩ cách phát hiện, đó chính là thứ đang được đo. |
-| Q09 | M12 đòi "ngưỡng cảnh báo cho tỷ lệ `auto_accept`" nhưng SPEC §2 chỉ có `radius_km` và `auto_accept_threshold` | `MATRIX_v0.md:35` vs `SPEC_A.md:20,22` | **Đã đảo so với bản gửi trước.** Theo nguyên tắc Q13: **không thêm** ngưỡng cảnh báo vào `matching.json` → M12 ra KHÔNG ĐẠT như một phát hiện thật. **Lead KHÔNG sửa `MATRIX_v0.md`** và không chốt sẵn tên khoá config nào — chốt tên khoá rồi đặt vào đầu vào của auditor thì M12 chỉ còn là so khớp chuỗi đã hẹn trước giữa A và B. |
+| Q09 | M12 đòi "ngưỡng cảnh báo cho tỷ lệ `auto_accept`" nhưng SPEC §2 chỉ có `radius_km` và `auto_accept_threshold` | `MATRIX_v0.md:35` vs `SPEC_A.md:31,33` | **Đã đảo so với bản gửi trước.** Theo nguyên tắc Q13: **không thêm** ngưỡng cảnh báo vào `matching.json` → M12 ra KHÔNG ĐẠT như một phát hiện thật. **Lead KHÔNG sửa `MATRIX_v0.md`** và không chốt sẵn tên khoá config nào — chốt tên khoá rồi đặt vào đầu vào của auditor thì M12 chỉ còn là so khớp chuỗi đã hẹn trước giữa A và B. |
 | Q10 | M04 đếm "số quyết định" nhưng "quyết định" chưa được định nghĩa; từ vựng `event` trong log cũng chưa | `MATRIX_v0.md:27`, `CLAUDE.md §3` | `INTERFACE.md` phải định nghĩa enum `event` và nêu rõ event nào là **quyết định** (trường `decision` khác null). Chốt: 1 chuyến = **2 quyết định** (`match_result`, `fare_result`) → 1 lần chạy = 2.000 quyết định, mỗi quyết định có ≥ 1 dòng log với `reason` không rỗng. |
 | Q11 | M01 nói "giữa các nhóm" còn phần ML nói "nhóm tài xế" — hai nhóm khác nhau; M11 so giá theo segment dễ báo động giả vì phân phối quãng đường hai nhóm vốn đã khác | `MATRIX_v0.md:24,34,39-40` | M01: tỷ lệ ghép được theo **customer segment A/B**, và khoảng cách trung bình theo **vehicle_type** của tài xế — ngưỡng 10%. M11: so giá trung bình theo segment **trong từng bậc km** (phân tầng) để khử nhiễu quãng đường. Cờ ML chỉ đẩy kết quả lên CẦN NGƯỜI XEM / KHÔNG ĐẠT, không bao giờ hạ xuống ĐẠT. |
 

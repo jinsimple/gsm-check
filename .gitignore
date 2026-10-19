@@ -9,3 +9,8 @@ DEFECTS_KEY*
 #   git add -f logs/<module>_<run_id>.jsonl
 # Quyet dinh Q12, Bach chot 19/10/2026.
 logs/*.jsonl
+
+# Bao cao tung lan chay: ignore cung quy tac voi logs/ (DECISIONS Q20,
+# Bach chot 19/10). Bang chung B can thi B chep nguyen van vao log cua B.
+# Manifest reports/logs_manifest_*.json VAN commit.
+reports/product_run_*.json

@@ -4,7 +4,18 @@
 
 ## 1. Dữ liệu tổng hợp — `product/data/gen_mock.py`
 
-Seed cố định `42`. Khu vực: hộp tọa độ giả `lat 21.00–21.08, lon 105.78–105.88`.
+Seed cố định `42`.
+
+**Vùng chính** (tài xế và phần lớn chuyến): hộp tọa độ giả `lat 21.00–21.08, lon 105.78–105.88`.
+
+**Sửa 19/10 theo quyết định của Bách — nguyên tắc phủ nhánh.** Mọi nhánh quyết định của A phải được chạy **ít nhất một lần** trên mock data. Hộp tọa độ cũ (~9×10 km) làm ba nhánh không bao giờ chạy: không tìm được tài xế, và hai bậc giá trên 12 km. Vì vậy `rides.json` bổ sung hai nhóm chuyến:
+
+| Nhóm | Tỷ lệ | Mục đích | Nhánh được phủ |
+|---|---|---|---|
+| **Chuyến ngoài vùng phủ** | 3–5% | điểm đón nằm ngoài vùng có tài xế, cách mọi tài xế hơn `radius_km` | `no_driver_in_radius`, `driver_id = None` |
+| **Chuyến dài** | đủ để mỗi bậc giá có ≥ 1 chuyến | điểm đến xa, quãng đường vượt 12 km và vượt 25 km | bậc `(12;25]` và bậc `>25` thật sự được tính tiền |
+
+Tham số của hai nhóm này nằm trong `product/config/mock_data.json` (`CLAUDE.md §2.4`), không hardcode. Tài xế vẫn chỉ nằm trong **vùng chính** — không dời tài xế để tạo ra kết quả mong muốn.
 
 | Bảng | Số bản ghi | Trường |
 |---|---|---|

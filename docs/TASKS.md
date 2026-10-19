@@ -32,7 +32,7 @@ Nhấn mạnh 5 điều trong lời giao việc:
 3. **Ràng buộc cứng `CLAUDE.md §2` vẫn tuyệt đối** — đây là chỗ ngược với điều 2, phải đọc kỹ cả hai: chỉ stdlib, seed 42, log JSONL đủ 9 trường cho mọi quyết định, mọi tham số nghiệp vụ trong config có `version`, không hardcode.
 4. `INTERFACE.md` phải định nghĩa enum `event`, event nào là quyết định, và **liệt kê các trường dễ biến động** (`ts`, `run_id`, đường dẫn log) — `MATRIX_v0.md` đã hẹn lấy mấy thứ này từ `INTERFACE.md`.
 5. Không đọc, không sửa `auditor/`. Không nhắn `coder-auditor`.
-6. **`INTERFACE.md` không được rò logic.** `SPEC_A.md:55` ghi rõ "**Không** mô tả logic bên trong", và đây là **file duy nhất** nối `product/` với `coder-auditor`. Chỉ gồm 5 thứ `SPEC_A.md:54` liệt kê. Schema config chỉ nêu **tên khoá và kiểu dữ liệu** — **KHÔNG** nêu giá trị, biên bậc, hệ số, ngưỡng. Không câu nào mô tả thuật toán, thứ tự lọc, cách phá hoà, hay cách tính giá. Viết "`pricing.json` có khoá `tiers` kiểu list" thì được; viết "gồm 4 bậc 0-2 km, 2-12 km…" thì **không**.
+6. **`INTERFACE.md` không được rò logic.** `SPEC_A.md:66` ghi rõ "**Không** mô tả logic bên trong", và đây là **file duy nhất** nối `product/` với `coder-auditor`. Chỉ gồm 5 thứ `SPEC_A.md:65` liệt kê. Schema config chỉ nêu **tên khoá và kiểu dữ liệu** — **KHÔNG** nêu giá trị, biên bậc, hệ số, ngưỡng. Không câu nào mô tả thuật toán, thứ tự lọc, cách phá hoà, hay cách tính giá. Viết "`pricing.json` có khoá `tiers` kiểu list" thì được; viết "gồm 4 bậc 0-2 km, 2-12 km…" thì **không**.
 
 ### Lệnh kiểm lead TỰ chạy ở T07 — không nhận báo cáo suông
 
@@ -49,7 +49,7 @@ Nhấn mạnh 5 điều trong lời giao việc:
 | 9 | Pricing đúng bậc và hệ số, **kể cả ở biên** | so với bảng giá trị kỳ vọng tính tay bên dưới |
 | 10 | Bảng thuộc tính trong `INTERFACE.md` khớp `DECISIONS.md` Q02 | so từng dòng, phải khớp tuyệt đối |
 | 11 | Dung lượng log thật (T04b) | `wc -l` + `du -sh logs/` |
-| 12 | **`INTERFACE.md` không rò logic** | lead **tự đọc hết file bằng mắt**, đối chiếu `SPEC_A.md:54-55`, liệt kê từng câu nghi là mô tả logic. Không script được. Nghi ngờ thì cắt |
+| 12 | **`INTERFACE.md` không rò logic** | lead **tự đọc hết file bằng mắt**, đối chiếu `SPEC_A.md:65-66`, liệt kê từng câu nghi là mô tả logic. Không script được. Nghi ngờ thì cắt |
 | 13 | **Log đủ ứng viên BỊ LOẠI** | lấy 3 `ride_id` bất kỳ, đếm dòng log ứng viên của từng chuyến → phải **= 200** (toàn bộ `drivers.json`), không phải số ứng viên qua lọc. Mỗi dòng bị loại phải có `reason` đúng lý do: `not_idle`, `wrong_vehicle_type`, `out_of_radius` |
 | 14 | **Không hardcode hằng số nghiệp vụ** | duyệt AST `matching.py` + `pricing.py`, thu mọi hằng số số học, bỏ nhóm vô hại (0, 1, 2 làm chỉ số; hằng trong công thức haversine), phần còn lại **phải có trong `config/*.json`**. Dư số nào thì hỏi `coder-product` số đó ở đâu ra |
 
@@ -195,7 +195,7 @@ Commit `7bfd149`, chỉ sửa `docs/INTERFACE.md`. Lead kiểm: `git diff cb9749
 
 Và một chỗ nó **làm mềm thay vì cắt**: mục 5.2 *"Mọi dòng log, **không trừ dòng nào**, có đúng chín trường"* → *"Mỗi dòng log là một đối tượng JSON gồm chín trường"*. Lead đồng ý: bảng 9 trường là schema nên phải giữ (điều 4 buộc có), còn cụm "không trừ dòng nào" là lời bảo đảm, không phải schema.
 
-**Một chỗ lead QUYẾT GIỮ — là lựa chọn, không phải sót.** `docs/INTERFACE.md:5` còn tham chiếu `SPEC_A.md:54-55` — tham chiếu `SPEC_A` duy nhất còn lại. `coder-product` nêu ra để lead quyết, và lead giữ, vì: nó trỏ vào quy định về **phạm vi của chính file INTERFACE.md**, không trỏ vào thuộc tính hay bước tính nào, nên đọc nó không đoán được gì về bên trong `product/`; và việc `docs/SPEC_A.md` tồn tại thì B vốn đã biết từ `CLAUDE.md §4`. Đổi lại là mất nguồn dẫn mà không được thêm gì.
+**Một chỗ lead QUYẾT GIỮ — là lựa chọn, không phải sót.** `docs/INTERFACE.md:5` còn tham chiếu `SPEC_A.md:65-66` — tham chiếu `SPEC_A` duy nhất còn lại. `coder-product` nêu ra để lead quyết, và lead giữ, vì: nó trỏ vào quy định về **phạm vi của chính file INTERFACE.md**, không trỏ vào thuộc tính hay bước tính nào, nên đọc nó không đoán được gì về bên trong `product/`; và việc `docs/SPEC_A.md` tồn tại thì B vốn đã biết từ `CLAUDE.md §4`. Đổi lại là mất nguồn dẫn mà không được thêm gì.
 
 ## T08 — review `product/`: KHÔNG CÓ MỤC CHẶN
 
