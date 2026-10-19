@@ -131,10 +131,11 @@ T02–T06 (coder-product) → T07 (lead chạy 14 lệnh kiểm) → T08 (review
 | T04 | G2a | `product/matching.py` — `match()` + log từng ứng viên | coder-product | SPEC_A §2, DECISIONS Q02/Q05/Q06/Q10/Q12 | matching.py, logs/matching_*.jsonl | chạy qua run_product; đếm dòng log / số quyết định | **completed** | `63e2ecd`; kiểm 13 PASS: **200 dòng `candidate_eval` mỗi chuyến × 1.000 chuyến = 200.000**, đủ 4 lý do `not_idle` 98.000 / `wrong_vehicle_type` 33.192 / `out_of_radius` 32.328 / `kept_as_candidate` 36.480 |
 | T04b | G2a | **Đo thật**: số dòng log, dung lượng 1 lần chạy, **tổng dung lượng qua 8 lần chạy dự kiến**; thay mọi số [Suy đoán] ở DECISIONS Q12 | lead | logs/*.jsonl | số đo ghi vào cột Bằng chứng | `wc -l` + `du -sh logs/` | pending | |
 | T05 | G2a | `product/pricing.py` — `fare()` + log từng bậc km | coder-product | SPEC_A §3, DECISIONS Q03/Q04/Q10 | pricing.py, logs/pricing_*.jsonl | 23 ca kể cả biên, so bảng tính tay | **completed** | `c9b0243`; kiểm 9 PASS **23/23** ca khớp bảng tính tay, gồm cặp giờ 6 → 108.000 và giờ 7 → 144.000 |
-| T06 | G2a | `product/run_product.py` + `docs/INTERFACE.md` | coder-product | SPEC_A §4–5, DECISIONS Q10 | reports/product_run_*.json, INTERFACE.md | `python product/run_product.py` | **completed** nhưng INTERFACE.md **chưa đạt kiểm 12** | `13e5718` + `1559d80`; kiểm 1 PASS exit=0; kiểm 3 PASS 2 lần chạy giống hệt; **kiểm 12 FAIL — xem bảng dưới** |
-| T07 | G2a | **Lead tự chạy đủ 14 lệnh kiểm** | lead | T02–T06 | bảng kết quả dưới | 14 lệnh kiểm, không nhận báo cáo suông | **13/14 PASS, kiểm 12 FAIL** | `run_id=20261019T064336`; xem 2 bảng dưới |
+| T06 | G2a | `product/run_product.py` + `docs/INTERFACE.md` | coder-product | SPEC_A §4–5, DECISIONS Q10 | reports/product_run_*.json, INTERFACE.md | `python product/run_product.py` | **completed** | `13e5718` + `1559d80`, sửa kiểm 12 ở `7bfd149`; kiểm 1 PASS exit=0; kiểm 3 PASS; kiểm 12 PASS sau khi sửa |
+| T07 | G2a | **Lead tự chạy đủ 14 lệnh kiểm** | lead | T02–T06 | bảng kết quả dưới | 14 lệnh kiểm, không nhận báo cáo suông | **14/14 PASS** | `run_id=20261019T064336`, sau sửa `7bfd149`; xem 2 bảng dưới |
 | T08 | G2a | Review `product/` theo checklist (security CHƯA chạy) | reviewer | product/, SPEC_A, INTERFACE | bảng Chặn / Nên sửa / Gợi ý | lead đọc, hết mục "Chặn" | pending | |
-| T09 | G2a | Sửa mục "Chặn" của reviewer | coder-product | bảng review | commit sửa | `python product/run_product.py` chạy lại OK | pending | |
+| T09a | G2a | Sửa 6 chỗ rò `INTERFACE.md` do kiểm 12 phát hiện | coder-product | bảng kiểm 12 | docs/INTERFACE.md | lead đọc lại diff + `grep` + chạy lại kiểm 10 | **completed** | `7bfd149`; chỉ sửa 1 file, `git diff cb97490..HEAD` = đúng `docs/INTERFACE.md`; `run_product.py` exit=0 sau sửa |
+| T09b | G2a | Sửa mục "Chặn" của reviewer | coder-product | bảng review T08 | commit sửa | `python product/run_product.py` chạy lại OK | pending | chờ T08 |
 | T10 | G2b | Tạm dừng commit; Bách chạy security ở cửa sổ cách ly, merge `security-pass`, lead chạy lại A | Bách → lead | — | commit sau security | `python product/run_product.py` sau merge | pending | |
 | T10b | G3 | **Chốt cửa trước T11, 2 việc:** (1) đọc lại `.claude/agents/coder-auditor.md:7`, xác nhận `docs/DECISIONS.md` vẫn không nằm trong danh sách được đọc; (2) xác nhận **Q17 đã được Bách trả lời**. Thiếu bất kỳ việc nào → **dừng, báo Bách**, không gọi T11 | lead | .claude/agents/coder-auditor.md, DECISIONS Q17 | xác nhận ghi vào cột Bằng chứng | `sed -n '7p' .claude/agents/coder-auditor.md` + đọc Q17 | pending | dòng 7 **đã sửa** ở G1 theo Q15 |
 | T11 | G3 | `auditor/matrix.json` + `auditor/rules/m01..m12` + `run_audit.py` | coder-auditor | **CHỈ** docs/MATRIX_v0.md + docs/INTERFACE.md (xem ô cảnh báo dưới bảng) | reports/audit_<commit>.json/.md | `python auditor/run_audit.py` ra đủ 12 dòng; **mỗi phát hiện có `file:dòng` riêng** (Q16) | pending | |
@@ -159,7 +160,7 @@ T02–T06 (coder-product) → T07 (lead chạy 14 lệnh kiểm) → T08 (review
 | 9 | pricing kể cả ở biên | **PASS** | **23/23** ca khớp bảng tính tay |
 | 10 | INTERFACE khớp Q02 | **PASS** | 12 thuộc tính, khớp từng dòng |
 | 11 | dung lượng log thật | **PASS** (số đo) | **110 MB / lần chạy**, 216.004 dòng → **VƯỢT ngưỡng 100 MB của Q12** |
-| 12 | **INTERFACE.md không rò logic** | **FAIL** | 2 chỗ chặn + 4 chỗ nên cắt, xem bảng dưới |
+| 12 | **INTERFACE.md không rò logic** | **PASS** sau khi sửa | FAIL lần đầu (2 chặn + 4 nên cắt); đã cắt hết ở `7bfd149`, lead đọc lại diff bằng mắt và `grep` 8 cụm từ → **0 lần xuất hiện** |
 | 13 | log đủ ứng viên bị loại | **PASS** | 200 dòng/chuyến × 1.000 = 200.000, đúng `len(drivers.json)` |
 | 14 | không hardcode nghiệp vụ | **PASS** | 0 hằng số nghiệp vụ còn trong code |
 
@@ -177,6 +178,21 @@ T02–T06 (coder-product) → T07 (lead chạy 14 lệnh kiểm) → T08 (review
 | 6 | dòng 94: *"`match` và `fare` không tự đọc các khoá đối chiếu đó"* | nên cắt | nói trước kết quả M02 | `coder-product` tự viết |
 
 **Không tính là rò:** enum `event` ở mục 5.3 (điều 4 lời giao việc **buộc** phải có, và B đọc log là thấy hết); tên khoá config ở mục 3 (điều 6 cho phép, và B đọc trực tiếp `product/config/*.json` được).
+
+## T09a — kết quả sửa chỗ rò, lead đã tự kiểm lại
+
+Commit `7bfd149`, chỉ sửa `docs/INTERFACE.md`. Lead kiểm: `git diff cb97490..HEAD --stat` → đúng 1 file; `grep` 8 cụm từ nghi vấn → **0 lần xuất hiện** từng cụm; đọc lại toàn bộ diff bằng mắt; chạy lại kiểm 10 → 12 thuộc tính khớp đúng thứ tự, mục 7 chỉ còn **một** cột.
+
+**`coder-product` tự tìm thêm 2 chỗ cùng loại, lead chấp nhận cả hai:**
+
+| Chỗ | Nội dung bị cắt | Lead đánh giá |
+|---|---|---|
+| mục 3 | *"Mọi tham số nghiệp vụ nằm trong `product/config/*.json`. Mỗi file **bắt buộc** có trường `version`"* | **Bắt đúng.** Câu đó nói trước phán quyết của **hai** dòng ma trận một lúc: M05 (`MATRIX_v0.md:28`) và M06 (`MATRIX_v0.md:29`). Hợp đồng không mất gì: bảng schema vẫn có dòng `version`, và đường dẫn config vẫn còn |
+| mục 1 | *"Chỉ dùng Python standard library."* | **Cắt được, nhưng lý do nó nêu không đúng.** Nó nói đây là "phán quyết của dòng ma trận kiểm đúng việc chỉ dùng stdlib" — lead `grep` `MATRIX_v0.md` và **không có dòng ma trận nào kiểm stdlib**; đó là checklist số 1 của `reviewer` và `CLAUDE.md §2`, không phải việc của B. Cắt vẫn vô hại vì `CLAUDE.md` nằm trong danh sách B được mở, nên thông tin không mất. Giữ nguyên chỗ cắt, nhưng ghi lại ở đây là lý do gốc sai |
+
+Và một chỗ nó **làm mềm thay vì cắt**: mục 5.2 *"Mọi dòng log, **không trừ dòng nào**, có đúng chín trường"* → *"Mỗi dòng log là một đối tượng JSON gồm chín trường"*. Lead đồng ý: bảng 9 trường là schema nên phải giữ (điều 4 buộc có), còn cụm "không trừ dòng nào" là lời bảo đảm, không phải schema.
+
+**Một chỗ lead QUYẾT GIỮ — là lựa chọn, không phải sót.** `docs/INTERFACE.md:5` còn tham chiếu `SPEC_A.md:54-55` — tham chiếu `SPEC_A` duy nhất còn lại. `coder-product` nêu ra để lead quyết, và lead giữ, vì: nó trỏ vào quy định về **phạm vi của chính file INTERFACE.md**, không trỏ vào thuộc tính hay bước tính nào, nên đọc nó không đoán được gì về bên trong `product/`; và việc `docs/SPEC_A.md` tồn tại thì B vốn đã biết từ `CLAUDE.md §4`. Đổi lại là mất nguồn dẫn mà không được thêm gì.
 
 ## Ô cảnh báo — độc lập của coder-auditor
 
