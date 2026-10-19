@@ -139,7 +139,7 @@ T02–T06 (coder-product) → T07 (lead chạy 14 lệnh kiểm) → T08 (review
 | T09c | G2a | `run_id` chống trùng | coder-product | chẩn đoán kiểm 2 | `run_id` 18 ký tự có milli giây | `gen_mock.py` 2 lần liên tiếp, lần 2 exit=0 | **completed** | `284461a`; 2 lần liên tiếp đều exit=0, hash giống hệt; vòng lặp 2.000 lần gọi ra 2.000 giá trị khác nhau |
 | T07b | G2a | **Kiểm 15** — chẩn đoán nhánh `no_driver_in_radius` | lead | T09b | dòng log quyết định làm bằng chứng | gọi `match()` với `radius_km=0.0001`, dữ liệu tài xế thật | **PASS** | `match()` → `{driver_id: None, auto_accept: False, reason: 'no_driver_in_radius'}`; 203 dòng log, **đúng 1** dòng quyết định, `reason='no_driver_in_radius'` |
 | T07c | G2a | **Kiểm 16** — log `data_loaded` phải có `sha256` 3 file dữ liệu + version `mock_data.json` | lead | T09b (C6) | bằng chứng dữ liệu nào đã dùng | đối chiếu sha256 trong log với hash file thật | **PASS** | 3 sha256 trong log, khớp hash 3 file dữ liệu |
-| T10 | G2b | Tạm dừng commit; Bách chạy security ở cửa sổ cách ly, merge `security-pass`, lead chạy lại A | Bách → lead | — | commit sau security | `python product/run_product.py` sau merge | pending | |
+| T10 | G2b | Tạm dừng commit; Bách chạy security ở cửa sổ cách ly, merge `security-pass`, lead chạy lại A. **Xem ô "Việc của lead ở G2b" ngay dưới bảng — chỉ 1 lệnh, không chẩn đoán** | Bách → lead | — | commit sau security | **CHỈ** `python product/run_product.py`, **chỉ xem exit code**. Không chạy lệnh kiểm nào khác | pending | |
 | T10b | G3 | **Chốt cửa trước T11, 2 việc:** (1) đọc lại `.claude/agents/coder-auditor.md:7`, xác nhận `docs/DECISIONS.md` vẫn không nằm trong danh sách được đọc; (2) xác nhận **Q17 đã được Bách trả lời**. Thiếu bất kỳ việc nào → **dừng, báo Bách**, không gọi T11 | lead | .claude/agents/coder-auditor.md, DECISIONS Q17 | xác nhận ghi vào cột Bằng chứng | `sed -n '7p' .claude/agents/coder-auditor.md` + đọc Q17 | pending | dòng 7 **đã sửa** ở G1 theo Q15 |
 | T11 | G3 | `auditor/matrix.json` + `auditor/rules/m01..m12` + `run_audit.py` | coder-auditor | **CHỈ** docs/MATRIX_v0.md + docs/INTERFACE.md (xem ô cảnh báo dưới bảng) | reports/audit_<commit>.json/.md | `python auditor/run_audit.py` ra đủ 12 dòng; **mỗi phát hiện có `file:dòng` riêng** (Q16) | pending | |
 | T12 | G3 | Lead tự chạy audit, kiểm 12 dòng có `result` + `evidence` | lead | T11 | kết quả dán vào TASKS.md | `python auditor/run_audit.py` | pending | |
@@ -380,6 +380,33 @@ Theo quy tắc rút ra từ sự cố mất log. Bốn file sinh từ `run_id` b
 
 → **Hai điều kiện qua G2a đã đạt.** Còn 3 việc chờ Bách quyết, không chặn kỹ thuật: dung lượng log, baseline `n_unmatched = 0`, và `reports/product_run_*.json` có ignore không.
 
+## Việc của lead ở G2b — chốt TRƯỚC khi Bách chạy security
+
+**pm phát hiện: bộ 20 lệnh kiểm của lead là một máy dò đáp án chính xác.** Chạy nó sau khi security merge lỗi vào thì **lead tự đọc đáp án** — vi phạm `CLAUDE.md §3`: *"Không ai ngoài 2 tab cách ly được biết đáp án — kể cả `pm`, `lead` và mọi subagent."*
+
+Chỗ nguy hiểm nằm trong **phản xạ lead đã tự khen hai lần ở G2a**: *"code đổi là chạy lại toàn bộ bộ kiểm"*. Phản xạ đó **đúng ở G2a** và **sai nghiêm trọng ở G2b**. Bộ kiểm càng tốt thì rò càng nặng — và nó đang rất tốt:
+
+| Lệnh kiểm | Nếu chạy sau merge thì nó chỉ thẳng ra |
+|---|---|
+| kiểm 9 (24 ca tính tay) | **ca giá nào** bị lệch |
+| kiểm 13 | bước lọc ứng viên bị sửa |
+| kiểm 14 | hằng số nghiệp vụ bị cắm vào |
+| kiểm 16 | dữ liệu đầu vào bị đổi |
+| kiểm 17 | chỗ log bị bỏ |
+| kiểm 19 | nhánh quyết định bị đổi |
+| kiểm 6, 10, 12 | số quyết định / thuộc tính / tài liệu bị sửa |
+
+### Quy tắc G2b — dứt khoát
+
+1. Sau khi merge `security-pass`, lead **chỉ** chạy `python product/run_product.py` và **chỉ** xem **exit code**.
+2. **Không** chạy kiểm 2, 3, 4, 5, 6, 9, 10, 12, 13, 14, 16, 17, 18, 19, 20. Không lệnh nào so với giá trị kỳ vọng hay với baseline.
+3. **Nếu exit ≠ 0 → báo Bách, KHÔNG chẩn đoán.** Chẩn đoán bằng log **chính là** đọc đáp án.
+4. Lead **không** tạo lần chạy bằng chứng mới và **không** sinh manifest mới ở G2b. Theo Quy ước `MATRIX_v0` Bách đã chốt, **B tự chạy `run_product.py` sinh log mới trước khi kiểm** — nên việc này không cần ai làm thay.
+
+**Điểm 3 là ngoại lệ duy nhất của `CLAUDE.md:30`** câu sau (*"Không sửa lỗi khi chưa chẩn đoán bằng log"*). Lý do: ở G2b, chẩn đoán phá đúng thứ dự án đang đo. Ngoại lệ này có phạm vi hẹp — **chỉ** `product/` **chỉ** trong G2b; mọi chỗ khác `CLAUDE.md:30` vẫn nguyên.
+
+→ **Việc của lead ở G2b co lại còn đúng một câu hỏi: A còn chạy không.**
+
 ## Ô cảnh báo — độc lập của coder-auditor
 
 **Đã bịt 19/10 theo Q15.** Nguồn có hiệu lực thật là `.claude/agents/coder-auditor.md` — file subagent tự nạp. Dòng 7 đã bỏ `docs/DECISIONS.md`, và danh sách KHÔNG mở đã có đủ. Ô dưới đây là bản ghi lại cho lead và Bách đọc; bản thân nó nằm trong `docs/TASKS.md` là file `coder-auditor` bị cấm mở, nên nó không tự thấy — đừng bao giờ dựa vào ô này để bịt lỗ độc lập.
@@ -402,5 +429,6 @@ Lý do: `DECISIONS.md` chứa biên bậc giá, hệ số giờ, định nghĩa 
 | R7 | Mọi con số dung lượng log hiện là [Suy đoán] | T04b đo thật ngay sau T04, thay số vào DECISIONS Q12 |
 | ~~R8~~ | **ĐÓNG 19/10.** Dòng 7 đã sửa theo Q15, Bách chuẩn thuận | T10b giữ lại làm chốt cửa, kiểm lại dòng 7 trước khi gọi T11 |
 | R10 | Q16 (mỗi phát hiện có `file:dòng` riêng) cộng nguyên tắc bất đối xứng sẽ đẩy M08 và M12 xuống CẦN NGƯỜI XEM, trái với Q13/Q08/Q09 vừa chốt là hai dòng đó ra KHÔNG ĐẠT. Báo cáo G4 sẽ không nói được điều Q13 muốn nói, và recall của qa đọc khác đi | Q17 xin Bách chọn (A) định nghĩa bằng chứng vắng mặt, hay (B) chấp nhận CẦN NGƯỜI XEM. T10b là chốt cửa: Q17 chưa trả lời thì không gọi T11 |
+| R12 | **Bộ kiểm của lead là máy dò đáp án.** Phản xạ "code đổi là chạy lại toàn bộ bộ kiểm" — đúng ở G2a, phá độc lập ở G2b. Nếu lead chạy kiểm 9/13/14/16/17/19 sau khi merge `security-pass` thì lead biết đáp án, và số precision/recall của `qa` ở G3 **mất nghĩa** vì bên bị chấm đã biết trước. Rủi ro nằm ở **phản xạ tốt**, nên không tự lộ ra | Ô "Việc của lead ở G2b" ngay dưới bảng việc: chỉ `python product/run_product.py`, chỉ xem exit code, exit ≠ 0 thì báo Bách **không chẩn đoán**. Ghi **trước** khi Bách chạy security. Cộng: bộ kiểm commit vào `tests/` phải nằm trong danh sách KHÔNG mở của `coder-auditor` (xin Bách cùng `reports/`) |
 | R11 | Dẫn chiếu `file:dòng` vào file còn đang sửa thì **tự vỡ** mỗi lần chèn dòng. Đã vỡ 1 lần ở `05edfec` (thêm 1 dòng vào Quy ước `MATRIX_v0` làm lệch +1 từ dòng 10). Nếu Bách chọn Q17(A) thì vỡ lần 2 | Chèn câu mới ở **cuối file** (sau dòng 42), nơi không có dẫn chiếu nào phía sau → lệch 0 dòng. Cộng với script kiểm chéo từng dẫn chiếu, chạy trong cùng commit với mọi lần sửa `MATRIX_v0`/`SPEC_A` |
 | R9 | Mỗi lần chạy sinh một file log mới theo `run_id`; 8 lần chạy dự kiến có thể làm repo phình vài trăm MB, git giữ vĩnh viễn | **Giảm thiểu đang hoạt động 19/10:** `.gitignore` có `logs/*.jsonl`; chỉ log của lần chạy được trích làm bằng chứng được force-add. Ngưỡng 100 MB ở Q12 vẫn tính cho **một lần chạy** |
