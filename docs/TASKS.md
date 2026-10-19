@@ -7,9 +7,9 @@
 | | |
 |---|---|
 | **Cổng đang mở** | **G2a** |
-| **Vừa xong** | T09e + T09e-b. Lead chạy lại **toàn bộ** bộ kiểm trên bằng chứng mới: **15/15 kiểm máy, kiểm 17, 18, 19 (9/9), 20 — tất cả PASS, 0 FAIL** |
+| **Vừa xong** | T09e + T09e-b xong (commit `d9f1f27`/`6728d3b`). Đã gọi `reviewer` cho T09f — **agent dừng giữa việc do hết hạn mức session** (`rate_limit`, reset 01:40 giờ Thái/VN 20/10). `agentId` nội bộ: `a6e2763bfa1ba709f` — **nối lại bằng SendMessage tới chính agent này, không tạo agent mới** (nó đã có phần việc đã làm, chưa rõ đã viết gì ra ngoài transcript — coi như **chưa có kết quả nào** cho tới khi nó tự báo lại) |
 | **`run_id` bằng chứng** | `20261019T143340880`, `commit_at_run` `d9f1f27`, `product_tree` `3b2892b` |
-| **Bước tiếp theo** | **T09f** — gọi `reviewer` review `product/` (Bách yêu cầu riêng: *"Reviewer kiểm lại trước khi đóng G2a"*) |
+| **Bước tiếp theo** | **Nối lại T09f** khi hạn mức reset (≈01:40). Lệnh: `SendMessage(to: agentId cũ, message: "tiếp tục, báo trạng thái đã làm tới đâu")`. Review `product/` của `reviewer`, Bách yêu cầu riêng: *"Reviewer kiểm lại trước khi đóng G2a"* |
 | **Lệnh kiểm của bước tiếp theo** | bảng review của `reviewer` **hết mục "Chặn"** |
 | **Sau đó** | trình Bách **báo cáo G2a**. `pm` chấm ở mốc này |
 
