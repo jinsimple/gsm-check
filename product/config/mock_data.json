@@ -38,9 +38,9 @@
   "acceptance_rate_range": [0.4, 1.0],
   "acceptance_rate_decimals": 2,
   "trips_today_range": [0, 25],
-  "ride_overlay_note": "Hai nhom chuyen duoi day duoc dat len rides.json SAU khi 1.000 chuyen co so da sinh xong, bang mot dong ngau nhien RIENG cung seed 42. Nho vay drivers.json va customers.json khong doi mot byte, va moi chuyen khong thuoc hai nhom nay giu nguyen gia tri cu. CANH BAO: THU TU hai khoi (rides_outside_service_area truoc, long_distance_rides sau) la MOT PHAN CUA SEED. Khong doi cho.",
-  "rides_outside_service_area": {
-    "note": "Diem don VA diem den cua nhom nay nam trong bbox rieng duoi day, tach khoi bbox chinh. min_clearance_km la khoang cach nho nhat cho phep tu diem don cua nhom nay den tai xe gan nhat; gen_mock do that va bao loi neu khong dat.",
+  "ride_overlay_note": "Hai nhom chuyen duoi day duoc dat len rides.json SAU khi 1.000 chuyen co so da sinh xong, bang mot dong ngau nhien RIENG cung seed 42. Nho vay drivers.json va customers.json khong doi mot byte, va moi chuyen khong thuoc hai nhom nay giu nguyen gia tri cu. CANH BAO: THU TU hai khoi (rides_in_secondary_bbox truoc, long_distance_rides sau) la MOT PHAN CUA SEED. Khong doi cho.",
+  "rides_in_secondary_bbox": {
+    "note": "Diem don VA diem den cua nhom nay nam trong bbox rieng duoi day, tach khoi bbox chinh. min_clearance_km la rang buoc hinh hoc giua hai tap diem: khoang cach nho nhat cho phep giua tap diem don cua nhom nay va tap toa do trong drivers.json; gen_mock do that va bao loi neu khong dat.",
     "share": 0.04,
     "bbox": {
       "lat_min": 21.2,

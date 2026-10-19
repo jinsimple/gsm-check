@@ -154,7 +154,7 @@ Dưới đây **chỉ** là tên khoá và kiểu dữ liệu. Giá trị nằm 
 | `acceptance_rate_decimals` | `int` |
 | `trips_today_range` | `list` |
 | `ride_overlay_note` | `str` |
-| `rides_outside_service_area` | `object` |
+| `rides_in_secondary_bbox` | `object` |
 | `long_distance_rides` | `object` |
 
 ---

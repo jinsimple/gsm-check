@@ -99,14 +99,14 @@ def _select_overlay_indices(rnd, n_rides, out_cfg, long_cfg, logger):
         event="overlay_selection",
         inputs={
             "n_rides": n_rides,
-            "share_outside_service_area": out_cfg["share"],
+            "share_secondary_bbox": out_cfg["share"],
             "share_long_distance": long_cfg["share"],
         },
         outputs={
-            "n_outside_service_area": len(idx_out),
+            "n_secondary_bbox": len(idx_out),
             "n_long_distance": len(idx_long),
             "n_unchanged": n_rides - len(idx_out) - len(idx_long),
-            "indices_outside_service_area": idx_out,
+            "indices_secondary_bbox": idx_out,
             "indices_long_distance": idx_long,
         },
         decision=None,
@@ -118,11 +118,11 @@ def _select_overlay_indices(rnd, n_rides, out_cfg, long_cfg, logger):
 def apply_ride_overlays(rides, drivers, config, logger):
     """Dat lai toa do cho hai nhom chuyen, tren danh sach rides da sinh.
 
-    Nhom 1: diem don va diem den chuyen sang bbox rieng (rides_outside_service_area).
+    Nhom 1: diem don va diem den chuyen sang bbox rieng (rides_in_secondary_bbox).
     Nhom 2: giu diem don, dat lai diem den theo khoang cach rut tu distance_km_bands.
     Chuyen khong thuoc nhom nao: khong doi mot byte.
     """
-    out_cfg = config["rides_outside_service_area"]
+    out_cfg = config["rides_in_secondary_bbox"]
     long_cfg = config["long_distance_rides"]
     decimals = config["coord_decimals"]
     rnd = random.Random(config["seed"])
@@ -135,7 +135,7 @@ def apply_ride_overlays(rides, drivers, config, logger):
     # Moi chuyen di qua dung mot trong ba nhanh; ghi log ca ba nhanh.
     for i in range(n_rides):
         if i in set_out:
-            group = "outside_service_area"
+            group = "secondary_bbox"
             reason = "chuyen_thuoc_nhom_bbox_rieng"
         elif i in set_long:
             group = "long_distance"
@@ -175,7 +175,7 @@ def apply_ride_overlays(rides, drivers, config, logger):
             inputs={
                 "index": i,
                 "ride_id": ride["ride_id"],
-                "group": "outside_service_area",
+                "group": "secondary_bbox",
                 "bbox": out_bbox,
                 "before": before,
             },
@@ -217,7 +217,7 @@ def apply_ride_overlays(rides, drivers, config, logger):
     )
     if not clearance_ok:
         raise ValueError(
-            "rides_outside_service_area: khoang cach nho nhat %r km < min_clearance_km %r"
+            "rides_in_secondary_bbox: khoang cach nho nhat %r km < min_clearance_km %r"
             % (observed_min, min_clearance_km)
         )
 
