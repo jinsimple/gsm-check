@@ -39,11 +39,16 @@ MIEN17 = [
     ('gen_mock.py',   '_coord',          'ham thuan sinh toa do'),
     ('gen_mock.py',   '_weighted',       'ham thuan chon theo trong so'),
     ('gen_mock.py',   '_rand_coord',     'ham thuan sinh toa do'),
+    ('gen_mock.py',   '_destination',    'ham thuan: toa do dich tu khoang cach + huong'),
 ]
 
 # Mien CHI cho Return, KHONG mien Raise — vi raise la quyet dinh ve du lieu
 # nghiep vu doc tu config, con return la tra gia tri da duoc log o tang goi.
 MIEN17_RETURN = [
+    # Mien CHI cho Return, KHONG mien Raise — tang goi ghi clearance_check voi
+    # chinh con so nay, nen gia tri tra ve co bang chung; con `raise` thi la quyet
+    # dinh ve du lieu nen van phai co log rieng.
+    ('gen_mock.py', '_min_distance_to_drivers', 'return gia tri do: tang goi ghi clearance_check voi con so nay'),
     ('logger.py',  'load_json_config',   'return thanh cong: tang goi ghi config_loaded'),
     ('pricing.py', '_round_to_multiple', 'return gia tri: fare() ghi fare_rounding voi gia truoc/sau'),
 ]
@@ -128,38 +133,26 @@ else:
     print('  [PASS] moi duong thoat tren duong quyet dinh deu co log truoc do')
 
 # ============ MANIFEST ============
-print('\n=== Sinh manifest (phuong an thu ba cua pm) ===')
-logs = sorted(glob.glob('logs/*_%s.jsonl' % EV))
-man = {
-    'schema_version': '0.1',
-    'note': 'Manifest cua log lan chay bang chung. logs/*.jsonl KHONG vao git theo .gitignore; '
-            'file nay la bang chung kiem chung duoc cho ban sao luu ngoai repo. '
-            'Bang chung dang log khong kem @commit — ngoai le da duoc chuan thuan trong Quy uoc MATRIX_v0.',
-    'run_id': EV,
-    'files': [],
-}
-for p in logs:
-    n = sum(1 for ln in io.open(p, encoding='utf-8') if ln.strip())
-    h = hashlib.sha256()
-    with open(p, 'rb') as fh:
-        for b in iter(lambda: fh.read(1 << 20), b''):
-            h.update(b)
-    man['files'].append({
-        'path': p.replace('\\', '/'),
-        'lines': n,
-        'bytes': os.path.getsize(p),
-        'sha256': h.hexdigest(),
-    })
-man['total_lines'] = sum(x['lines'] for x in man['files'])
-man['total_bytes'] = sum(x['bytes'] for x in man['files'])
-mp = 'reports/logs_manifest_%s.json' % EV
-io.open(mp, 'w', encoding='utf-8', newline='\n').write(json.dumps(man, ensure_ascii=False, indent=2) + '\n')
-print('  %s  (%d file, %d dong, %.1f MB)' % (mp, len(man['files']), man['total_lines'], man['total_bytes'] / 1e6))
+# DA BO. Truoc day khoi nay sinh manifest schema_version 0.1 va GHI DE manifest
+# 0.3 tot ma kiem19_manifest.py vua tao cho cung run_id — mot lenh kiem tu pha
+# bang chung cua lenh kiem khac. Nay kiem 18 doc manifest da co tren dia.
+_mp = 'reports/logs_manifest_%s.json' % EV
+if not os.path.exists(_mp):
+    print('\n=== KIEM 18 ===')
+    print('  [FAIL] chua co %s — chay tests/kiem19_manifest.py truoc' % _mp)
+    print('\n' + '=' * 70)
+    print('KET QUA: %d FAIL' % (FAIL + 1))
+    sys.exit(1)
+man = json.load(io.open(_mp, encoding='utf-8'))
 
 # ============ KIEM 18 ============
 print('\n=== KIEM 18 — manifest khop ban sao luu ngoai repo ===')
 bad18 = []
-for x in man['files']:
+# Quet 0 file thi bao PASS la dung loai loi reviewer da bat o kiem 14: mot lenh
+# kiem khong co gi de kiem thi phai FAIL, khong phai PASS.
+if not man.get('files'):
+    bad18.append('manifest khong liet ke file nao — khong co gi de doi chieu')
+for x in man.get('files', []):
     b = os.path.join(BACKUP, os.path.basename(x['path']))
     if not os.path.exists(b):
         bad18.append('thieu ban sao luu: %s' % os.path.basename(x['path'])); continue

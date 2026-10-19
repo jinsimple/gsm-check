@@ -179,7 +179,7 @@ MIEN = [
     # (duoi ten file, gia tri, chuoi phai co tren dong, ly do)
     (None,              0.0,       None,              'chi so / so sanh zero'),
     (None,              1.0,       None,              'chi so / don vi'),
-    ('matching.py',     2.0,       'haversine',       'so 2 trong cong thuc haversine'),
+    ('matching.py',     2.0,       'math.',           'so 2 trong cong thuc haversine (nua goc / binh phuong) — moi dong deu goi math.*'),
     ('matching.py',     6371.0088, None,              'ban kinh Trai Dat, hang toan hoc'),
     ('pricing.py',      1e-09,     None,              'sai so lam tron so thuc, co comment'),
     ('gen_mock.py',     24.0,      '_SECONDS_PER_DAY','quy doi don vi: gio/ngay — KHONG phai tham so nghiep vu'),
@@ -188,6 +188,9 @@ MIEN = [
     ('logger.py',       3.0,       '_RUN_ID_MS_DIGITS',    'so chu so milli giay trong run_id — hang so ky thuat'),
     ('logger.py',       0.001,     '_RUN_ID_RETRY_SLEEP_S','thoi gian nghi khi run_id trung — hang so ky thuat'),
     ('logger.py',       1000.0,    'microsecond',          'quy doi micro -> milli giay'),
+    ('pricing.py',      6.0,       '_FLOAT_DECIMALS',      'so chu so lam tron float — hang so ky thuat'),
+    ('gen_mock.py',     2.0,       'indent=',              'do thut le khi ghi JSON — hang so ky thuat'),
+    ('run_product.py',  2.0,       'indent=',              'do thut le khi ghi JSON — hang so ky thuat'),
 ]
 cfgn = set()
 def wn(o):
@@ -218,8 +221,14 @@ for f in pyf:
         if isinstance(n, ast.Constant) and isinstance(n.value, (int, float)) and not isinstance(n.value, bool):
             v = float(n.value)
             ctx = srcl[n.lineno - 1].strip()
-            if v in cfgn:
-                continue
+            # KHONG con bo qua hang so chi vi no trung mot gia tri nao do trong
+            # config. Dong cu (`if v in cfgn: continue`) whitelist am tham 20 so
+            # nguyen nho — qua danh sach gio [0..6] va [7,8,9,17,18,19] — gom ca
+            # 12/13/25/26 la bien bac gia va 17/18/19 la gio cao diem. Mot hang so
+            # nghiep vu bi cam vao dung nhung gia tri do se LOT. Va no chay TRUOC
+            # MIEN, nen muc mien cho _RUN_ID_MS_DIGITS la code khong bao gio chay:
+            # nhin vao thi tuong da sua, that ra chua. Nay moi hang so phai co
+            # nguon goc tuong minh trong MIEN.
             ly = mien_vi(f, v, ctx)
             if ly:
                 da_mien.append('%s:%d %r (%s)' % (f, n.lineno, n.value, ly))

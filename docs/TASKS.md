@@ -137,7 +137,7 @@ T02–T06 (coder-product) → T07 (lead chạy 14 lệnh kiểm) → T08 (review
 | T09a | G2a | Sửa 6 chỗ rò `INTERFACE.md` do kiểm 12 phát hiện | coder-product | bảng kiểm 12 | docs/INTERFACE.md | lead đọc lại diff + `grep` + chạy lại kiểm 10 | **completed** | `7bfd149`; chỉ sửa 1 file, `git diff cb97490..HEAD` = đúng `docs/INTERFACE.md`; `run_product.py` exit=0 sau sửa |
 | T09b | G2a | Sửa 14 mục từ T08 + 2 mục pm | coder-product | bảng review T08, bảng chấm pm | commit sửa | lead chạy lại toàn bộ bộ kiểm | **completed** | `2ca9a03`, 8 file +220/−75; lead chạy lại 15 kiểm, 13 PASS |
 | T09c | G2a | `run_id` chống trùng | coder-product | chẩn đoán kiểm 2 | `run_id` 18 ký tự có milli giây | `gen_mock.py` 2 lần liên tiếp, lần 2 exit=0 | **completed** | `284461a`; 2 lần liên tiếp đều exit=0, hash giống hệt; vòng lặp 2.000 lần gọi ra 2.000 giá trị khác nhau |
-| T09e | G2a | **Phủ nhánh — sửa `gen_mock.py` + `mock_data.json`** theo Q19 và cách B Bách duyệt: giữ hộp toạ độ, 3–5% điểm đón ngoài vùng, **thêm** 3–5% chuyến điểm đến xa cho hai bậc `(12;25]` và `>25`. Tham số vào config, **trong `data/`+`config/` chỉ ghi tham số trung tính**, lý do chỉ ở SPEC_A/DECISIONS. Thêm `sys.argv` + `seed` vào log `run_start` | coder-product | DECISIONS Q19, SPEC_A §1 | commit sửa + **bảng so trước/sau** | lead chạy lại **toàn bộ** bộ kiểm + kiểm 19 (9 mục a–i) | in_progress | đã giao 19/10 21:2x; `coder-product` cũ hết hạn mức nên gọi agent mới |
+| T09e | G2a | ✅ **completed — xem ô "Kết quả T09e" dưới bảng.** Phủ nhánh — sửa `gen_mock.py` + `mock_data.json`** theo Q19 và cách B Bách duyệt: giữ hộp toạ độ, 3–5% điểm đón ngoài vùng, **thêm** 3–5% chuyến điểm đến xa cho hai bậc `(12;25]` và `>25`. Tham số vào config, **trong `data/`+`config/` chỉ ghi tham số trung tính**, lý do chỉ ở SPEC_A/DECISIONS. Thêm `sys.argv` + `seed` vào log `run_start` | coder-product | DECISIONS Q19, SPEC_A §1 | commit sửa + **bảng so trước/sau** | lead chạy lại **toàn bộ** bộ kiểm + kiểm 19 (9 mục a–i) | **completed** | `64b4791`→`10e8ff8`; lead chạy lại **toàn bộ** bộ kiểm: 15/15 + kiểm 17, 18, 19 (9/9), 20 đều PASS. `run_id` bằng chứng **20261019T142131055** |
 | T09f | G2a | **Reviewer kiểm lại trước khi đóng G2a** — Bách yêu cầu riêng sau T09e | reviewer | product/ sau T09e | bảng review | hết mục "Chặn" | pending | chỉ review `product/`, vì chưa merge `security-pass` (Q21) |
 | T07b | G2a | **Kiểm 15** — chẩn đoán nhánh `no_driver_in_radius` | lead | T09b | dòng log quyết định làm bằng chứng | gọi `match()` với `radius_km=0.0001`, dữ liệu tài xế thật | **PASS** | `match()` → `{driver_id: None, auto_accept: False, reason: 'no_driver_in_radius'}`; 203 dòng log, **đúng 1** dòng quyết định, `reason='no_driver_in_radius'` |
 | T07c | G2a | **Kiểm 16** — log `data_loaded` phải có `sha256` 3 file dữ liệu + version `mock_data.json` | lead | T09b (C6) | bằng chứng dữ liệu nào đã dùng | đối chiếu sha256 trong log với hash file thật | **PASS** | 3 sha256 trong log, khớp hash 3 file dữ liệu |
@@ -385,6 +385,43 @@ Theo quy tắc rút ra từ sự cố mất log. Bốn file sinh từ `run_id` b
 
 → **Hai điều kiện qua G2a đã đạt.** Còn 3 việc chờ Bách quyết, không chặn kỹ thuật: dung lượng log, baseline `n_unmatched = 0`, và `reports/product_run_*.json` có ignore không.
 
+## Kết quả T09e — nguyên tắc phủ nhánh đã xanh hết, và ba lỗi trong bộ kiểm của chính lead
+
+**Lead chạy lại toàn bộ bộ kiểm, không nhận báo cáo suông.** `run_id` bằng chứng **20261019T142131055**, commit lúc chạy `10e8ff8`.
+
+| Nhóm | Kết quả |
+|---|---|
+| 15 kiểm máy | **PASS 15/15** |
+| Kiểm 17 — mọi đường thoát có log trước đó | **PASS** — 44 `return`/`raise`, 29 miễn có nguồn gốc |
+| Kiểm 18 — manifest khớp bản sao lưu | **PASS** 3/3 `sha256` |
+| **Kiểm 19 — phủ nhánh** | **PASS cả 9 mục a–i, lần đầu tiên** |
+| Kiểm 20 — nhánh trần hệ số | **PASS 5/5** |
+| Kiểm 12 — `INTERFACE.md` không rò, bằng mắt | **1 phát hiện** → T09e-b |
+
+**Ba nhánh chết đã chạy thật.** `n_unmatched = 40` (**4,0%**, trong 3–5%), bậc `t3` **40** chuyến được tính tiền, bậc `t4` **20** chuyến. Quãng đường max từ **11,60 → 39,18 km**.
+
+**Bảng so trước/sau của `coder-product` khớp số đo độc lập của lead ở mọi dòng**, kể cả `candidate_eval` vẫn đúng 200 dòng/chuyến **cho cả 40 chuyến không ghép được** (mục `i`, mục lead thêm trước để bắt tác dụng phụ của chính bản sửa). 920/1.000 chuyến giữ nguyên `distance_km`, `driver_id`, `fare_vnd`, `auto_accept` — nên baseline so sánh còn dùng được, đúng mục đích của việc chọn cách B thay vì nới hộp toạ độ.
+
+### Ba lỗi trong bộ kiểm của lead, tìm ra khi chạy trên dữ liệu mới
+
+**1. Kiểm 14 whitelist âm thầm 20 số nguyên nhỏ — gồm cả biên bậc giá.** Dòng `if v in cfgn: continue` cho qua **mọi** hằng số trùng bất kỳ số nào trong config. Vì `pricing.json` có danh sách giờ `[0,1,2,3,4,5,6]` và `[7,8,9,17,18,19]`, tập được miễn gồm `0–10, 12, 13, 17, 18, 19, 21, 24, 25, 26`. Tức **một hằng số nghiệp vụ bị cắm vào đúng giá trị `12`, `25` (biên bậc giá) hay `17`, `18`, `19` (giờ cao điểm) sẽ LỌT kiểm 14.**
+
+Nặng hơn: dòng đó chạy **trước** danh sách miễn, nên mục miễn cho `_RUN_ID_MS_DIGITS` là **code không bao giờ chạy**. Lead đã "sửa" chỗ này ở vòng trước bằng cách thêm nó vào danh sách miễn — **nhìn vào thì tưởng đã sửa, thật ra chưa.** Một bản sửa không có lệnh kiểm chứng minh nó chạy thì cũng bằng như không có, đúng bài học Q12.
+
+→ Đã bỏ dòng đó. Nay **mọi** hằng số phải có nguồn gốc tường minh: 47 chỗ miễn, in ra mỗi lần chạy. Kiểm 14 vẫn PASS sau khi siết.
+
+**2. Kiểm 18 báo PASS khi quét 0 file.** Bộ kiểm `t07b_check.py` **dọn `logs/` rồi chạy lại**, nên nó xoá log của `run_id` bằng chứng; kiểm 18 sau đó tìm 0 file và báo **PASS**. Đúng loại lỗi `reviewer` đã bắt ở kiểm 14 vòng trước: *một lệnh kiểm quét quá ít thì báo PASS, không báo lỗi.* → Nay 0 file là **FAIL**, đã thử lại với `run_id` không tồn tại để xác nhận nó FAIL thật.
+
+**3. Một lệnh kiểm phá bằng chứng của lệnh kiểm khác.** `kiem17_18.py` còn sinh manifest `schema_version` 0.1 và **ghi đè** manifest 0.3 mà `kiem19_manifest.py` vừa tạo cho cùng `run_id`. → Đã bỏ khối đó; kiểm 18 nay **đọc** manifest có trên đĩa và FAIL nếu chưa có.
+
+Bằng chứng không mất vì đã sao lưu ngoài repo **trước** khi chạy — chính quy tắc rút ra từ sự cố mất log lần trước.
+
+### Kiểm 12 — một phát hiện, đã giao T09e-b
+
+Khoá `rides_outside_service_area` **không trung tính**: "service area" là **khái niệm của A**, không phải thuộc tính của dữ liệu. Nó nói ra rằng A có vùng phục vụ và dữ liệu được cố ý đặt ra ngoài vùng đó. Bách chốt riêng cho T09e: *trong `data/` chỉ ghi tham số trung tính*. `coder-product` tự nêu đúng chỗ này và để lead quyết.
+
+→ **Đổi tên** thành tên tả hình học. **Giữ** cả 3 khoá và 4 event trong `INTERFACE.md`: hợp đồng phải **đủ**, vì hợp đồng thiếu làm agent kiểm thử báo sai — cái đó phá phép đo nặng hơn một gợi ý nhẹ.
+
 ## Cấu trúc báo cáo G4 — đổi theo phụ lục chỉ thị 19/10
 
 **Chị Ánh không cung cấp thêm thông tin nào.** Nên mục *"Câu hỏi mở cho chị Ánh"* trong PROMPTS 4.1 **không còn đúng** — một câu hỏi không có người trả lời thì không phải câu hỏi mở, nó là một giả định chưa khai báo. Đổi thành **hai** mục:
@@ -417,7 +454,10 @@ Chỗ nguy hiểm nằm trong **phản xạ lead đã tự khen hai lần ở G2
 ### Quy tắc G2b — dứt khoát
 
 1. Sau khi merge `security-pass`, lead được chạy **đúng một** lệnh: `python product/run_product.py`, và **chỉ** đọc **exit code**.
-   - **[Chờ Bách] Ngoại lệ đang xin, chưa có hiệu lực:** thêm `python auditor/run_audit.py` (T14c) — xem DECISIONS Q21 mục *"Thiếu bước 6"*. Nó là **phép đo**, không phải chẩn đoán, và chỉ an toàn nhờ tag `b-freeze` khoá B trước đó. **Chưa được Bách duyệt thì chưa chạy.**
+   - **[Chờ Bách] Ngoại lệ đang xin, chưa có hiệu lực.** Xem DECISIONS Q21 mục *"Thiếu bước 6"*. Xin Bách cấp nó dưới dạng **loại**, không phải tên lệnh:
+     > *Sau merge, lead được chạy những lệnh chỉ **sinh ra** dữ liệu từ vật phẩm đã đóng băng — A, và B sau tag `b-freeze`. Lead **không** chạy lệnh nào **so sánh** kết quả với giá trị kỳ vọng do lead giữ, cụ thể là toàn bộ `tests/`.*
+
+     Ranh giới *"sinh ra"* so với *"so sánh với kỳ vọng do mình giữ"* phân loại đúng cả ba ca đã biết mà không cần đặt tên lệnh nào: `run_product.py` sinh dữ liệu → được; `run_audit.py` sinh phát hiện từ B đã khoá → được; `tests/kiem*.py` so với 24 giá kỳ vọng và với manifest → **không**. Và nó phân loại sẵn những lệnh chưa ai viết. Viết thành *"được chạy thêm `run_audit.py`"* thì lại là **liệt kê ca**, và ca thứ ba sẽ xuất hiện ở G4. **Chưa được Bách duyệt thì chưa chạy.**
 2. **Mọi lệnh kiểm khác — đã có hay sẽ thêm — đều không được chạy, không cần liệt kê tên.** Muốn chạy thêm bất cứ gì thì **xin Bách trước**.
 3. **Nếu exit ≠ 0 → báo Bách, KHÔNG chẩn đoán.** Chẩn đoán bằng log **chính là** đọc đáp án.
 4. Lead **không** tạo lần chạy bằng chứng mới và **không** sinh manifest mới ở G2b. Theo Quy ước `MATRIX_v0` Bách đã chốt, **B tự chạy `run_product.py` sinh log mới trước khi kiểm** — nên việc này không cần ai làm thay. Thêm nữa, một lần chạy của lead sau security **sinh thêm một baseline để lead đối chiếu**, tức lại là một đường rò.
@@ -476,7 +516,7 @@ Lý do: `DECISIONS.md` chứa biên bậc giá, hệ số giờ, định nghĩa 
 | R3 | M02 mất hiệu lực nếu người viết code tự viết danh sách thuộc tính được phép; M04/M09 mất hiệu lực nếu "quyết định" không được định nghĩa trước | Q02 + Q10 chốt ở G1, không để coder-product tự định nghĩa. Ngược lại, M08/M12 **không** được vá — xem nguyên tắc Q13 |
 | R4 | M11 dễ báo động giả nếu so giá theo segment mà không phân tầng quãng đường | Q11: so trong từng bậc km; cờ ML chỉ đẩy lên CẦN NGƯỜI XEM |
 | R5 | Số hiệu control Annex A chưa đối chiếu bản chuẩn | Giữ nhãn [Chưa xác minh] trong mọi báo cáo; Q01 |
-| ~~R6~~ | **ĐÓNG 19/10.** Bách cho biết qa chấm theo chênh lệch giữa commit A sạch và commit chấm điểm, nên khoảng trống theo thiết kế không bị tính nhầm | Lead vẫn gửi Bách danh sách baseline trước T10, giữ ngoài repo, không commit |
+| R6 | **MỞ LẠI 19/10 — đóng CÓ ĐIỀU KIỆN, điều kiện là T09f→T14c.** pm chỉ ra: R6 được đóng bằng lập luận *qa chấm theo chênh lệch*, mà vế thứ hai (**T14c**, chạy B trên A có lỗi) đang **blocked**. Một rủi ro mà phần giảm thiểu đang blocked thì **chưa đóng** — sổ sách ghi một trạng thái mà bằng chứng không có, đúng loại lỗi lead vừa tự bắt ở T09e. Chỉ gạch khi T14c xong. Lý do đóng ban đầu vẫn giữ: **ĐÓNG 19/10.** Bách cho biết qa chấm theo chênh lệch giữa commit A sạch và commit chấm điểm, nên khoảng trống theo thiết kế không bị tính nhầm | Lead vẫn gửi Bách danh sách baseline trước T10, giữ ngoài repo, không commit |
 | R7 | Mọi con số dung lượng log hiện là [Suy đoán] | T04b đo thật ngay sau T04, thay số vào DECISIONS Q12 |
 | ~~R8~~ | **ĐÓNG 19/10.** Dòng 7 đã sửa theo Q15, Bách chuẩn thuận | T10b giữ lại làm chốt cửa, kiểm lại dòng 7 trước khi gọi T11 |
 | R10 | Q16 (mỗi phát hiện có `file:dòng` riêng) cộng nguyên tắc bất đối xứng sẽ đẩy M08 và M12 xuống CẦN NGƯỜI XEM, trái với Q13/Q08/Q09 vừa chốt là hai dòng đó ra KHÔNG ĐẠT. Báo cáo G4 sẽ không nói được điều Q13 muốn nói, và recall của qa đọc khác đi | Q17 xin Bách chọn (A) định nghĩa bằng chứng vắng mặt, hay (B) chấp nhận CẦN NGƯỜI XEM. T10b là chốt cửa: Q17 chưa trả lời thì không gọi T11 |

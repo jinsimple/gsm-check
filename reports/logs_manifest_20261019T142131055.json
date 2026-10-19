@@ -1,0 +1,35 @@
+{
+  "schema_version": "0.3",
+  "note": "Manifest log cua lan chay bang chung. logs/*.jsonl va reports/product_run_*.json KHONG vao git (DECISIONS Q12, Q20). File nay la bang chung kiem chung duoc cho ban sao luu ngoai repo. Bang chung dang log khong kem @commit — ngoai le da chuan thuan trong Quy uoc MATRIX_v0.",
+  "run_id": "20261019T142131055",
+  "commit_at_run": "10e8ff865b105aa12bfea34832685cf7d9ff811f",
+  "commit_at_manifest": "e8bcdb04c52562aa29d7db7f56238a8944f240ea",
+  "product_tree_at_run": "eec827108cc09618642829943e441aec3f003416",
+  "product_tree_at_manifest": "eec827108cc09618642829943e441aec3f003416",
+  "product_unchanged_since_run": true,
+  "worktree_clean": false,
+  "command": "python product/run_product.py",
+  "seed": 42,
+  "files": [
+    {
+      "path": "logs/matching_20261019T142131055.jsonl",
+      "lines": 204920,
+      "bytes": 106049098,
+      "sha256": "edc198dd1db8804b00d4fbd1436e14c6eac30032a944bacceb191fb4ccc74114"
+    },
+    {
+      "path": "logs/pricing_20261019T142131055.jsonl",
+      "lines": 10000,
+      "bytes": 3950287,
+      "sha256": "f27ed62552ce43f1c1f62bdd9e466906038af2cfdac6da5cc54477bcc057c771"
+    },
+    {
+      "path": "logs/run_product_20261019T142131055.jsonl",
+      "lines": 1005,
+      "bytes": 397552,
+      "sha256": "9360dd96e1d8013b0aa302dbf20f9af7d2512e4081b5aa1959bc7fa62cae60e4"
+    }
+  ],
+  "total_lines": 215925,
+  "total_bytes": 110396937
+}
