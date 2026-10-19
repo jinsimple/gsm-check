@@ -24,8 +24,28 @@ REQUIRED_FIELDS = (
     "reason",
 )
 
-_REPO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-LOG_DIR = os.path.join(_REPO_ROOT, "logs")
+REPO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+LOG_DIR = os.path.join(REPO_ROOT, "logs")
+
+
+def rel(path):
+    """Duong dan tuong doi so voi goc repo, dung POSIX separator.
+
+    Dung khi in ra man hinh va khi ghi vao bao cao, de ket qua khong phu thuoc
+    vao duong dan tuyet doi cua may chay.
+    """
+    return os.path.relpath(path, REPO_ROOT).replace(os.sep, "/")
+
+
+def enable_utf8_stdout():
+    """Tranh UnicodeEncodeError khi console Windows dung codepage cp1252."""
+    import sys
+
+    for stream in (sys.stdout, sys.stderr):
+        try:
+            stream.reconfigure(encoding="utf-8", errors="replace")
+        except Exception:
+            pass
 
 
 def make_run_id():

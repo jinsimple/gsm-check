@@ -1,0 +1,41 @@
+{
+  "version": "0.1",
+  "note": "Tham so sinh du lieu tong hop. 100% gia lap, khong co du lieu that.",
+  "seed": 42,
+  "base_date": "2026-10-19",
+  "utc_offset_hours": 7,
+  "bbox": {
+    "lat_min": 21.0,
+    "lat_max": 21.08,
+    "lon_min": 105.78,
+    "lon_max": 105.88
+  },
+  "coord_decimals": 6,
+  "counts": {
+    "drivers": 200,
+    "customers": 300,
+    "rides": 1000
+  },
+  "id_format": {
+    "driver_prefix": "D",
+    "customer_prefix": "C",
+    "ride_prefix": "R",
+    "width": 4
+  },
+  "driver_status_weights": {
+    "idle": 0.5,
+    "busy": 0.3,
+    "offline": 0.2
+  },
+  "vehicle_type_weights": {
+    "car": 0.8,
+    "premium": 0.2
+  },
+  "customer_segment_weights": {
+    "A": 0.5,
+    "B": 0.5
+  },
+  "acceptance_rate_range": [0.4, 1.0],
+  "acceptance_rate_decimals": 2,
+  "trips_today_range": [0, 25]
+}
