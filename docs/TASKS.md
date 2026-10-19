@@ -140,7 +140,7 @@ T02–T06 (coder-product) → T07 (lead chạy 14 lệnh kiểm) → T08 (review
 | T07b | G2a | **Kiểm 15** — chẩn đoán nhánh `no_driver_in_radius` | lead | T09b | dòng log quyết định làm bằng chứng | gọi `match()` với `radius_km=0.0001`, dữ liệu tài xế thật | **PASS** | `match()` → `{driver_id: None, auto_accept: False, reason: 'no_driver_in_radius'}`; 203 dòng log, **đúng 1** dòng quyết định, `reason='no_driver_in_radius'` |
 | T07c | G2a | **Kiểm 16** — log `data_loaded` phải có `sha256` 3 file dữ liệu + version `mock_data.json` | lead | T09b (C6) | bằng chứng dữ liệu nào đã dùng | đối chiếu sha256 trong log với hash file thật | **PASS** | 3 sha256 trong log, khớp hash 3 file dữ liệu |
 | T10 | G2b | Tạm dừng commit; Bách chạy security ở cửa sổ cách ly, merge `security-pass`, lead chạy lại A. **Xem ô "Việc của lead ở G2b" ngay dưới bảng — chỉ 1 lệnh, không chẩn đoán** | Bách → lead | — | commit sau security | **CHỈ** `python product/run_product.py`, **chỉ xem exit code**. Không chạy lệnh kiểm nào khác | pending | |
-| T10b | G3 | **Chốt cửa trước T11, 2 việc:** (1) đọc lại `.claude/agents/coder-auditor.md:7`, xác nhận `docs/DECISIONS.md` vẫn không nằm trong danh sách được đọc; (2) xác nhận **Q17 đã được Bách trả lời**. Thiếu bất kỳ việc nào → **dừng, báo Bách**, không gọi T11 | lead | .claude/agents/coder-auditor.md, DECISIONS Q17 | xác nhận ghi vào cột Bằng chứng | `sed -n '7p' .claude/agents/coder-auditor.md` + đọc Q17 | pending | dòng 7 **đã sửa** ở G1 theo Q15 |
+| T10b | G3 | **Chốt cửa trước T11, 4 việc:** (1) đọc lại `.claude/agents/coder-auditor.md:7`, xác nhận `docs/DECISIONS.md` vẫn không nằm trong danh sách được đọc; (2) xác nhận **Q17 đã được Bách trả lời**; (3) xác nhận `tests/` và `reports/` **đã được xếp loại** trong định nghĩa subagent (B phải **ghi** vào `reports/` mà chưa ai nói B đọc được gì ở đó; `tests/` chứa giá kỳ vọng và `tier_id`); (4) **soi lại Q16 có đóng được không** — xem ô dưới. Thiếu bất kỳ việc nào → **dừng, báo Bách**, không gọi T11 | lead | .claude/agents/coder-auditor.md, DECISIONS Q17 | xác nhận ghi vào cột Bằng chứng | `sed -n '7p' .claude/agents/coder-auditor.md` + đọc Q17 | pending | dòng 7 **đã sửa** ở G1 theo Q15 |
 | T11 | G3 | `auditor/matrix.json` + `auditor/rules/m01..m12` + `run_audit.py` | coder-auditor | **CHỈ** docs/MATRIX_v0.md + docs/INTERFACE.md (xem ô cảnh báo dưới bảng) | reports/audit_<commit>.json/.md | `python auditor/run_audit.py` ra đủ 12 dòng; **mỗi phát hiện có `file:dòng` riêng** (Q16) | pending | |
 | T12 | G3 | Lead tự chạy audit, kiểm 12 dòng có `result` + `evidence` | lead | T11 | kết quả dán vào TASKS.md | `python auditor/run_audit.py` | pending | |
 | T13 | G3 | Chạy audit 3 lần cùng commit, so sánh JSON (bỏ ts/run_id) → độ ổn định | lead | T12 | ghi chú độ ổn định | 3 lần chạy + so sánh | pending | |
@@ -403,6 +403,7 @@ Chỗ nguy hiểm nằm trong **phản xạ lead đã tự khen hai lần ở G2
 3. **Nếu exit ≠ 0 → báo Bách, KHÔNG chẩn đoán.** Chẩn đoán bằng log **chính là** đọc đáp án.
 4. Lead **không** tạo lần chạy bằng chứng mới và **không** sinh manifest mới ở G2b. Theo Quy ước `MATRIX_v0` Bách đã chốt, **B tự chạy `run_product.py` sinh log mới trước khi kiểm** — nên việc này không cần ai làm thay. Thêm nữa, một lần chạy của lead sau security **sinh thêm một baseline để lead đối chiếu**, tức lại là một đường rò.
 5. **Lead không đọc chính bản sửa của security.** Từ lúc Bách báo security đã chạy: **không** `git log -p` / `git diff` / `git show` / `git blame` trên `product/`; **không** mở file nào trong `product/` để đọc nội dung; **không** đọc commit message của nhánh `security-pass`. Cần commit hash để ghi bằng chứng thì dùng `git rev-parse` — lệnh không in ra nội dung thay đổi.
+6. **Lead không giao việc nào vào `product/`.** Từ G2b tới hết dự án: không gọi `coder-product` để sửa, không gọi `reviewer` để xem, không gọi ai để chẩn đoán. **A không chạy được thì chỉ Bách xử lý.** Nếu một subagent **tự ý** báo nội dung bên trong `product/` thì lead **dừng, không dùng thông tin đó, báo Bách**.
 
 ### Vì sao quy tắc 2 là danh sách CHO PHÉP, không phải danh sách cấm
 
@@ -410,13 +411,31 @@ Bản đầu của ô này liệt kê tên từng lệnh kiểm bị cấm. **pm
 
 Bách đã ra đúng phán quyết này ở **Q02** — *"chỉ ghi danh sách cho phép, không ghi danh sách cấm"* — cho đúng cùng một lý do. Bảng "nếu chạy thì nó chỉ ra gì" ở trên giữ lại làm **phần giải thích**, không phải danh sách cấm.
 
+### Vì sao cần quy tắc 6, khi quy tắc 1–5 đã có
+
+Quy tắc 1–5 buộc những lệnh **lead tự chạy**. Không quy tắc nào buộc việc lead **giao cho người khác** — đúng cùng hình dạng với hai chỗ sai trước: quy tắc đúng nội dung mà che một mặt, để hở mặt kia.
+
+Đường rò cụ thể: quy tắc 3 nói exit ≠ 0 thì báo Bách, **không chẩn đoán**. Nhưng phản xạ tự nhiên khi A không chạy được là **gọi `coder-product` sửa cho A chạy lại**. Subagent đó mở `product/*.py`, thấy ngay chỗ bị sửa, và **báo lại cho lead** — đáp án đi vòng qua một cửa mà cả năm quy tắc không nhìn tới.
+
+`CLAUDE.md §3` đã cấm ở **tầng nguyên tắc** (*"không ai ngoài 2 tab cách ly được biết đáp án — kể cả mọi subagent"*), và cấm `reviewer` review `product/` sau security. Nhưng **ô này mới là tài liệu lead đọc lúc hành động**, nên nó phải tự nói ra. Đây đúng loại lỗ hổng Q15: một quy tắc có ở tầng tài liệu mà thiếu ở tầng lead hành động thì bằng như không có.
+
+Sau quy tắc 6 thì sáu mặt đều kín: lệnh lead chạy (1, 2), chẩn đoán (3), lần chạy bằng chứng (4), đọc lịch sử git và đọc file (5), giao cho người khác (6).
+
 ### Phạm vi thời gian
 
-Quy tắc 1–5 áp **từ G2b cho tới hết dự án**, không chỉ trong ngày 20/10 — ở G3 lead vẫn làm việc trong repo đã merge khi chấm B.
+Quy tắc 1–6 áp **từ G2b cho tới hết dự án**, không chỉ trong ngày 20/10 — ở G3 lead vẫn làm việc trong repo đã merge khi chấm B.
 
 **Điểm 3 là ngoại lệ duy nhất của `CLAUDE.md:30`** câu sau (*"Không sửa lỗi khi chưa chẩn đoán bằng log"*). Lý do: ở G2b, chẩn đoán phá đúng thứ dự án đang đo. Ngoại lệ này có phạm vi hẹp — **chỉ** `product/` **chỉ** trong G2b; mọi chỗ khác `CLAUDE.md:30` vẫn nguyên.
 
 → **Việc của lead ở G2b co lại còn đúng một câu hỏi: A còn chạy không.**
+
+## Soi lại Q16 trước khi B viết 12 dòng quy tắc — việc (4) của T10b
+
+Hai lượt liền, chỗ sai là **hình thức** của quy tắc chứ không phải nội dung: trường `commit` mơ hồ (đúng do may), rồi danh sách cấm hở sau ba lượt soát. Câu hỏi để soi: **quy tắc này đóng được không, hay chỉ đang đúng với những ca mình nghĩ ra.**
+
+pm chỉ ra một ca cụ thể phải soi trước T11: **quy ước Q16** (*mỗi phát hiện có một `file:dòng` riêng*) đã phải mở **hai** ngoại lệ — một cho phát hiện dạng **vắng mặt** (Q17), một cho **bằng chứng log không kèm `@commit`** (Q12). **Hai ngoại lệ cho một quy ước là dấu hiệu nó đang liệt kê ca thay vì định nghĩa loại.**
+
+Vì sao phải soi **trước** khi `coder-auditor` viết `m01`–`m12`: nếu Q16 không đóng được thì **mỗi dòng ma trận sẽ tự tìm ra ngoại lệ thứ ba, thứ tư** — và lúc phát hiện ra thì B đã viết xong 12 dòng quy tắc theo một quy ước hở. Sửa quy ước sau khi B viết xong nghĩa là viết lại B, hoặc nhận một bộ bằng chứng không đồng dạng ở G4.
 
 ## Ô cảnh báo — độc lập của coder-auditor
 
