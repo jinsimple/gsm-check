@@ -104,10 +104,18 @@ def run(run_id=None):
     price_log = JsonlLogger(pricing.MODULE_NAME, run_id)
 
     try:
+        # Doc mock_data.json TRUOC run_start de dong log dau tien mang du argv va
+        # seed: lan chay tai lap duoc tu log, khong phai suy ra.
+        mock_config = load_json_config(MOCK_CONFIG_PATH, logger=run_log)
         run_log.log(
             func="run",
             event="run_start",
-            inputs={"run_id": run_id},
+            inputs={
+                "run_id": run_id,
+                "argv": list(sys.argv),
+                "seed": mock_config["seed"],
+                "mock_data_config_version": mock_config["version"],
+            },
             outputs={
                 "log_files": [
                     rel(run_log.path),
@@ -121,7 +129,6 @@ def run(run_id=None):
 
         matching_config = matching.load_config(logger=run_log)
         pricing_config = pricing.load_config(logger=run_log)
-        mock_config = load_json_config(MOCK_CONFIG_PATH, logger=run_log)
         run_log.log(
             func="run",
             event="config_loaded",
