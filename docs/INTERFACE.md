@@ -21,7 +21,7 @@ Các hàm phụ trợ nội bộ khác của `product/` không thuộc hợp đ�
 | Chạy toàn bộ sản phẩm mẫu A | `python product/run_product.py` |
 | Sinh lại dữ liệu tổng hợp | `python product/data/gen_mock.py` |
 
-Máy dự án chỉ có lệnh `python` (3.13.9), **không có `python3`**. Chỉ dùng Python standard library.
+Máy dự án chỉ có lệnh `python` (3.13.9), **không có `python3`**.
 
 ---
 
@@ -89,15 +89,15 @@ class JsonlLogger:
     close(self) -> None
 ```
 
-Tham số `logger` của `match` và `fare` là tùy chọn. Nếu người gọi không truyền, module tự tạo một `JsonlLogger` riêng, nên **không có đường chạy nào không sinh log**.
+Tham số `logger` của `match` và `fare` là tùy chọn. Nếu người gọi không truyền, module tự tạo một `JsonlLogger` riêng.
 
-`set_context` gán các khoá đối chiếu (ví dụ `ride_id`) do **người gọi** cung cấp vào trường `inputs` của các dòng log kế tiếp. `match` và `fare` không tự đọc các khoá đối chiếu đó từ bản ghi đầu vào.
+`set_context` gán các khoá đối chiếu (ví dụ `ride_id`) do **người gọi** cung cấp vào trường `inputs` của các dòng log kế tiếp.
 
 ---
 
 ## 3. Đường dẫn config và schema config
 
-Mọi tham số nghiệp vụ nằm trong `product/config/*.json`. Mỗi file **bắt buộc** có trường `version`; `load_json_config` báo lỗi nếu thiếu.
+Các file config của sản phẩm mẫu A nằm ở `product/config/`:
 
 | Đường dẫn | Hàm đọc mặc định |
 |---|---|
@@ -154,7 +154,7 @@ Dưới đây **chỉ** là tên khoá và kiểu dữ liệu. Giá trị nằm 
 
 ## 4. Schema dữ liệu
 
-Dữ liệu **100% tổng hợp**, sinh từ seed cố định trong `mock_data.json`. Không có tên, số điện thoại, biển số, địa chỉ thật. Chạy `gen_mock.py` hai lần cho ra ba file giống hệt nhau.
+Dữ liệu **100% tổng hợp**, sinh từ seed cố định trong `mock_data.json`. Không có tên, số điện thoại, biển số, địa chỉ thật.
 
 ### `product/data/drivers.json` — `list[dict]`, 200 bản ghi
 
@@ -251,7 +251,7 @@ Giá trị `module` đang có:
 
 ### 5.2 Chín trường bắt buộc
 
-Mọi dòng log, không trừ dòng nào, có đúng chín trường, đúng thứ tự này:
+Mỗi dòng log là một đối tượng JSON gồm chín trường, theo thứ tự này:
 
 | # | Trường | Kiểu | Ghi chú |
 |---|---|---|---|
@@ -323,32 +323,32 @@ Phải **bỏ** các thứ sau trước khi so sánh kết quả hai lần chạ
 | Tên file báo cáo | `reports/product_run_<run_id>.json` — đổi theo `run_id` |
 | Thứ tự dòng trong log | các dòng của những `module` khác nhau nằm ở **các file khác nhau**; so sánh theo từng file |
 
-Ngoài các thứ trên, cùng đầu vào cho ra cùng kết quả: dữ liệu tổng hợp sinh từ seed cố định, và `reports/product_run_<run_id>.json` sau khi bỏ `ts`, `run_id`, `log_files` thì hai lần chạy giống hệt nhau.
-
 ---
 
 ## 7. DANH SÁCH THUỘC TÍNH ĐƯỢC PHÉP
 
-> Bảng dưới đây **chép nguyên** từ `docs/DECISIONS.md` mục Q02, bản chốt ở cổng G1. `coder-product` không thêm, không bớt, không đổi tên. Đây là **danh sách trắng đóng**: thuộc tính nào không có tên trong bảng thì code không được đọc. Theo yêu cầu của Bách, chỉ ghi danh sách **được phép**, không ghi danh sách bị cấm.
+> Hai bảng dưới đây chép cột `Thuộc tính` từ `docs/DECISIONS.md` mục Q02, bản chốt ở cổng G1 — đúng tên, đúng thứ tự, không thêm, không bớt, không đổi tên.
+>
+> Đây là **danh sách trắng đóng**: thuộc tính nào không có tên trong bảng thì không được dùng làm đầu vào. Theo yêu cầu của Bách, chỉ ghi danh sách **được phép**, không ghi danh sách bị cấm.
 
 `matching` được đọc đúng 10 thuộc tính:
 
-| Thuộc tính | Dùng để | Nguồn SPEC_A |
-|---|---|---|
-| `ride.vehicle_type` | lọc đúng loại xe | `SPEC_A.md:19` |
-| `ride.pickup_lat` | tính haversine | `SPEC_A.md:20` |
-| `ride.pickup_lon` | tính haversine | `SPEC_A.md:20` |
-| `driver.status` | lọc `idle` | `SPEC_A.md:19` |
-| `driver.vehicle_type` | lọc đúng loại xe | `SPEC_A.md:19` |
-| `driver.lat` | tính haversine | `SPEC_A.md:20` |
-| `driver.lon` | tính haversine | `SPEC_A.md:20` |
-| `driver.trips_today` | phá hoà bước 1 | `SPEC_A.md:21` |
-| `driver.acceptance_rate` | so với `auto_accept_threshold` | `SPEC_A.md:22` |
-| `driver.driver_id` | phá hoà bước 2 và trả kết quả — không dùng để tính gì khác | `SPEC_A.md:17,21` |
+| Thuộc tính |
+|---|
+| `ride.vehicle_type` |
+| `ride.pickup_lat` |
+| `ride.pickup_lon` |
+| `driver.status` |
+| `driver.vehicle_type` |
+| `driver.lat` |
+| `driver.lon` |
+| `driver.trips_today` |
+| `driver.acceptance_rate` |
+| `driver.driver_id` |
 
 `pricing` được đọc đúng 2 thuộc tính:
 
-| Thuộc tính | Dùng để | Nguồn SPEC_A |
-|---|---|---|
-| `distance_km` | bậc giá | `SPEC_A.md:27` |
-| `requested_at` | hệ số giờ | `SPEC_A.md:27` |
+| Thuộc tính |
+|---|
+| `distance_km` |
+| `requested_at` |
