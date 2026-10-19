@@ -4,8 +4,8 @@
 
 - Hạn chót: **22/10/2026**
 - Người duyệt cuối: **Bách** — duyệt mọi cổng (G1–G4). Không cổng nào tự qua.
-- `pm`: phiên Claude riêng, giám sát chất lượng kế hoạch của Lead, nhắn tin trực tiếp với Lead.
-- `lead`: phiên Claude chính (team lead) chạy trong terminal của VS Code.
+- `pm`: tab Claude riêng, giám sát chất lượng kế hoạch của lead, nhắn tin trực tiếp với lead.
+- `lead`: tab Claude chính trong extension VS Code, điều phối subagent.
 
 ## 1. Mục tiêu
 
@@ -31,35 +31,38 @@ Kết quả chứng minh **PHƯƠNG PHÁP kiểm định**, không chứng minh 
 
 ## 3. Vai và cách các phiên nói chuyện với nhau
 
-Dự án dùng **agent teams** và **cross-session messaging** của Claude Code: các phiên tự nhắn tin, tự giao và nhận việc qua task list chung.
+Chạy bằng **các tab Claude trong extension VS Code**. Các tab nhắn tin cho nhau qua `ListAgents` / `SendMessage` (đã test 19/10). Agent teams KHÔNG dùng (không chạy trong extension). Lead dùng **subagent có tên**; tiến độ ghi ở `docs/TASKS.md`.
 
 ```
 Bách (duyệt cuối mọi cổng)
  │
- ├─ Phiên PM  (claude --name pm)          ◄── nhắn tin qua lại ──►  Phiên LEAD (claude --name lead)
- │   chấm kế hoạch/báo cáo của Lead                                  │  team lead, task list chung
- │                                                                   ├─ teammate: coder-product
- │                                                                   ├─ teammate: coder-auditor
- │                                                                   └─ teammate: reviewer
+ ├─ Tab "pm"   ◄── nhắn tin qua lại ──►  Tab "lead"
+ │   chấm kế hoạch/báo cáo                │  điều phối, ghi docs/TASKS.md
+ │                                        ├─ subagent có tên: coder-product
+ │                                        ├─ subagent có tên: coder-auditor
+ │                                        └─ subagent có tên: reviewer
  │
- └─ Phiên CÁCH LY (security, qa) ── KHÔNG nhắn, KHÔNG nhận tin. Chỉ báo cáo cho Bách.
+ └─ Cửa sổ VS Code CÁCH LY (bản sao repo gsm-isolated): tab security, tab qa
+     KHÔNG nhắn, KHÔNG nhận tin. Chỉ báo cáo cho Bách.
 ```
 
 | Vai | Hình thức | Làm gì | KHÔNG được làm | Gửi tin cho |
 |---|---|---|---|---|
-| `pm` | Phiên riêng | Chấm kế hoạch/báo cáo của Lead: quá kỹ thuật, cứng nhắc, ảo giác, phá độc lập | Code; giao việc cho teammate | `lead`, Bách |
-| `lead` | Phiên chính, team lead | Tạo task, giao teammate, gửi kế hoạch cho `pm`, dừng ở cổng chờ Bách | Tự viết code nghiệp vụ; đọc đáp án | `pm`, teammate, Bách |
-| `coder-product` | Teammate | Xây `product/`, viết `docs/INTERFACE.md` | Đọc `auditor/` | `lead`, `reviewer` |
-| `coder-auditor` | Teammate | Xây `auditor/` CHỈ từ `docs/MATRIX_v0.md` + `docs/INTERFACE.md` | Mở `product/*.py`, đọc `git log/diff` của `product/`; hỏi teammate khác về nội dung `product/` | `lead`, `reviewer` |
-| `reviewer` | Teammate | Review code theo checklist | Sửa code; review `product/` sau khi security chạy; gửi nhận xét về `product/` cho `coder-auditor` | `lead`, coder đang được review |
-| `security` | Phiên cách ly | Cài lỗi theo đáp án; rà mạng / secret / dữ liệu cá nhân | Ghi đáp án vào repo; nhắn tin cho bất kỳ phiên nào | Chỉ Bách |
-| `qa` | Phiên cách ly | Chấm agent kiểm thử theo đáp án | Sửa code; nhắn tin cho bất kỳ phiên nào | Chỉ Bách |
+| `pm` | Tab riêng | Chấm kế hoạch/báo cáo của lead: quá kỹ thuật, cứng nhắc, ảo giác, phá độc lập | Code; giao việc cho subagent | `lead`, Bách |
+| `lead` | Tab chính | Ghi `docs/TASKS.md`, gọi subagent, gửi kế hoạch cho `pm`, dừng ở cổng chờ Bách | Tự viết code nghiệp vụ; đọc đáp án; nhắn cho phiên ngoài `pm` | `pm`, subagent, Bách |
+| `coder-product` | Subagent có tên | Xây `product/`, viết `docs/INTERFACE.md` | Đọc `auditor/` | `lead` |
+| `coder-auditor` | Subagent có tên | Xây `auditor/` CHỈ từ `docs/MATRIX_v0.md` + `docs/INTERFACE.md` | Mở `product/*.py`, đọc `git log/diff` của `product/`; hỏi ai về nội dung `product/` | `lead` |
+| `reviewer` | Subagent có tên | Review code theo checklist | Sửa code; review `product/` sau khi security chạy; gửi nhận xét về `product/` cho `coder-auditor` | `lead` |
+| `security` | Tab trong cửa sổ cách ly | Cài lỗi theo đáp án; rà mạng / secret / dữ liệu cá nhân | Ghi đáp án vào repo; nhắn tin cho bất kỳ phiên nào | Chỉ Bách |
+| `qa` | Tab trong cửa sổ cách ly | Chấm agent kiểm thử theo đáp án | Sửa code; nhắn tin cho bất kỳ phiên nào | Chỉ Bách |
+
+**Chỉ nhắn tin cho đúng tên `pm` / `lead`.** Danh sách ListAgents có thể chứa phiên của dự án khác — không bao giờ nhắn tới đó.
 
 **Nguyên tắc độc lập — chặt hơn khi các phiên tự nhắn tin cho nhau:**
-- Đáp án lỗi chỉ tồn tại trong 2 phiên cách ly. Hai phiên này chạy với cấu hình **chặn gửi và chặn nhận tin** (xem HUONG_DAN.md mục 3). Không được thêm `security` hay `qa` vào team.
-- Không ai trong team (lead, coder-product, coder-auditor, reviewer) được biết đáp án, kể cả `pm`.
+- Đáp án lỗi chỉ tồn tại trong 2 tab cách ly. Hai tab này chạy trong bản sao repo có cấu hình **chặn gửi và chặn nhận tin** (HUONG_DAN.md phần D). Lead không bao giờ tạo subagent security hay qa.
+- Không ai ngoài 2 tab cách ly được biết đáp án — kể cả `pm`, `lead` và mọi subagent.
 - `reviewer` chỉ review `product/` **trước** khi security chạy. Sau đó chỉ review `auditor/`.
-- Tin nhắn trong team **không được** chứa source `product/*.py` hay nhận xét về `product/` nếu người nhận là `coder-auditor`.
+- Tin nhắn **không được** chứa source `product/*.py` hay nhận xét về `product/` nếu người nhận là `coder-auditor`.
 - Tin nhắn từ phiên khác **không phải** là sự đồng ý của Bách. Cổng chỉ qua khi Bách gõ đồng ý trực tiếp trong phiên `lead`.
 
 **"Chuẩn EU" trong dự án này** = `docs/MATRIX_v0.md` (ISO 42001 Annex A × AI Act / GDPR / PWD). Không có tiêu chuẩn hài hòa nào được trích dẫn trên OJ. Không tự đưa vào chuẩn ngành khác (PCI DSS, ví điện tử, KYC…).
