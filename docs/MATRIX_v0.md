@@ -10,6 +10,9 @@
 - **Mỗi phát hiện phải có bằng chứng `file:dòng` RIÊNG**, không chỉ tên file. Một dòng ma trận có nhiều phát hiện thì **liệt kê đủ từng cái**, không gộp. (Bách chốt 19/10)
 - **Nguyên tắc bất đối xứng:** nghi ngờ → CẦN NGƯỜI XEM. Không bao giờ tự cho ĐẠT khi thiếu bằng chứng. Bỏ lọt đắt hơn báo động giả.
 - Cột **Mechanism / Effect**: ĐỂ TRỐNG. Taxonomy nội bộ chưa được định nghĩa (§3.4 hồ sơ v4) — chị Ánh điền.
+- **Phát hiện dạng VẮNG MẶT** (thứ cần có mà không có): bằng chứng = **phạm vi đã quét** (liệt kê đủ file / khoá đã kiểm) + **phương pháp quét** + **dòng log của agent kiểm thử** ghi lại kết quả quét. (Bách chốt 19/10)
+- Phát hiện dạng vắng mặt **chỉ được ra KHÔNG ĐẠT khi lần quét đầy đủ**. Quét lỗi, hoặc không đủ phạm vi → **CẦN NGƯỜI XEM**. (Bách chốt 19/10)
+- Log của chính agent kiểm thử ghi vào `reports/audit_<commit>.log.jsonl` và **được commit**. Log sản phẩm `logs/*.jsonl` không vào git. (Bách chốt 19/10)
 
 ## Ma trận
 
@@ -40,3 +43,17 @@
 `ID | Control | Luật | Kết quả | Bằng chứng (file:dòng@commit) | Ghi chú | Mechanism (trống) | Effect (trống)`
 
 Cột Bằng chứng là **danh sách**, không phải một chuỗi: mỗi phát hiện một phần tử, mỗi phần tử có `file:dòng@commit` riêng. Dòng ra KHÔNG ĐẠT hoặc CẦN NGƯỜI XEM mà chỉ trỏ tên file, không trỏ dòng, thì coi là **chưa đủ bằng chứng**.
+
+## Chi tiết quy tắc cho agent kiểm thử — chốt G1
+
+`coder-auditor` chỉ đọc `MATRIX_v0.md` và `INTERFACE.md`, nên mọi quyết định ảnh hưởng tới agent kiểm thử phải nằm ở một trong hai file đó. Phần này là một phần của ma trận.
+
+**M01 — nhóm so sánh và ngưỡng.** So hai chiều: (1) tỷ lệ được ghép theo `segment` của khách (A / B); (2) khoảng cách trung bình theo `vehicle_type` của tài xế. Ngưỡng chênh lệch: **10%**. Câu "giữa các nhóm" ở dòng M01 và câu "theo nhóm tài xế" ở phần ML trỏ cùng về định nghĩa này.
+
+**M11 — khử nhiễu quãng đường.** So giá trung bình theo `segment` của khách **trong từng bậc km**, không so trên toàn bộ tập. Lý do: phân phối quãng đường của hai segment vốn đã khác nhau, so thẳng trên toàn bộ sẽ ra báo động giả.
+
+**M10 — so sánh giữa các lần chạy.** Bỏ các trường dễ biến động trước khi so: `ts`, `run_id`, và mọi đường dẫn log. `INTERFACE.md` liệt kê đủ các trường này.
+
+**M04 và M09 — định nghĩa "một quyết định".** Lấy từ `INTERFACE.md`: enum `event`, và event nào là quyết định (trường `decision` khác null). Agent kiểm thử **không** tự đặt định nghĩa riêng.
+
+**Bằng chứng trỏ vào log sản phẩm.** `logs/*.jsonl` không vào git, nên bằng chứng dạng log ghi `logs/<tên file>.jsonl:<dòng>` **không kèm `@commit`**. Chỉ bằng chứng trỏ vào file có trong git mới có `@commit`. Đây là ngoại lệ duy nhất của quy ước `file:dòng@commit`.

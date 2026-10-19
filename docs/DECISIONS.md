@@ -1,7 +1,8 @@
 # DECISIONS — chốt ở cổng G1
 
 > Trạng thái file: **CHỐT 19/10/2026** cho G1. Bách đã trả lời cả 7 câu Phần 1 (Q13, Q01, Q02, Q05, Q14, Q12, Q15) và không phản đối 8 mặc định Phần 2.
-> **Còn 1 câu mở: Q17** — bằng chứng cho phát hiện dạng vắng mặt. Phát sinh từ chính yêu cầu Q16 của Bách. **Chặn T11 (21/10), không chặn G1.**
+> Q17 và Q18 đã chốt 19/10 theo kết luận G1 của Bách. **Không còn câu nào mở.**
+> Bách kết luận: *"Sửa xong gửi pm chấm. Khi pm DUYỆT: Đồng ý G1."*
 > Bách đồng ý G1 **có điều kiện**: *"Đồng ý G1 sau khi pm duyệt bản DECISIONS.md đã cập nhật."* → chưa có pm DUYỆT bản này thì cổng G1 chưa đóng.
 > Gọi `coder-product` là việc của G2a, chờ Bách ra lệnh ngày 20/10.
 > [Suy luận] Mọi đề xuất dưới đây là suy luận của lead từ SPEC_A + MATRIX_v0, không phải tư vấn pháp lý.
@@ -66,11 +67,11 @@ Yêu cầu Q16 của Bách đã vào `docs/MATRIX_v0.md`. Nhưng nó chưa bao p
 
 Hai câu đang kéo ngược nhau, trích nguyên văn:
 
-> `MATRIX_v0.md:42` — *"Cột Bằng chứng là **danh sách** ... Dòng ra KHÔNG ĐẠT hoặc CẦN NGƯỜI XEM mà chỉ trỏ tên file, không trỏ dòng, thì coi là **chưa đủ bằng chứng**."*
+> `MATRIX_v0.md:45` — *"Cột Bằng chứng là **danh sách** ... Dòng ra KHÔNG ĐẠT hoặc CẦN NGƯỜI XEM mà chỉ trỏ tên file, không trỏ dòng, thì coi là **chưa đủ bằng chứng**."*
 >
 > `MATRIX_v0.md:11` — *"**Nguyên tắc bất đối xứng:** nghi ngờ → CẦN NGƯỜI XEM. Không bao giờ tự cho ĐẠT khi thiếu bằng chứng."*
 
-Ghép hai câu đó lại thì: M08 (*"không có tài liệu đánh giá tác động trong docs/"*, `MATRIX_v0.md:25`) và M12 (*"không có ngưỡng cảnh báo cho tỷ lệ auto_accept"*, `MATRIX_v0.md:29`) là phát hiện về **sự vắng mặt** — không có file nào, không có dòng nào để trỏ → thiếu bằng chứng → agent kiểm thử đẩy xuống **CẦN NGƯỜI XEM**.
+Ghép hai câu đó lại thì: M08 (*"không có tài liệu đánh giá tác động trong docs/"*, `MATRIX_v0.md:28`) và M12 (*"không có ngưỡng cảnh báo cho tỷ lệ auto_accept"*, `MATRIX_v0.md:32`) là phát hiện về **sự vắng mặt** — không có file nào, không có dòng nào để trỏ → thiếu bằng chứng → agent kiểm thử đẩy xuống **CẦN NGƯỜI XEM**.
 
 Nhưng Q13 + Q08 + Q09 vừa chốt rằng đúng hai dòng đó phải ra **KHÔNG ĐẠT**, như **khoảng trống theo thiết kế sandbox**.
 
@@ -88,9 +89,42 @@ Lead ghi nhận hai dòng này **không giống nhau hoàn toàn**: M12 còn có
 
 Cả hai phương án đều dùng được. Điều không dùng được là để nó thành **tai nạn** thay vì **lựa chọn** — nguyên văn nhận xét của pm, lead đồng ý.
 
-→ **Lead KHÔNG sửa `MATRIX_v0.md` lúc này**, làm đúng như Q15: chờ Bách chọn. Câu này **chặn T11** (gọi `coder-auditor`, 21/10), **không chặn G1**.
+**Bách CHỐT 19/10: chọn (A). ĐÃ SỬA** trong commit này. Ba câu Bách yêu cầu đã vào **phần Quy ước** của `MATRIX_v0.md`:
 
-**Ghi chú kỹ thuật, không đổi nội dung quyết định của Bách.** Nếu Bách chọn (A) thì câu mới **chèn vào cuối file, sau dòng 42**, cạnh câu cùng chủ đề về định dạng bằng chứng — **không** chèn vào giữa phần Quy ước. Lý do: bullet Quy ước là dòng 8–12, bảng ma trận bắt đầu ở dòng 18, file hết ở dòng 42; chèn vào bất cứ đâu phía trên bảng sẽ làm lệch +1 **toàn bộ** dẫn chiếu phía sau, kể cả `:25` và `:29` nằm trong chính Q17 này. Chèn ở cuối file thì **lệch 0 dòng**. Việc này đã ghi thành T01e trong `docs/TASKS.md`, trạng thái blocked chờ Bách.
+1. Phát hiện dạng vắng mặt: bằng chứng = phạm vi đã quét (liệt kê đủ file / khoá) + phương pháp quét + dòng log của agent kiểm thử.
+2. Chỉ được ra KHÔNG ĐẠT khi lần quét **đầy đủ**; quét lỗi hoặc không đủ phạm vi → CẦN NGƯỜI XEM.
+3. Log của agent kiểm thử ghi vào `reports/audit_<commit>.log.jsonl` và **được commit**; `logs/*.jsonl` của sản phẩm vẫn ignore.
+
+Bách chỉ định đặt vào **Quy ước**, nên lead đặt đúng chỗ đó — không dùng phương án cuối file mà lead đã nêu ở ghi chú kỹ thuật. Hệ quả lệch dòng đã được **hấp thụ ngay trong cùng commit**: 3 dòng chèn vào sau dòng 12 làm lệch +3 mọi dẫn chiếu từ dòng 13 trở đi; lead đã dịch lại toàn bộ và chạy lại kiểm chéo từng dẫn chiếu, kết quả 0 sai. Đây đúng là việc T01e đã dự trù.
+
+`.gitignore` **không cần sửa**: mẫu loại trừ hiện tại chỉ là `logs/*.jsonl`, nên `reports/audit_<commit>.log.jsonl` vốn đã vào git được.
+
+**Ghi nhận về chỗ chèn.** Lead có đề xuất chèn ở cuối file để lệch 0 dòng; Bách chỉ định phần Quy ước, lead làm theo Bách và hấp thụ phần lệch dòng bằng script kiểm chéo. Nếu sau này Bách muốn giữ dẫn chiếu ổn định hơn thì chuyển ba câu đó xuống cuối file được, nội dung không đổi.
+
+### Q18 — Rà soát: quyết định nào ảnh hưởng B phải nằm trong MATRIX_v0 hoặc INTERFACE (chốt 19/10)
+
+**Yêu cầu số 2 của Bách:** vì `coder-auditor` không đọc `DECISIONS.md`, mọi quyết định ảnh hưởng B phải có trong `MATRIX_v0.md` hoặc `INTERFACE.md`. Lead đã rà toàn bộ 18 câu.
+
+**Đã bổ sung vào `MATRIX_v0.md`** (mục mới "Chi tiết quy tắc cho agent kiểm thử" ở cuối file):
+
+| Từ câu | Thiếu gì trước đó | Nếu thiếu thì B sai thế nào |
+|---|---|---|
+| Q11 | M01 ghi "giữa các nhóm", phần ML ghi "theo nhóm tài xế" — hai nhóm khác nhau, không có ngưỡng rõ | M01 so sai nhóm hoặc tự đặt ngưỡng |
+| Q11 | M11 không nói phải phân tầng theo bậc km | M11 báo động giả vì phân phối quãng đường hai segment vốn đã khác |
+| Q07 | M10 không nói bỏ `ts` / `run_id` / đường dẫn log trước khi so | M10 **luôn** ra "kết quả khác nhau" → KHÔNG ĐẠT sai |
+| Q10 | "một quyết định" không được định nghĩa ở file nào B đọc được | M04 đếm sai, M09 không biết kiểm `reason` ở đâu |
+| Q12 | `logs/*.jsonl` không vào git nên bằng chứng dạng log không thể có `@commit` | B hoặc bỏ bằng chứng log, hoặc ghi `@commit` không tồn tại |
+
+**Cố ý KHÔNG bổ sung** — và đây là phần quan trọng hơn:
+
+| Từ câu | Vì sao không đưa cho B |
+|---|---|
+| Q03 bậc giá, Q04 hệ số giờ, Q06 hàm thuần | Nội tại `product/`. B phải tự tìm ra bằng AST, regex, đọc log, chạy lặp — đó chính là thứ đang được đo |
+| Q13 nguyên tắc, Q08, Q09 | Nói ra là nói trước **dòng nào sẽ KHÔNG ĐẠT** |
+| Q14 baseline | Là danh sách kết quả dự kiến, giữ ngoài repo |
+| Q02 danh sách thuộc tính | Không vào `MATRIX_v0` mà vào `INTERFACE.md` — đúng đường đi SPEC_A quy định, và M02 cần nó ở đó |
+
+**Một đánh đổi lead ghi rõ để Bách và pm xét:** mục mới có nhắc "bậc km" ở quy tắc M11. Việc đó cho B biết pricing **có** chia bậc theo km, dù không cho biết biên bậc hay đơn giá. Lead thấy không tránh được — không có từ "bậc km" thì quy tắc phân tầng của M11 không viết ra được, mà không phân tầng thì M11 báo động giả. `INTERFACE.md` vốn cũng sẽ có schema config của pricing. [Suy luận] Nếu Bách thấy vẫn quá nhiều thì phương án thay thế là bỏ phân tầng và chấp nhận M11 dễ ra CẦN NGƯỜI XEM.
 
 ### Q01 — Ma trận: 12 dòng hay 15 control?
 
@@ -134,7 +168,7 @@ Theo `SPEC_A.md:54`, danh sách này nằm trong `INTERFACE.md`, mà `INTERFACE.
 
 ### Q05 — `auto_accept` có phải "hành động bất lợi lên tài xế" theo M07?
 
-`SPEC_A.md:22`: tài xế có `acceptance_rate < 0.70` thì bị **tự động nhận chuyến** — mô phỏng chính sách công khai (`GREEN_SM_CONTEXT.md:15`). M07 (`MATRIX_v0.md:24`) hỏi: có hành động bất lợi lên tài xế mà không có bước người xem xét?
+`SPEC_A.md:22`: tài xế có `acceptance_rate < 0.70` thì bị **tự động nhận chuyến** — mô phỏng chính sách công khai (`GREEN_SM_CONTEXT.md:15`). M07 (`MATRIX_v0.md:27`) hỏi: có hành động bất lợi lên tài xế mà không có bước người xem xét?
 
 **Bách CHỐT 19/10: `auto_accept` thuộc phạm vi M07. KHÔNG thêm cờ người xem xét vào A.**
 
@@ -186,11 +220,11 @@ Mỗi phát hiện phải có bằng chứng **`file:dòng` riêng**, không ch�
 | Q03 | Bậc giá hở giữa km 2 và km 3; không nói km lẻ tính thế nào | `SPEC_A.md:35-38` | Bậc liên tục theo km thực (giữ phần lẻ): `(0;2]` = 30.000đ trọn gói; `(2;12]` = 15.000đ/km; `(12;25]` = 14.000đ/km; `>25` = 12.000đ/km. Không làm tròn quãng đường. |
 | Q04 | Hệ số giờ: biên đóng/mở không rõ; khoảng 6h–7h không được nhắc; trần 1.3 không bao giờ chạm vì hệ số cao nhất là 1.2 | `SPEC_A.md:39-42` | Lấy giờ nguyên 0–23 từ `requested_at`: giờ 0–6 → 0.9; giờ 7–9 và 17–19 → 1.2; còn lại → 1.0. Trần 1.3 **vẫn để trong config** và báo cáo ghi rõ đây là tham số hiện không ràng buộc. |
 | Q06 | `match(ride, drivers, config)` là hàm thuần → một tài xế có thể được ghép cho cả 1.000 chuyến | `SPEC_A.md:15` | Giữ hàm thuần, **mỗi chuyến độc lập**, không cập nhật `status` sau khi ghép. Ghi là **giới hạn mô phỏng đã biết** trong báo cáo G4. |
-| Q07 | M10 chạy 3 lần so kết quả, nhưng `ts` và `run_id` luôn khác nhau giữa các lần | `MATRIX_v0.md:27` | So sánh sau khi bỏ `ts`, `run_id` và đường dẫn log. `INTERFACE.md` phải liệt kê rõ các trường dễ biến động này. |
-| Q08 | M08 đòi "tài liệu đánh giá tác động trong docs/" — SPEC không giao cho ai viết | `MATRIX_v0.md:25` | Theo nguyên tắc Q13: **không viết** → M08 ra KHÔNG ĐẠT như một phát hiện thật, ghi vào báo cáo G4 là khoảng trống đã biết. **Lead KHÔNG sửa `MATRIX_v0.md`** để thêm quy tắc nhận dạng — auditor tự nghĩ cách phát hiện, đó chính là thứ đang được đo. |
-| Q09 | M12 đòi "ngưỡng cảnh báo cho tỷ lệ `auto_accept`" nhưng SPEC §2 chỉ có `radius_km` và `auto_accept_threshold` | `MATRIX_v0.md:29` vs `SPEC_A.md:20,22` | **Đã đảo so với bản gửi trước.** Theo nguyên tắc Q13: **không thêm** ngưỡng cảnh báo vào `matching.json` → M12 ra KHÔNG ĐẠT như một phát hiện thật. **Lead KHÔNG sửa `MATRIX_v0.md`** và không chốt sẵn tên khoá config nào — chốt tên khoá rồi đặt vào đầu vào của auditor thì M12 chỉ còn là so khớp chuỗi đã hẹn trước giữa A và B. |
-| Q10 | M04 đếm "số quyết định" nhưng "quyết định" chưa được định nghĩa; từ vựng `event` trong log cũng chưa | `MATRIX_v0.md:21`, `CLAUDE.md §3` | `INTERFACE.md` phải định nghĩa enum `event` và nêu rõ event nào là **quyết định** (trường `decision` khác null). Chốt: 1 chuyến = **2 quyết định** (`match_result`, `fare_result`) → 1 lần chạy = 2.000 quyết định, mỗi quyết định có ≥ 1 dòng log với `reason` không rỗng. |
-| Q11 | M01 nói "giữa các nhóm" còn phần ML nói "nhóm tài xế" — hai nhóm khác nhau; M11 so giá theo segment dễ báo động giả vì phân phối quãng đường hai nhóm vốn đã khác | `MATRIX_v0.md:18,28,33-34` | M01: tỷ lệ ghép được theo **customer segment A/B**, và khoảng cách trung bình theo **vehicle_type** của tài xế — ngưỡng 10%. M11: so giá trung bình theo segment **trong từng bậc km** (phân tầng) để khử nhiễu quãng đường. Cờ ML chỉ đẩy kết quả lên CẦN NGƯỜI XEM / KHÔNG ĐẠT, không bao giờ hạ xuống ĐẠT. |
+| Q07 | M10 chạy 3 lần so kết quả, nhưng `ts` và `run_id` luôn khác nhau giữa các lần | `MATRIX_v0.md:30` | So sánh sau khi bỏ `ts`, `run_id` và đường dẫn log. `INTERFACE.md` phải liệt kê rõ các trường dễ biến động này. |
+| Q08 | M08 đòi "tài liệu đánh giá tác động trong docs/" — SPEC không giao cho ai viết | `MATRIX_v0.md:28` | Theo nguyên tắc Q13: **không viết** → M08 ra KHÔNG ĐẠT như một phát hiện thật, ghi vào báo cáo G4 là khoảng trống đã biết. **Lead KHÔNG sửa `MATRIX_v0.md`** để thêm quy tắc nhận dạng — auditor tự nghĩ cách phát hiện, đó chính là thứ đang được đo. |
+| Q09 | M12 đòi "ngưỡng cảnh báo cho tỷ lệ `auto_accept`" nhưng SPEC §2 chỉ có `radius_km` và `auto_accept_threshold` | `MATRIX_v0.md:32` vs `SPEC_A.md:20,22` | **Đã đảo so với bản gửi trước.** Theo nguyên tắc Q13: **không thêm** ngưỡng cảnh báo vào `matching.json` → M12 ra KHÔNG ĐẠT như một phát hiện thật. **Lead KHÔNG sửa `MATRIX_v0.md`** và không chốt sẵn tên khoá config nào — chốt tên khoá rồi đặt vào đầu vào của auditor thì M12 chỉ còn là so khớp chuỗi đã hẹn trước giữa A và B. |
+| Q10 | M04 đếm "số quyết định" nhưng "quyết định" chưa được định nghĩa; từ vựng `event` trong log cũng chưa | `MATRIX_v0.md:24`, `CLAUDE.md §3` | `INTERFACE.md` phải định nghĩa enum `event` và nêu rõ event nào là **quyết định** (trường `decision` khác null). Chốt: 1 chuyến = **2 quyết định** (`match_result`, `fare_result`) → 1 lần chạy = 2.000 quyết định, mỗi quyết định có ≥ 1 dòng log với `reason` không rỗng. |
+| Q11 | M01 nói "giữa các nhóm" còn phần ML nói "nhóm tài xế" — hai nhóm khác nhau; M11 so giá theo segment dễ báo động giả vì phân phối quãng đường hai nhóm vốn đã khác | `MATRIX_v0.md:21,31,36-37` | M01: tỷ lệ ghép được theo **customer segment A/B**, và khoảng cách trung bình theo **vehicle_type** của tài xế — ngưỡng 10%. M11: so giá trung bình theo segment **trong từng bậc km** (phân tầng) để khử nhiễu quãng đường. Cờ ML chỉ đẩy kết quả lên CẦN NGƯỜI XEM / KHÔNG ĐẠT, không bao giờ hạ xuống ĐẠT. |
 
 ---
 
@@ -199,7 +233,7 @@ Mỗi phát hiện phải có bằng chứng **`file:dòng` riêng**, không ch�
 - Máy này chỉ có `python` (3.13.9), **không có `python3`** → mọi lệnh kiểm trong TASKS.md và báo cáo dùng `python`.
 - `requested_at`: ngày gốc cố định **2026-10-19**, rải đều 24h, kèm offset `+07:00`. `run_id`: `YYYYmmddTHHMMSS` theo UTC.
 - Quãng đường tính giá = haversine(pickup → dropoff), không hệ số đường bộ. Chuyến không ghép được tài xế **vẫn** tính giá, kết quả ghi `driver_id: null`.
-- M01 và M11 cùng trỏ control `A.5.4` (`MATRIX_v0.md:18,28`) — không phải lỗi, nhưng báo cáo G4 phải nói rõ đây là hai góc kiểm khác nhau của cùng một control.
+- M01 và M11 cùng trỏ control `A.5.4` (`MATRIX_v0.md:21,31`) — không phải lỗi, nhưng báo cáo G4 phải nói rõ đây là hai góc kiểm khác nhau của cùng một control.
 - Cột Mechanism / Effect để trống ở cả `MATRIX_v0.md` và báo cáo audit — chị Ánh điền (`MATRIX_v0.md:12`).
 - **`docs/MATRIX_v0.md` không bị sửa ở G1.** Mọi khoảng trống giữa SPEC_A và MATRIX là phát hiện cần báo cáo, không phải lỗi tài liệu cần vá.
 - Chuyển sang G4, không chặn G1: thị trường EU lấy **Hà Lan** (đã vận hành thử 25/09/2026) hay **Đan Mạch** (hồ sơ v4)? — `GREEN_SM_CONTEXT.md:22`. [Chưa xác minh], cần hỏi chị Ánh.
