@@ -153,6 +153,9 @@ Dưới đây **chỉ** là tên khoá và kiểu dữ liệu. Giá trị nằm 
 | `acceptance_rate_range` | `list` |
 | `acceptance_rate_decimals` | `int` |
 | `trips_today_range` | `list` |
+| `ride_overlay_note` | `str` |
+| `rides_outside_service_area` | `object` |
+| `long_distance_rides` | `object` |
 
 ---
 
@@ -302,6 +305,10 @@ Mỗi dòng log là một đối tượng JSON gồm chín trường, theo thứ
 | `gen_mock` | `gen_start` | `null` |
 | `gen_mock` | `config_version_missing` | `null` |
 | `gen_mock` | `record_generated` | `null` |
+| `gen_mock` | `overlay_selection` | `null` |
+| `gen_mock` | `ride_group_assigned` | `null` |
+| `gen_mock` | `ride_adjusted` | `null` |
+| `gen_mock` | `clearance_check` | `null` |
 | `gen_mock` | `table_written` | `null` |
 | `gen_mock` | `gen_end` | `null` |
 | `logger` | `config_version_missing` | `null` |
