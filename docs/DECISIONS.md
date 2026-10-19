@@ -1,6 +1,7 @@
 # DECISIONS — chốt ở cổng G1
 
-> Trạng thái file: **CHỐT 19/10/2026**. Bách đã trả lời cả 7 câu Phần 1 (Q13, Q01, Q02, Q05, Q14, Q12, Q15) và không phản đối 8 mặc định Phần 2.
+> Trạng thái file: **CHỐT 19/10/2026** cho G1. Bách đã trả lời cả 7 câu Phần 1 (Q13, Q01, Q02, Q05, Q14, Q12, Q15) và không phản đối 8 mặc định Phần 2.
+> **Còn 1 câu mở: Q17** — bằng chứng cho phát hiện dạng vắng mặt. Phát sinh từ chính yêu cầu Q16 của Bách. **Chặn T11 (21/10), không chặn G1.**
 > Bách đồng ý G1 **có điều kiện**: *"Đồng ý G1 sau khi pm duyệt bản DECISIONS.md đã cập nhật."* → chưa có pm DUYỆT bản này thì cổng G1 chưa đóng.
 > Gọi `coder-product` là việc của G2a, chờ Bách ra lệnh ngày 20/10.
 > [Suy luận] Mọi đề xuất dưới đây là suy luận của lead từ SPEC_A + MATRIX_v0, không phải tư vấn pháp lý.
@@ -58,6 +59,36 @@ Lead chỉ sửa file cấu hình này **vì Bách chỉ thị trực tiếp**, 
 T10b vẫn giữ làm chốt cửa trước T11: đọc lại dòng 7 và xác nhận, phòng trường hợp file bị đổi lại.
 
 → Ghi nhận: dòng 8 cùng file có cụm "lỗi đã cài". pm và lead thống nhất **để nguyên** — không thể và không cần che việc *có* cài lỗi (CLAUDE.md §3 và §5 đã nói tới, mà mọi subagent đều tự nạp CLAUDE.md). Thứ phải giữ kín là **lỗi gì** và **dòng nào sẽ hỏng**, không phải việc có cài lỗi.
+
+### Q17 — Bằng chứng cho phát hiện dạng VẮNG MẶT (CHẶN T11, không chặn G1)
+
+Yêu cầu Q16 của Bách đã vào `docs/MATRIX_v0.md`. Nhưng nó chưa bao phủ loại phát hiện **"thứ cần có thì không có"**, và chỗ chưa bao phủ đó đụng trực tiếp vào Q08 + Q09 vừa chốt **cùng một commit**. pm phát hiện, lead xác nhận là có thật.
+
+Hai câu đang kéo ngược nhau, trích nguyên văn:
+
+> `MATRIX_v0.md:42` — *"Cột Bằng chứng là **danh sách** ... Dòng ra KHÔNG ĐẠT hoặc CẦN NGƯỜI XEM mà chỉ trỏ tên file, không trỏ dòng, thì coi là **chưa đủ bằng chứng**."*
+>
+> `MATRIX_v0.md:11` — *"**Nguyên tắc bất đối xứng:** nghi ngờ → CẦN NGƯỜI XEM. Không bao giờ tự cho ĐẠT khi thiếu bằng chứng."*
+
+Ghép hai câu đó lại thì: M08 (*"không có tài liệu đánh giá tác động trong docs/"*, `MATRIX_v0.md:25`) và M12 (*"không có ngưỡng cảnh báo cho tỷ lệ auto_accept"*, `MATRIX_v0.md:29`) là phát hiện về **sự vắng mặt** — không có file nào, không có dòng nào để trỏ → thiếu bằng chứng → agent kiểm thử đẩy xuống **CẦN NGƯỜI XEM**.
+
+Nhưng Q13 + Q08 + Q09 vừa chốt rằng đúng hai dòng đó phải ra **KHÔNG ĐẠT**, như **khoảng trống theo thiết kế sandbox**.
+
+**Hệ quả thật nếu để nguyên:** báo cáo G4 không nói được điều Q13 muốn nói, và con số recall của qa đọc khác đi.
+
+Lead ghi nhận hai dòng này **không giống nhau hoàn toàn**: M12 còn có chỗ để trỏ — `product/config/matching.json` tồn tại, agent có thể trỏ vào file đó và các dòng khoá hiện có để chứng minh không có khoá nào là ngưỡng cảnh báo. M08 thì **không có file nào cả**: thứ vắng mặt là chính tài liệu đó trong `docs/`.
+
+→ **Cần Bách chọn:**
+
+**(A)** Bổ sung vào phần Quy ước của `MATRIX_v0.md` một câu về bằng chứng vắng mặt: *phát hiện dạng vắng mặt thì bằng chứng là **phạm vi đã quét + phương pháp quét + dòng log của chính agent kiểm thử ghi lại kết quả quét***. Như vậy vẫn giữ được `file:dòng` đúng yêu cầu Q16 — chỉ là `file:dòng` trỏ vào log của agent kiểm thử, không trỏ vào thứ không tồn tại. M08 và M12 ra KHÔNG ĐẠT đúng như Q13 muốn.
+
+**(B)** Để nguyên, chấp nhận M08 và M12 ra CẦN NGƯỜI XEM, và báo cáo G4 trình bày theo đúng kết quả đó.
+
+**Lead nghiêng về (A)**, vì nó giữ được cả Q16 lẫn Q13 mà không phải nới câu nào, và vì "đã quét hết `docs/` bằng phương pháp này, không thấy" **là** một bằng chứng kiểm định thật, truy được, không phải sự thiếu vắng bằng chứng. [Suy luận]
+
+Cả hai phương án đều dùng được. Điều không dùng được là để nó thành **tai nạn** thay vì **lựa chọn** — nguyên văn nhận xét của pm, lead đồng ý.
+
+→ **Lead KHÔNG sửa `MATRIX_v0.md` lúc này**, làm đúng như Q15: chờ Bách chọn. Câu này **chặn T11** (gọi `coder-auditor`, 21/10), **không chặn G1**.
 
 ### Q01 — Ma trận: 12 dòng hay 15 control?
 
