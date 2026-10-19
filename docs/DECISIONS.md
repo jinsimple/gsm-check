@@ -243,6 +243,31 @@ Cách commit log bằng chứng: **không đổi tên file** (giữ đúng `logs
 Cột Source của báo cáo trỏ tới đúng file đó kèm `@commit`. Các lần chạy khác vẫn nằm trên đĩa cho auditor đọc nhưng không vào git. Phần giảm thiểu của R9 đang hoạt động, nên ngưỡng 100 MB ở trên vẫn tính cho **một lần chạy**, không phải tổng.
 → T04b sẽ ghi vào TASKS.md: số lần chạy thực tế, dung lượng một lần chạy, và tổng dung lượng sau khi đo.
 
+### Q22 — Bốn điểm trước đây chờ chị Ánh, nay nhóm tự chốt (Bách chỉ thị 19/10)
+
+**Bối cảnh Bách chốt: chị Ánh KHÔNG cung cấp thêm thông tin nào. Nhóm tự nghiên cứu và tự chốt mọi thứ.** Mọi chỗ trước đây ghi "hỏi chị Ánh" nay dùng quyết định ở `docs/CHECKLIST_KIEM_TOAN.md` §7.
+
+| Điểm | Chốt | Nhãn / giới hạn |
+|---|---|---|
+| Số hiệu control ISO/IEC 42001 | Khớp **3 nguồn thứ cấp độc lập** | Giữ nhãn **[Chưa xác minh với bản chuẩn có bản quyền]** ở mọi chỗ trích số hiệu |
+| Thị trường EU | **Đan Mạch** (chính thức 30/07/2026) + **Hà Lan** (vận hành thử 25/09/2026) | có nguồn chính thức |
+| Mechanism / Effect | Taxonomy checklist §6. **Lead điền tay trong báo cáo G4, KHÔNG sửa B** | B không biết taxonomy này — xem ô độc lập dưới |
+| Legal/DPO ký duyệt | Giả định là Legal/DPO **của Green SM** (bên chịu nghĩa vụ) | Trong sandbox **chưa có ai ký** — TB-09, ghi thẳng là giới hạn lớn nhất |
+
+**Vì sao "lead điền tay, KHÔNG sửa B" là điều kiện độc lập, không chỉ là cách chia việc.** Taxonomy §6 là một **cách phân loại kết quả**. Nếu nó vào `auditor/` thì B được cấp trước khuôn để xếp kết quả của chính mình — đúng mẫu Q02 (*người bị chấm không được cấp thước đo*). Lead điền sau, trên kết quả B đã sinh ra, nên taxonomy không ảnh hưởng tới điều B đi tìm.
+
+#### `docs/CHECKLIST_KIEM_TOAN.md` — `coder-auditor` KHÔNG đọc
+
+Bách chỉ thị rõ. Lý do kỹ thuật thì mạnh hơn chỉ thị: **§3B của checklist là chính bộ thước đo B bị chấm** — TB-01 recall ≥ 80%, TB-02 FNR ≤ 20%, TB-04 độ ổn định 100%, TB-05 truy nguồn 100%. Cho B đọc ngưỡng nó bị chấm là lặp lại đúng Q02 ở một file mới. §5 còn ánh xạ M01–M12 sang TA-##, tức cho biết **mỗi dòng ma trận được kỳ vọng kiểm cái gì**.
+
+→ Đây là **file thứ ba** cần xếp loại trong `.claude/agents/coder-auditor.md`, cùng `tests/` và `reports/`. Lead **không** tự sửa định nghĩa subagent; đã gộp vào một câu xin Bách.
+
+#### Không sửa MATRIX_v0 theo checklist trước `b-freeze`
+
+Checklist là tài liệu cho **báo cáo G4** và **backlog sau 22/10**, không phải nguồn sửa ma trận. Bốn mục `MÁY` chưa có dòng MATRIX (TA-13 truy nguồn, TA-14 độ phủ nhánh, TA-17 kiểm biên, TB-08 căn cứ mỗi dòng) là **backlog sau 22/10**, theo checklist §5.
+
+**[Chưa xác minh] Một chỗ hở lead tìm ra, cần Bách:** checklist dẫn chiếu `(Q21)` cho việc đóng băng B, và TB-07 lấy bằng chứng là **tag `b-freeze`** — nhưng **Q21 không tồn tại** trong `DECISIONS.md`, và tag `b-freeze` chưa được định nghĩa ở bất kỳ tài liệu nào (`grep` toàn `docs/`, trừ chính checklist, ra **0** kết quả). B sẽ bị chấm theo TB-07, nên quy trình đóng băng phải có **trước** G3. Lead không tự đặt Q21 vì nó là quyết định quy trình, không phải việc thực thi.
+
 ### Q19 — Nguyên tắc phủ nhánh (Bách chốt 19/10, ghi đè khuyến nghị của lead)
 
 Lead đề nghị ghi `n_unmatched = 0` là khoảng trống đã biết. **Bách không đồng ý** và đặt nguyên tắc:

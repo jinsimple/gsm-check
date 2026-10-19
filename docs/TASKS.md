@@ -146,7 +146,8 @@ T02–T06 (coder-product) → T07 (lead chạy 14 lệnh kiểm) → T08 (review
 | T13 | G3 | Chạy audit 3 lần cùng commit, so sánh JSON (bỏ ts/run_id) → độ ổn định | lead | T12 | ghi chú độ ổn định | 3 lần chạy + so sánh | pending | |
 | T14 | G3 | Review `auditor/` (KHÔNG review product/ nữa) | reviewer | auditor/, MATRIX_v0 | bảng review | hết mục "Chặn" | pending | |
 | T15 | G3 | Bách chạy qa ở cửa sổ cách ly, merge `qa-score` | Bách | reports/audit_*.json | reports/qa_score_*.md | — | pending | |
-| T16 | G4 | `reports/BAO_CAO_SANDBOX.md` 6 phần theo PROMPTS 4.1 | lead | tất cả trên | báo cáo + câu hỏi mở | pm chấm lần cuối + Bách duyệt | pending | |
+| T16 | G4 | `reports/BAO_CAO_SANDBOX.md` theo PROMPTS 4.1, **đã sửa cấu trúc theo phụ lục chỉ thị 19/10** — xem ô dưới bảng | lead | tất cả trên + `docs/CHECKLIST_KIEM_TOAN.md` | báo cáo | pm chấm lần cuối + Bách duyệt | pending | |
+| T17 | G4 | **Chấm kết quả B theo checklist §3B** (TB-01 → TB-12): recall, FNR, precision, độ ổn định, truy nguồn, độc lập, đóng băng, nguồn gốc quy tắc, Legal/DPO, log của B, phạm vi dùng B, chạy lại bộ đo khi đổi MATRIX | lead | `reports/qa_score_*.md` (T15), `reports/audit_*.json` | một phần riêng trong báo cáo G4, 12 dòng | mỗi dòng TB có số đo hoặc ghi rõ **chưa đo được** và vì sao | pending | ngưỡng ở checklist §3B là **[Suy luận]**, không phải chuẩn |
 
 ## Kết quả T07 — lead tự chạy, run_id `20261019T064336`
 
@@ -379,6 +380,19 @@ Theo quy tắc rút ra từ sự cố mất log. Bốn file sinh từ `run_id` b
 | Bảng review của reviewer không còn mục "Chặn" | **ĐẠT** — không có mục Chặn nào |
 
 → **Hai điều kiện qua G2a đã đạt.** Còn 3 việc chờ Bách quyết, không chặn kỹ thuật: dung lượng log, baseline `n_unmatched = 0`, và `reports/product_run_*.json` có ignore không.
+
+## Cấu trúc báo cáo G4 — đổi theo phụ lục chỉ thị 19/10
+
+**Chị Ánh không cung cấp thêm thông tin nào.** Nên mục *"Câu hỏi mở cho chị Ánh"* trong PROMPTS 4.1 **không còn đúng** — một câu hỏi không có người trả lời thì không phải câu hỏi mở, nó là một giả định chưa khai báo. Đổi thành **hai** mục:
+
+| Mục mới | Nội dung | Nguồn |
+|---|---|---|
+| (a) **Giả định đã tự chốt và rủi ro** | 7 dòng, mỗi dòng kèm mức rủi ro nếu chốt sai | bảng checklist §7 |
+| (b) **Việc cần người có thẩm quyền pháp lý** | **TB-09, PL-02, PL-03, PL-20, PL-27, PL-30** | checklist §3B, §4 |
+
+Cộng thêm **một phần chấm kết quả B** theo checklist §3B, TB-01 → TB-12 — xem T17.
+
+**Vì sao tách (a) và (b) chứ không gộp thành một mục "giới hạn".** Hai mục này có **người nhận khác nhau**: (a) là việc nhóm đã quyết và chịu trách nhiệm, đọc xong thì biết chỗ nào có thể sai. (b) là việc **nhóm không có thẩm quyền quyết** — sáu dòng đó cần Legal/DPO hoặc luật sư, và không lượng kiểm thử nào thay được. Gộp lại thì (b) đọc thành "nhóm làm chưa xong", mà sự thật là nhóm **không được phép làm**. TB-09 là dòng checklist tự xếp **giới hạn lớn nhất của sandbox**.
 
 ## Việc của lead ở G2b — chốt TRƯỚC khi Bách chạy security
 
