@@ -135,8 +135,10 @@ T02–T06 (coder-product) → T07 (lead chạy 14 lệnh kiểm) → T08 (review
 | T07 | G2a | **Lead tự chạy đủ 14 lệnh kiểm** | lead | T02–T06 | bảng kết quả dưới | 14 lệnh kiểm, không nhận báo cáo suông | **14/14 PASS** | `run_id=20261019T064336`, sau sửa `7bfd149`; xem 2 bảng dưới |
 | T08 | G2a | Review `product/` theo checklist (security CHƯA chạy) | reviewer | product/, SPEC_A, INTERFACE | bảng Chặn / Nên sửa / Gợi ý | lead đọc, hết mục "Chặn" | **completed** | **KHÔNG CÓ MỤC CHẶN**; 5 Nên sửa + 10 Gợi ý; lead tự xác minh tận dòng 7 chỗ then chốt, đúng hết |
 | T09a | G2a | Sửa 6 chỗ rò `INTERFACE.md` do kiểm 12 phát hiện | coder-product | bảng kiểm 12 | docs/INTERFACE.md | lead đọc lại diff + `grep` + chạy lại kiểm 10 | **completed** | `7bfd149`; chỉ sửa 1 file, `git diff cb97490..HEAD` = đúng `docs/INTERFACE.md`; `run_product.py` exit=0 sau sửa |
-| T09b | G2a | Sửa 14 mục từ T08 + 2 mục pm: rò logic A1–A3, nhánh thoát không log B1–B4, bằng chứng tự khẳng định C1–C6, ghi `note` D1–D2 | coder-product | bảng review T08, bảng chấm pm | commit sửa | lead chạy lại 14 lệnh kiểm + kiểm 15 | in_progress | không có mục Chặn nào, nên đây là Nên sửa/Gợi ý |
-| T07b | G2a | **Kiểm 15** — lần chạy chẩn đoán cho nhánh `no_driver_in_radius`: gọi `match()` với dữ liệu tài xế thật nhưng `radius_km` rất nhỏ, **không** đổi config mặc định, **không** commit làm baseline | lead | T09b xong | 1 dòng log `decision="no_match"` làm bằng chứng nhánh đó chạy thật | gọi `match()` trực tiếp, đọc dòng log sinh ra | pending | ý của pm + reviewer; chờ T09b |
+| T09b | G2a | Sửa 14 mục từ T08 + 2 mục pm | coder-product | bảng review T08, bảng chấm pm | commit sửa | lead chạy lại toàn bộ bộ kiểm | **completed** | `2ca9a03`, 8 file +220/−75; lead chạy lại 15 kiểm, 13 PASS |
+| T09c | G2a | `run_id` chống trùng: mode `"x"` + `run_id` phân giải 1 giây làm `gen_mock` chạy 2 lần liên tiếp bị `FileExistsError` | coder-product | chẩn đoán kiểm 2 | `run_id` có milli giây | `gen_mock.py` 2 lần liên tiếp, lần 2 phải exit=0 | in_progress | **chặn G2a** |
+| T07b | G2a | **Kiểm 15** — chẩn đoán nhánh `no_driver_in_radius` | lead | T09b | dòng log quyết định làm bằng chứng | gọi `match()` với `radius_km=0.0001`, dữ liệu tài xế thật | **PASS** | `match()` → `{driver_id: None, auto_accept: False, reason: 'no_driver_in_radius'}`; 203 dòng log, **đúng 1** dòng quyết định, `reason='no_driver_in_radius'` |
+| T07c | G2a | **Kiểm 16** — log `data_loaded` phải có `sha256` 3 file dữ liệu + version `mock_data.json` | lead | T09b (C6) | bằng chứng dữ liệu nào đã dùng | đối chiếu sha256 trong log với hash file thật | **PASS** | 3 sha256 trong log, khớp hash 3 file dữ liệu |
 | T10 | G2b | Tạm dừng commit; Bách chạy security ở cửa sổ cách ly, merge `security-pass`, lead chạy lại A | Bách → lead | — | commit sau security | `python product/run_product.py` sau merge | pending | |
 | T10b | G3 | **Chốt cửa trước T11, 2 việc:** (1) đọc lại `.claude/agents/coder-auditor.md:7`, xác nhận `docs/DECISIONS.md` vẫn không nằm trong danh sách được đọc; (2) xác nhận **Q17 đã được Bách trả lời**. Thiếu bất kỳ việc nào → **dừng, báo Bách**, không gọi T11 | lead | .claude/agents/coder-auditor.md, DECISIONS Q17 | xác nhận ghi vào cột Bằng chứng | `sed -n '7p' .claude/agents/coder-auditor.md` + đọc Q17 | pending | dòng 7 **đã sửa** ở G1 theo Q15 |
 | T11 | G3 | `auditor/matrix.json` + `auditor/rules/m01..m12` + `run_audit.py` | coder-auditor | **CHỈ** docs/MATRIX_v0.md + docs/INTERFACE.md (xem ô cảnh báo dưới bảng) | reports/audit_<commit>.json/.md | `python auditor/run_audit.py` ra đủ 12 dòng; **mỗi phát hiện có `file:dòng` riêng** (Q16) | pending | |
@@ -235,6 +237,37 @@ Bảy chỗ đã cắt đều thuộc nhóm thứ hai — nên cắt **đúng**.
 ## Kỷ luật commit — pm nhắc, lead nhận
 
 `git add -A` là cách lead commit nhầm `reports/product_run_*.json` (408 KB). Lần này vô hại và còn dùng được làm bằng chứng cổng vì `SPEC_A §4` vốn đòi file đó. Nhưng `.gitignore` chỉ chặn `logs/*.jsonl`, nên `git add -A` sẽ nuốt bất cứ thứ gì rơi vào thư mục làm việc. **Từ G2b trở đi: commit bằng đường dẫn tường minh, không `git add -A`.**
+
+## T07 vòng 2 — chạy lại sau T09b. 13/15 PASS, 2 FAIL đã chẩn đoán
+
+Code đổi 8 file (+220/−75) nên lead chạy lại **toàn bộ** bộ kiểm, không chỉ kiểm phần sửa.
+
+**Hai kiểm mới lead thêm:**
+
+| # | Kiểm | Kết quả |
+|---|---|---|
+| **15** | Nhánh `no_driver_in_radius` có log thật | **PASS** — gọi `match()` với dữ liệu tài xế thật và `radius_km=0.0001`: trả `{driver_id: None, auto_accept: False, reason: 'no_driver_in_radius'}`, sinh 203 dòng log, **đúng 1** dòng quyết định với `reason='no_driver_in_radius'`. Là **ca kiểm thử**, không đổi config mặc định, không đổi dữ liệu, không commit làm baseline |
+| **16** | Log `data_loaded` có `sha256` dữ liệu | **PASS** — 3 sha256 trong log khớp hash 3 file thật, kèm version và seed của `mock_data.json` |
+
+**Hai FAIL, cả hai đã chẩn đoán trước khi sửa (`CLAUDE.md:30`):**
+
+**Kiểm 2 FAIL — nguyên nhân là mode `"x"` của C1, không phải tính xác định.** Hash 3 file vẫn giống hệt nhau (`89aadc78` / `ea898f24` / `a94fdf64`), nhưng lần chạy `gen_mock` thứ hai **exit=1** với `FileExistsError` trên `logs/gen_mock_20261019T075320.jsonl`. Lý do: `run_id` chỉ phân giải **1 giây** mà `gen_mock.py` chạy **dưới 1 giây**, nên hai lần liên tiếp trùng `run_id` và mode `"x"` chặn lần sau.
+`coder-product` **đã cảnh báo đúng chỗ này** và lead đã chọn sai: lead bảo dùng `"x"` và không đổi `run_id` vì sợ phải sửa `INTERFACE.md`. Lý do đó không đứng được — `INTERFACE.md` đã sửa mấy lượt, còn lỗi này **chặn quy trình thật**: Quy ước `MATRIX_v0` bắt B tự chạy sinh log mới trước khi kiểm, nên một script kiểm chạy `gen_mock` hai lần sẽ **tự tạo cho mình kết quả CẦN NGƯỜI XEM giả**. → T09c: giữ `"x"`, đổi `run_id` sang có milli giây.
+
+**Kiểm 14 FAIL — bộ kiểm của lead siết quá tay, không phải lỗi sản phẩm.** Hai hằng số bị báo: `gen_mock.py:34` `_SECONDS_PER_DAY = 24 * 60 * 60` (quy đổi đơn vị thời gian) và `run_product.py:51` `65536` (cỡ bộ đệm đọc file cho sha256). `CLAUDE.md §2.4` cấm hardcode **hằng số nghiệp vụ**, không cấm hằng số kỹ thuật.
+Lead **không whitelist mù**: thay bằng **danh sách miễn có nguồn gốc** — mỗi chỗ miễn phải khớp cả ba (tên file, giá trị, chuỗi ngữ cảnh trên dòng đó) và kèm lý do, và bộ kiểm **in danh sách miễn ra mỗi lần chạy** để nó luôn ở trong tầm mắt. Siết lại bộ kiểm cũng vá được điểm mù thật: bản trước chỉ quét `matching.py` + `pricing.py`, nay quét hết `product/**/*.py` — chính vì vậy mới thấy hai chỗ này, và cũng chính vì vậy mà `n_decisions = 2 * len(results)` ở `run_product.py` trước đó lọt.
+
+## Sự cố mất log bằng chứng — và lỗi quy trình của lead
+
+`coder-product` dùng wildcard quá rộng (`rm -f logs/matching_2026*.jsonl`) và **xoá mất `logs/matching_20261019T064336.jsonl`** — file matching của lần chạy bằng chứng cổng. Nó **báo trước mọi thứ khác** và **từ chối dựng file thay thế** vì `ts` từng dòng sẽ khác bản gốc, thành bằng chứng giả. Xử lý đúng.
+
+**Phần lỗi của lead:** `DECISIONS.md` Q12 ghi rõ phải `git add -f logs/<module>_<run_id>.jsonl` cho lần chạy bằng chứng. **Lead chưa bao giờ làm.** Nếu làm rồi thì file khôi phục được từ git. Quyết định ở Q12 mà không thực hiện thì bằng như không có.
+
+Xử lý: lần chạy cũ **phải** bỏ dù sao, vì code đã đổi 8 file nên nó không còn khớp code hiện tại. Lead chạy lại sạch lấy `run_id` mới, và lần chạy mới **mạnh hơn** bản cũ vì log `data_loaded` giờ có sha256 dữ liệu (kiểm 16).
+
+**Hai quy tắc lấy từ sự cố này:**
+1. Chỉ xoá trong `logs/` bằng **danh sách tên file liệt kê đủ**, không bao giờ dùng wildcard.
+2. Log bằng chứng phải được **sao lưu ra ngoài repo** ngay khi chốt, vì `logs/*.jsonl` không vào git nên không có lưới an toàn nào khác.
 
 ## Ô cảnh báo — độc lập của coder-auditor
 
