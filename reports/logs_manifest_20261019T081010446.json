@@ -1,0 +1,27 @@
+{
+  "schema_version": "0.1",
+  "note": "Manifest cua log lan chay bang chung. logs/*.jsonl KHONG vao git theo .gitignore; file nay la bang chung kiem chung duoc cho ban sao luu ngoai repo. Bang chung dang log khong kem @commit — ngoai le da duoc chuan thuan trong Quy uoc MATRIX_v0.",
+  "run_id": "20261019T081010446",
+  "files": [
+    {
+      "path": "logs/matching_20261019T081010446.jsonl",
+      "lines": 205000,
+      "bytes": 106094942,
+      "sha256": "967bf3caa3267ba31369877bb9486c79a6a0489219efebaaeb187b9a177ba73a"
+    },
+    {
+      "path": "logs/pricing_20261019T081010446.jsonl",
+      "lines": 10000,
+      "bytes": 3949701,
+      "sha256": "16863cf15d468fb4c7183b486d5bc553c04a3d1ec01c0f0acaf864ad29f610ee"
+    },
+    {
+      "path": "logs/run_product_20261019T081010446.jsonl",
+      "lines": 1005,
+      "bytes": 397446,
+      "sha256": "f109a2e61d22e1736734ace985a7b82e8fff76289bdef2acf9838f1e26ee87f9"
+    }
+  ],
+  "total_lines": 216005,
+  "total_bytes": 110442089
+}

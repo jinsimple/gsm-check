@@ -269,7 +269,58 @@ Xử lý: lần chạy cũ **phải** bỏ dù sao, vì code đã đổi 8 file 
 1. Chỉ xoá trong `logs/` bằng **danh sách tên file liệt kê đủ**, không bao giờ dùng wildcard.
 2. Log bằng chứng phải được **sao lưu ra ngoài repo** ngay khi chốt, vì `logs/*.jsonl` không vào git nên không có lưới an toàn nào khác.
 
-## KẾT QUẢ CUỐI T07 — 16/16 PASS. `run_id` bằng chứng `20261019T075936693`
+## KẾT QUẢ CUỐI — 18/18 PASS. `run_id` bằng chứng `20261019T081010446`
+
+Sau T09d. Lead chạy bộ kiểm **4 vòng**: sau T06, sau T09b, sau T09c, sau T09d. Mỗi lần code đổi là chạy lại **toàn bộ**.
+
+| Nhóm | Kết quả |
+|---|---|
+| 15 kiểm máy (1–11, 13–16, +) | **PASS** |
+| Kiểm 12 — `INTERFACE.md` không rò logic, đọc bằng mắt | **PASS** — đọc diff cả 4 vòng; `grep` 10 cụm từ nghi vấn → **0 lần** từng cụm |
+| **Kiểm 17** — mọi đường thoát có log trước đó (vế 2 của M04) | **PASS** — 39 `return`/`raise`, **27 miễn có nguồn gốc**, 0 đường thoát không log |
+| **Kiểm 18** — manifest khớp bản sao lưu ngoài repo | **PASS** — 3/3 file, `sha256` khớp từng file |
+
+### Hai kiểm mới, dựng theo nhận xét của pm
+
+pm chấm T08 ĐẠT nhưng chỉ ra điều kiện qua G2a của lead **tuyên bố đủ mà không phủ hết chính dòng ma trận bắt buộc phải ĐẠT**: M04 kiểm **hai** thứ — số quyết định lệch, **hoặc** có nhánh `return` không gọi log. reviewer tìm ra chỗ thứ hai **bằng mắt**, mà `product/` có **39 câu `return`/`raise`**.
+
+**Kiểm 17 bắt được lỗi thật mà cả `reviewer` đọc tay và `coder-product` đều bỏ sót.** Hai bản sửa B2 và B4 ghi log **bên trong `if logger is not None:`**, nên khi không ai truyền logger thì `raise` xảy ra **không có dòng log nào** — và đường đó chạm được, vì chính `INTERFACE.md` nói tham số `logger` là **tùy chọn**. Đã sửa ở T09d: ghi log không điều kiện qua logger dự phòng.
+
+`coder-product` tự nêu điều đáng ghi nhận nhất của vòng này: ở T09b nó báo *"đã kiểm từng chỗ bằng cách ép nhánh đó chạy thật"* — nhưng nó ép **có truyền logger**, tức **chỉ kiểm đúng đường nó đã viết**. Nó tự gọi đó là đúng vấn đề Q02 mà cả dự án đang đo: *bài kiểm do chính người viết code thiết kế lại trúng đúng giả định của người viết code*. **Câu này phải vào báo cáo G4** — nó là lập luận gọn nhất cho việc vì sao cần một agent kiểm thử độc lập.
+
+**Kiểm 18 canh chính quy tắc sao lưu**, vì lead vừa tự chứng minh một quyết định không có lệnh kiểm thì bằng như không có (Q12 đòi `git add -f` từ vòng 2, lead chưa bao giờ làm, nên mất log là mất thật).
+
+### Danh sách miễn của kiểm 17 — 27 chỗ, có nguồn gốc
+
+Cùng khuôn kiểm 14: mỗi chỗ miễn phải khớp **tên file + tên hàm**, kèm lý do, và in ra mỗi lần chạy. Hai loại:
+- **Hàm thuần hoặc không nằm trên đường quyết định**: `haversine_km`, `_hour_of`, `_make_id`, `_coord`, `_weighted`, `_read_json`, `_sha256`, `_iso_now`, `rel`, `_format_run_id`, `make_run_id`, `process_run_id`, `_now_iso`, `_merge_context`, `__enter__`, `__exit__`, `main`, `default_logger` (cả 3 module), `make_fallback_logger`, `load_config`.
+- **Miễn CHỈ cho `return`, vẫn canh `raise`**: `load_json_config` (trả thành công thì tầng gọi ghi `config_loaded`) và `_round_to_multiple` (trả giá trị thì `fare()` ghi `fare_rounding` với giá trước và sau). Lead tách theo **loại đường thoát** để không miễn lẫn — nếu miễn cả hàm thì đúng hai câu `raise` gây lỗi T09d sẽ bị miễn theo.
+
+### Một chỗ `coder-product` nhắc đúng về bộ kiểm
+
+Nó cảnh báo: heuristic kiểu *"có chuỗi `if log is not None` trong cửa sổ trước `raise`"* giờ **báo dương tính giả**, vì chuỗi đó vẫn còn trong dòng gán `log = log if log is not None else default_logger()`. Heuristic của chính nó vướng đúng bẫy đó. Kiểm 17 của lead **không** khớp chuỗi mà xét **vị trí của `.log(` trong AST**, nên không vướng — đã kiểm lại và `logger.py:226` không còn bị báo sau khi sửa.
+
+### Bằng chứng cổng và manifest
+
+| | |
+|---|---|
+| `run_id` | `20261019T081010446` |
+| Manifest đã commit | `reports/logs_manifest_20261019T081010446.json` — tên file, số dòng, số byte, `sha256` từng file |
+| Bản sao lưu ngoài repo | 3 log + báo cáo + log kiểm 15 |
+| Kiểm 18 | `sha256` manifest khớp bản sao lưu, 3/3 |
+| Log trong git | **không** — `logs/*.jsonl` bị ignore |
+
+Bằng chứng cổng đã bị thay **ba lần** vì code đổi: `064336` → `075936693` → `081010446`. Mỗi lần code đổi là lần chạy cũ không còn khớp, nên phải chạy lại — `summary` giống nhau **không** chứng minh các file log giống nhau, đúng như `coder-product` nhận xét.
+
+### Điều kiện qua G2a
+
+| Điều kiện | Trạng thái |
+|---|---|
+| Mọi lệnh kiểm đạt | **ĐẠT 18/18** |
+| `reviewer` không còn mục "Chặn" | **ĐẠT** |
+| *(pm đề xuất thêm)* manifest đã commit + bản sao lưu tồn tại + `sha256` khớp | **ĐẠT** — kiểm 18 |
+
+## KẾT QUẢ T07 vòng 3 (lịch sử) — `run_id` `20261019T075936693`
 
 Lead chạy bộ kiểm **3 vòng**: sau T06, sau T09b, sau T09c. Mỗi lần code đổi là chạy lại toàn bộ, không chỉ kiểm phần sửa.
 
