@@ -32,6 +32,7 @@ Nhấn mạnh 5 điều trong lời giao việc:
 3. **Ràng buộc cứng `CLAUDE.md §2` vẫn tuyệt đối** — đây là chỗ ngược với điều 2, phải đọc kỹ cả hai: chỉ stdlib, seed 42, log JSONL đủ 9 trường cho mọi quyết định, mọi tham số nghiệp vụ trong config có `version`, không hardcode.
 4. `INTERFACE.md` phải định nghĩa enum `event`, event nào là quyết định, và **liệt kê các trường dễ biến động** (`ts`, `run_id`, đường dẫn log) — `MATRIX_v0.md` đã hẹn lấy mấy thứ này từ `INTERFACE.md`.
 5. Không đọc, không sửa `auditor/`. Không nhắn `coder-auditor`.
+6. **`INTERFACE.md` không được rò logic.** `SPEC_A.md:55` ghi rõ "**Không** mô tả logic bên trong", và đây là **file duy nhất** nối `product/` với `coder-auditor`. Chỉ gồm 5 thứ `SPEC_A.md:54` liệt kê. Schema config chỉ nêu **tên khoá và kiểu dữ liệu** — **KHÔNG** nêu giá trị, biên bậc, hệ số, ngưỡng. Không câu nào mô tả thuật toán, thứ tự lọc, cách phá hoà, hay cách tính giá. Viết "`pricing.json` có khoá `tiers` kiểu list" thì được; viết "gồm 4 bậc 0-2 km, 2-12 km…" thì **không**.
 
 ### Lệnh kiểm lead TỰ chạy ở T07 — không nhận báo cáo suông
 
@@ -45,19 +46,72 @@ Nhấn mạnh 5 điều trong lời giao việc:
 | 6 | Số quyết định = 2.000 (Q10) | đếm event `match_result` + `fare_result` |
 | 7 | Config có `version` | đọc 2 file config, in `version` |
 | 8 | Chỉ stdlib | thu mọi `import` trong `product/`, đối chiếu `sys.stdlib_module_names` |
-| 9 | Pricing đúng bậc và hệ số | kiểm tay 3 quãng đường (1.5 / 8 / 30 km) x 3 khung giờ (3h / 8h / 14h) |
-| 10 | Danh sách thuộc tính trong `INTERFACE.md` khớp `DECISIONS.md` Q02 | so từng dòng bảng, phải khớp tuyệt đối |
+| 9 | Pricing đúng bậc và hệ số, **kể cả ở biên** | so với bảng giá trị kỳ vọng tính tay bên dưới |
+| 10 | Bảng thuộc tính trong `INTERFACE.md` khớp `DECISIONS.md` Q02 | so từng dòng, phải khớp tuyệt đối |
 | 11 | Dung lượng log thật (T04b) | `wc -l` + `du -sh logs/` |
+| 12 | **`INTERFACE.md` không rò logic** | lead **tự đọc hết file bằng mắt**, đối chiếu `SPEC_A.md:54-55`, liệt kê từng câu nghi là mô tả logic. Không script được. Nghi ngờ thì cắt |
+| 13 | **Log đủ ứng viên BỊ LOẠI** | lấy 3 `ride_id` bất kỳ, đếm dòng log ứng viên của từng chuyến → phải **= 200** (toàn bộ `drivers.json`), không phải số ứng viên qua lọc. Mỗi dòng bị loại phải có `reason` đúng lý do: `not_idle`, `wrong_vehicle_type`, `out_of_radius` |
+| 14 | **Không hardcode hằng số nghiệp vụ** | duyệt AST `matching.py` + `pricing.py`, thu mọi hằng số số học, bỏ nhóm vô hại (0, 1, 2 làm chỉ số; hằng trong công thức haversine), phần còn lại **phải có trong `config/*.json`**. Dư số nào thì hỏi `coder-product` số đó ở đâu ra |
+
+**Kiểm 13 lệch con số thì DỪNG, không sửa vội** — chẩn đoán bằng log trước, theo `CLAUDE.md:30`.
+
+### Bảng giá kỳ vọng cho kiểm 9 — TÍNH TAY TRƯỚC KHI CHẠY
+
+Theo Q03 (bậc nửa mở, giữ phần lẻ) và Q04 (giờ nguyên 0–6 → 0.9; 7–9 và 17–19 → 1.2; còn lại 1.0), làm tròn **lên** bội số 1.000đ.
+
+Giá gốc theo quãng đường `d`: `d ≤ 2` → 30.000 ; `2 < d ≤ 12` → 30.000 + (d−2)×15.000 ; `12 < d ≤ 25` → 180.000 + (d−12)×14.000 ; `d > 25` → 362.000 + (d−25)×12.000.
+
+**9 ca gốc:**
+
+| d (km) | giờ | hệ số | giá gốc | trước làm tròn | **kỳ vọng** |
+|---|---|---|---|---|---|
+| 1.5 | 3 | 0.9 | 30.000 | 27.000 | **27.000** |
+| 1.5 | 8 | 1.2 | 30.000 | 36.000 | **36.000** |
+| 1.5 | 14 | 1.0 | 30.000 | 30.000 | **30.000** |
+| 8 | 3 | 0.9 | 120.000 | 108.000 | **108.000** |
+| 8 | 8 | 1.2 | 120.000 | 144.000 | **144.000** |
+| 8 | 14 | 1.0 | 120.000 | 120.000 | **120.000** |
+| 30 | 3 | 0.9 | 422.000 | 379.800 | **380.000** |
+| 30 | 8 | 1.2 | 422.000 | 506.400 | **507.000** |
+| 30 | 14 | 1.0 | 422.000 | 422.000 | **422.000** |
+
+**Biên quãng đường** (giờ 14, hệ số 1.0, để tách riêng logic bậc):
+
+| d (km) | giá gốc | **kỳ vọng** | bắt lỗi gì |
+|---|---|---|---|
+| 2.0 | 30.000 | **30.000** | biên trên của bậc mở cửa |
+| 2.1 | 31.500 | **32.000** | vừa qua biên → phải tính 15.000/km |
+| 12.0 | 180.000 | **180.000** | biên 15.000 → 14.000 |
+| 12.1 | 181.400 | **182.000** | vừa qua biên |
+| 25.0 | 362.000 | **362.000** | biên 14.000 → 12.000 |
+| 25.1 | 363.200 | **364.000** | vừa qua biên |
+
+**Biên giờ** (d = 8 km, giá gốc 120.000):
+
+| giờ | hệ số | **kỳ vọng** | bắt lỗi gì |
+|---|---|---|---|
+| 0 | 0.9 | **108.000** | đầu khung đêm |
+| 6 | 0.9 | **108.000** | **chỗ Q04 phải quyết vì SPEC bỏ trống khoảng 6h–7h** |
+| 7 | 1.2 | **144.000** | **ngay sau đó phải nhảy lên 1.2** |
+| 9 | 1.2 | **144.000** | cuối khung sáng |
+| 17 | 1.2 | **144.000** | đầu khung chiều |
+| 19 | 1.2 | **144.000** | cuối khung chiều |
+| 20 | 1.0 | **120.000** | vừa qua khung chiều |
+| 23 | 1.0 | **120.000** | cuối ngày |
+
+Trần hệ số 1.3 không ca nào chạm tới — đúng như Q04 đã ghi, đây là tham số hiện không ràng buộc.
 
 ### Thứ tự và điều kiện qua cổng
 
-T02–T06 (coder-product) → T07 (lead chạy 11 lệnh kiểm) → T08 (reviewer review `product/`, lead xác nhận **security CHƯA chạy**) → T09 (coder-product sửa mọi mục "Chặn") → lead chạy lại từ đầu → báo cáo pm → trình Bách.
-**Điều kiện qua G2a:** 11 lệnh kiểm đều đạt **và** bảng review của reviewer không còn mục "Chặn".
+T02–T06 (coder-product) → T07 (lead chạy 14 lệnh kiểm) → T08 (reviewer review `product/`, lead xác nhận **security CHƯA chạy**) → T09 (coder-product sửa mọi mục "Chặn") → lead chạy lại từ đầu → báo cáo pm → trình Bách.
+**Điều kiện qua G2a:** **14** lệnh kiểm đều đạt **và** bảng review của reviewer không còn mục "Chặn".
 
 ### Rủi ro riêng của G2a
 
 - Nếu 17h ngày 20/10 chưa xong T08 thì lead đề nghị dời security sang sáng 21/10 và báo Bách ngay (R1).
 - Điều 2 và điều 3 trong lời giao việc ngược chiều nhau. Nếu `coder-product` hiểu lệch mà bỏ log thì mất cả G3, không chỉ mất mấy dòng ma trận. Lệnh kiểm 4, 5, 6 bắt đúng chỗ đó.
+- **`INTERFACE.md` là cửa duy nhất mở sang B.** Hàng rào Q18 dựng công phu để giữ Q03, Q04, Q06 ngoài tầm mắt của B sẽ sụp hết chỉ vì một câu mô tả biên bậc giá trong schema config — qua đúng cái cửa được phép mở. Điều 6 chặn ở đầu vào, kiểm 12 chặn ở đầu ra.
+- **Kiểm 4 và 11 đạt ngay cả khi log thiếu ứng viên bị loại.** Đó đúng là phương án lead đã bác bỏ ở Q12 khi chọn không xin nới `CLAUDE.md §3`, nên nó sẽ lọt êm nếu không có kiểm 13. Mất dấu vết từng ứng viên là mất M01 và một phần M04.
 
 ## Bảng việc
 
@@ -76,7 +130,7 @@ T02–T06 (coder-product) → T07 (lead chạy 11 lệnh kiểm) → T08 (review
 | T04b | G2a | **Đo thật**: số dòng log, dung lượng 1 lần chạy, **tổng dung lượng qua 8 lần chạy dự kiến**; thay mọi số [Suy đoán] ở DECISIONS Q12 | lead | logs/*.jsonl | số đo ghi vào cột Bằng chứng | `wc -l` + `du -sh logs/` | pending | |
 | T05 | G2a | `product/pricing.py` — `fare()` + log từng bậc km | coder-product | SPEC_A §3, DECISIONS Q03/Q04/Q10 | pricing.py, logs/pricing_*.jsonl | kiểm tay 3 mốc quãng đường ở 3 khung giờ | pending | |
 | T06 | G2a | `product/run_product.py` + `docs/INTERFACE.md` | coder-product | SPEC_A §4–5, DECISIONS Q10 | reports/product_run_*.json, INTERFACE.md | `python product/run_product.py` | pending | |
-| T07 | G2a | **Lead tự chạy đủ 11 lệnh kiểm** ở bảng "Kế hoạch G2a" | lead | T02–T06 | kết quả từng lệnh dán vào cột Bằng chứng | 11 lệnh kiểm, không nhận báo cáo suông | pending | |
+| T07 | G2a | **Lead tự chạy đủ 14 lệnh kiểm** ở bảng "Kế hoạch G2a", gồm kiểm 12 đọc `INTERFACE.md` bằng mắt và kiểm 13 đếm ứng viên bị loại | lead | T02–T06 | kết quả từng lệnh dán vào cột Bằng chứng | 14 lệnh kiểm, không nhận báo cáo suông | pending | |
 | T08 | G2a | Review `product/` theo checklist (security CHƯA chạy) | reviewer | product/, SPEC_A, INTERFACE | bảng Chặn / Nên sửa / Gợi ý | lead đọc, hết mục "Chặn" | pending | |
 | T09 | G2a | Sửa mục "Chặn" của reviewer | coder-product | bảng review | commit sửa | `python product/run_product.py` chạy lại OK | pending | |
 | T10 | G2b | Tạm dừng commit; Bách chạy security ở cửa sổ cách ly, merge `security-pass`, lead chạy lại A | Bách → lead | — | commit sau security | `python product/run_product.py` sau merge | pending | |
