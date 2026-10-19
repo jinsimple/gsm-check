@@ -41,7 +41,7 @@ Nhấn mạnh 5 điều trong lời giao việc:
 | 1 | Chạy được bằng một lệnh | `python product/run_product.py` → exit 0 |
 | 2 | Seed 42 cho kết quả xác định | chạy `gen_mock.py` 2 lần, so `sha256` của 3 file JSON |
 | 3 | Cùng đầu vào → cùng kết quả (chuẩn bị cho M10) | chạy `run_product.py` 2 lần, so `reports/product_run_*.json` sau khi bỏ `ts`, `run_id` |
-| 4 | Log đủ 9 trường ở **mọi** dòng | script đọc hết `logs/*.jsonl`, đếm dòng thiếu trường |
+| 4 | Log đủ 9 trường ở **mọi** dòng | **Điều kiện tiên quyết trước khi tin kết quả:** có ít nhất 1 file khớp `logs/*.jsonl`, **và** tên file khớp mẫu `<module>_<run_id>.jsonl` theo `CLAUDE.md §3`. Thiếu một trong hai thì kiểm 4 **đạt rỗng** — quét không ra file nào cũng cho 0 dòng thiếu. Sau đó mới đọc hết `logs/*.jsonl` đếm dòng thiếu trường |
 | 5 | Mọi quyết định có `reason` không rỗng | script lọc dòng có `decision` khác null, kiểm `reason` |
 | 6 | Số quyết định = 2.000 (Q10) | đếm event `match_result` + `fare_result` |
 | 7 | Config có `version` | đọc 2 file config, in `version` |
@@ -54,6 +54,8 @@ Nhấn mạnh 5 điều trong lời giao việc:
 | 14 | **Không hardcode hằng số nghiệp vụ** | duyệt AST `matching.py` + `pricing.py`, thu mọi hằng số số học, bỏ nhóm vô hại (0, 1, 2 làm chỉ số; hằng trong công thức haversine), phần còn lại **phải có trong `config/*.json`**. Dư số nào thì hỏi `coder-product` số đó ở đâu ra |
 
 **Kiểm 13 lệch con số thì DỪNG, không sửa vội** — chẩn đoán bằng log trước, theo `CLAUDE.md:30`.
+
+**Bẫy "đạt rỗng" ở kiểm 4.** Nếu `coder-product` đặt tên log sai quy ước (ví dụ `logs/product.log` thay vì `logs/<module>_<run_id>.jsonl`) thì `logs/*.jsonl` không khớp file nào, script đếm 0 dòng thiếu trường và **báo đạt trong khi không có log nào cả**. Vì vậy kiểm 4 phải khẳng định sự tồn tại và tên file trước. Kiểm 13 không dính bẫy này vì 0 ≠ 200 sẽ fail to tiếng. Quy ước tên file đã được đưa thẳng vào lời giao việc cho `coder-product`.
 
 ### Bảng giá kỳ vọng cho kiểm 9 — TÍNH TAY TRƯỚC KHI CHẠY
 
