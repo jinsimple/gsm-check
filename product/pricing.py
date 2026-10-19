@@ -15,7 +15,7 @@ _HERE = os.path.dirname(os.path.abspath(__file__))
 if _HERE not in sys.path:
     sys.path.insert(0, _HERE)
 
-from logger import JsonlLogger, load_json_config, make_run_id  # noqa: E402
+from logger import load_json_config, make_fallback_logger  # noqa: E402
 
 CONFIG_PATH = os.path.join(_HERE, "config", "pricing.json")
 MODULE_NAME = "pricing"
@@ -31,19 +31,19 @@ def default_logger():
     """Logger du phong khi fare() duoc goi truc tiep, khong truyen logger."""
     global _DEFAULT_LOGGER
     if _DEFAULT_LOGGER is None:
-        _DEFAULT_LOGGER = JsonlLogger(MODULE_NAME, make_run_id())
+        _DEFAULT_LOGGER = make_fallback_logger(MODULE_NAME)
     return _DEFAULT_LOGGER
 
 
-def load_config(path=None):
-    return load_json_config(path or CONFIG_PATH)
+def load_config(path=None, logger=None):
+    return load_json_config(path or CONFIG_PATH, logger=logger)
 
 
 def _hour_of(requested_at):
     return datetime.fromisoformat(requested_at).hour
 
 
-def _round_to_multiple(amount, mode, multiple):
+def _round_to_multiple(amount, mode, multiple, log=None):
     value = round(amount, _FLOAT_DECIMALS)
     if mode == "up":
         return int(math.ceil(value / multiple - _FLOAT_EPSILON) * multiple)
@@ -51,6 +51,15 @@ def _round_to_multiple(amount, mode, multiple):
         return int(math.floor(value / multiple + _FLOAT_EPSILON) * multiple)
     if mode == "nearest":
         return int(round(value / multiple) * multiple)
+    if log is not None:
+        log.log(
+            func="_round_to_multiple",
+            event="rounding_mode_unsupported",
+            inputs={"mode": mode, "multiple_vnd": multiple, "amount_vnd": amount},
+            outputs={},
+            decision=None,
+            reason="rounding_mode_khong_ho_tro_nen_bao_loi",
+        )
     raise ValueError("rounding.mode khong ho tro: %r" % mode)
 
 
@@ -98,6 +107,18 @@ def fare(distance_km, requested_at, config, logger=None):
             amount = km_in_tier * unit
             reason = "tier_charged_per_km" if km_in_tier > 0 else "tier_not_reached"
         else:
+            log.log(
+                func="fare",
+                event="tier_kind_unsupported",
+                inputs={
+                    "tier_index": index,
+                    "tier_id": tier.get("tier_id"),
+                    "kind": tier["kind"],
+                },
+                outputs={},
+                decision=None,
+                reason="tier_kind_khong_ho_tro_nen_bao_loi",
+            )
             raise ValueError("tier.kind khong ho tro: %r" % tier["kind"])
 
         base_fare += amount
@@ -192,7 +213,7 @@ def fare(distance_km, requested_at, config, logger=None):
     )
 
     fare_vnd = _round_to_multiple(
-        fare_before_rounding, rounding["mode"], rounding["multiple_vnd"]
+        fare_before_rounding, rounding["mode"], rounding["multiple_vnd"], log
     )
     breakdown.append(
         {

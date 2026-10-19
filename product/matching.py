@@ -17,7 +17,7 @@ _HERE = os.path.dirname(os.path.abspath(__file__))
 if _HERE not in sys.path:
     sys.path.insert(0, _HERE)
 
-from logger import JsonlLogger, load_json_config, make_run_id  # noqa: E402
+from logger import load_json_config, make_fallback_logger  # noqa: E402
 
 CONFIG_PATH = os.path.join(_HERE, "config", "matching.json")
 MODULE_NAME = "matching"
@@ -29,18 +29,15 @@ _DEFAULT_LOGGER = None
 
 
 def default_logger():
-    """Logger du phong khi match() duoc goi truc tiep, khong truyen logger.
-
-    Bao dam khong bao gio co quyet dinh nao chay ma khong de lai log.
-    """
+    """Logger du phong khi match() duoc goi truc tiep, khong truyen logger."""
     global _DEFAULT_LOGGER
     if _DEFAULT_LOGGER is None:
-        _DEFAULT_LOGGER = JsonlLogger(MODULE_NAME, make_run_id())
+        _DEFAULT_LOGGER = make_fallback_logger(MODULE_NAME)
     return _DEFAULT_LOGGER
 
 
-def load_config(path=None):
-    return load_json_config(path or CONFIG_PATH)
+def load_config(path=None, logger=None):
+    return load_json_config(path or CONFIG_PATH, logger=logger)
 
 
 def haversine_km(lat1, lon1, lat2, lon2):

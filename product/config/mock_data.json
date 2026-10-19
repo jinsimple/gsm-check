@@ -1,6 +1,6 @@
 {
   "version": "0.1",
-  "note": "Tham so sinh du lieu tong hop. 100% gia lap, khong co du lieu that.",
+  "note": "Tham so sinh du lieu tong hop. 100% gia lap, khong co du lieu that. CANH BAO: THU TU KHOA trong cac khoi trong so (driver_status_weights, vehicle_type_weights, customer_segment_weights) la MOT PHAN CUA SEED. Doi cho hai khoa trong cung mot khoi khong doi ngu nghia nhung doi toan bo du lieu sinh ra voi cung seed 42. Khong doi cho, khong sap xep lai.",
   "seed": 42,
   "base_date": "2026-10-19",
   "utc_offset_hours": 7,

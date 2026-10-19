@@ -9,6 +9,7 @@ Chuyen khong ghep duoc tai xe VAN tinh gia, ket qua ghi driver_id: null.
 [Suy luan] Sandbox mo phong, khong phai san pham that cua Green SM.
 """
 
+import hashlib
 import json
 import os
 import sys
@@ -24,6 +25,7 @@ from logger import (  # noqa: E402
     REPO_ROOT,
     JsonlLogger,
     enable_utf8_stdout,
+    load_json_config,
     make_run_id,
     rel,
 )
@@ -34,6 +36,7 @@ REPORTS_DIR = os.path.join(REPO_ROOT, "reports")
 DRIVERS_PATH = os.path.join(DATA_DIR, "drivers.json")
 CUSTOMERS_PATH = os.path.join(DATA_DIR, "customers.json")
 RIDES_PATH = os.path.join(DATA_DIR, "rides.json")
+MOCK_CONFIG_PATH = os.path.join(_HERE, "config", "mock_data.json")
 
 
 def _read_json(path):
@@ -41,10 +44,43 @@ def _read_json(path):
         return json.load(fh)
 
 
+def _sha256(path):
+    """Bang chung lan chay nay dung dung file du lieu nao."""
+    digest = hashlib.sha256()
+    with open(path, "rb") as fh:
+        for chunk in iter(lambda: fh.read(65536), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
+
+
 def _ensure_mock_data(run_log, run_id):
     missing = [p for p in (DRIVERS_PATH, CUSTOMERS_PATH, RIDES_PATH) if not os.path.exists(p)]
     if not missing:
+        run_log.log(
+            func="_ensure_mock_data",
+            event="mock_data_check",
+            inputs={
+                "checked_files": [
+                    rel(p) for p in (DRIVERS_PATH, CUSTOMERS_PATH, RIDES_PATH)
+                ]
+            },
+            outputs={"missing_files": [], "generated": False},
+            decision=None,
+            reason="mock_data_day_du_khong_sinh_lai",
+        )
         return False
+    run_log.log(
+        func="_ensure_mock_data",
+        event="mock_data_check",
+        inputs={
+            "checked_files": [
+                rel(p) for p in (DRIVERS_PATH, CUSTOMERS_PATH, RIDES_PATH)
+            ]
+        },
+        outputs={"missing_files": [rel(p) for p in missing], "generated": True},
+        decision=None,
+        reason="thieu_file_mock_nen_se_sinh_lai",
+    )
     sys.path.insert(0, DATA_DIR)
     import gen_mock
 
@@ -83,18 +119,21 @@ def run(run_id=None):
             reason="bat_dau_lan_chay_san_pham_mau_A",
         )
 
-        matching_config = matching.load_config()
-        pricing_config = pricing.load_config()
+        matching_config = matching.load_config(logger=run_log)
+        pricing_config = pricing.load_config(logger=run_log)
+        mock_config = load_json_config(MOCK_CONFIG_PATH, logger=run_log)
         run_log.log(
             func="run",
             event="config_loaded",
             inputs={
                 "matching_config_path": rel(matching.CONFIG_PATH),
                 "pricing_config_path": rel(pricing.CONFIG_PATH),
+                "mock_data_config_path": rel(MOCK_CONFIG_PATH),
             },
             outputs={
                 "matching_config_version": matching_config["version"],
                 "pricing_config_version": pricing_config["version"],
+                "mock_data_config_version": mock_config["version"],
             },
             decision=None,
             reason="doc_tham_so_nghiep_vu_tu_config",
@@ -117,6 +156,13 @@ def run(run_id=None):
                 "n_drivers": len(drivers),
                 "n_customers": len(customers),
                 "n_rides": len(rides),
+                "sha256": {
+                    rel(DRIVERS_PATH): _sha256(DRIVERS_PATH),
+                    rel(CUSTOMERS_PATH): _sha256(CUSTOMERS_PATH),
+                    rel(RIDES_PATH): _sha256(RIDES_PATH),
+                },
+                "mock_data_config_version": mock_config["version"],
+                "mock_data_seed": mock_config["seed"],
             },
             decision=None,
             reason="doc_du_lieu_tong_hop",
@@ -179,12 +225,19 @@ def run(run_id=None):
 
         n_matched = sum(1 for r in results if r["driver_id"] is not None)
         n_auto_accept = sum(1 for r in results if r["auto_accept"])
+        # n_decisions DEM THAT tu so dong log co decision != null, khong suy ra
+        # tu so chuyen, de con so nay khong tu khang dinh chinh no.
+        n_decisions = match_log.decision_count + price_log.decision_count
         summary = {
             "n_rides": len(results),
             "n_matched": n_matched,
             "n_unmatched": len(results) - n_matched,
             "n_auto_accept": n_auto_accept,
-            "n_decisions": 2 * len(results),
+            "n_decisions": n_decisions,
+            "n_decisions_by_module": {
+                matching.MODULE_NAME: match_log.decision_count,
+                pricing.MODULE_NAME: price_log.decision_count,
+            },
             "total_fare_vnd": sum(r["fare_vnd"] for r in results),
         }
 
@@ -205,7 +258,9 @@ def run(run_id=None):
 
         os.makedirs(REPORTS_DIR, exist_ok=True)
         report_path = os.path.join(REPORTS_DIR, "product_run_%s.json" % run_id)
-        with open(report_path, "w", encoding="utf-8", newline="\n") as fh:
+        # Mode "x" nhu file log: vo ngay neu bao cao cua run_id nay da ton tai,
+        # thay vi ghi de im lang bang chung cua lan chay truoc.
+        with open(report_path, "x", encoding="utf-8", newline="\n") as fh:
             json.dump(report, fh, ensure_ascii=False, indent=2)
             fh.write("\n")
 
@@ -216,7 +271,10 @@ def run(run_id=None):
             outputs={
                 "report_path": rel(report_path),
                 "summary": summary,
+                # +1 la chinh dong run_end nay, de con so bang so dong cua file
+                # sau khi dong log nay duoc ghi.
                 "log_lines": {
+                    MODULE_NAME: run_log.line_count + 1,
                     matching.MODULE_NAME: match_log.line_count,
                     pricing.MODULE_NAME: price_log.line_count,
                 },
@@ -230,6 +288,7 @@ def run(run_id=None):
             "report_path": report_path,
             "summary": summary,
             "log_paths": [run_log.path, match_log.path, price_log.path],
+            # Khong cong 1 o day: dong run_end da duoc ghi va dem xong.
             "log_lines": {
                 MODULE_NAME: run_log.line_count,
                 matching.MODULE_NAME: match_log.line_count,

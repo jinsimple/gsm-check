@@ -1,6 +1,6 @@
 {
   "version": "0.1",
-  "note": "Tham so gia cuoc khach cho san pham mau A. [Suy luan] Moi con so la GIA.",
+  "note": "Tham so gia cuoc khach cho san pham mau A. [Suy luan] Moi con so la GIA. GHI NHAN: quang duong 0 km duoc tinh theo bac mo cua, tuc thu du tien bac mo cua. SPEC_A khong noi toi truong hop 0 km va bac dau tien duoc dinh nghia nua mo khong gom 0, nen day la mot don gian hoa cua sandbox, khong phai quy tac tu SPEC_A.",
   "currency": "VND",
   "tiers": [
     {

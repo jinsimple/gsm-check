@@ -31,7 +31,7 @@ Máy dự án chỉ có lệnh `python` (3.13.9), **không có `python3`**.
 
 ```python
 match(ride: dict, drivers: list[dict], config: dict, logger=None) -> dict
-load_config(path: str | None = None) -> dict
+load_config(path: str | None = None, logger=None) -> dict
 ```
 
 `match` trả về dict đúng 3 khoá:
@@ -46,7 +46,7 @@ load_config(path: str | None = None) -> dict
 
 ```python
 fare(distance_km: float, requested_at: str, config: dict, logger=None) -> dict
-load_config(path: str | None = None) -> dict
+load_config(path: str | None = None, logger=None) -> dict
 ```
 
 `fare` trả về dict đúng 4 khoá:
@@ -75,12 +75,15 @@ main(run_id: str | None = None) -> dict
 
 ```python
 make_run_id() -> str
-load_json_config(path: str) -> dict
+process_run_id() -> str
+load_json_config(path: str, logger=None) -> dict
+make_fallback_logger(module: str) -> JsonlLogger
 rel(path: str) -> str
 enable_utf8_stdout() -> None
 
 class JsonlLogger:
-    __init__(self, module: str, run_id: str, log_dir: str | None = None)
+    __init__(self, module: str, run_id: str, log_dir: str | None = None,
+             autoflush: bool = False)
     log(self, func: str, event: str, inputs: dict | None = None,
         outputs: dict | None = None, decision=None, reason: str = "") -> None
     set_context(self, context: dict) -> None
@@ -210,6 +213,7 @@ Dữ liệu **100% tổng hợp**, sinh từ seed cố định trong `mock_data.
 | `n_unmatched` | `int` |
 | `n_auto_accept` | `int` |
 | `n_decisions` | `int` |
+| `n_decisions_by_module` | `object` — khoá là giá trị `module`, giá trị `int` |
 | `total_fare_vnd` | `int` |
 
 Mỗi phần tử của `results`:
@@ -239,6 +243,7 @@ Mỗi phần tử của `results`:
 - Đường dẫn: `logs/<module>_<run_id>.jsonl`
 - `run_id` dạng `YYYYmmddTHHMMSS` theo **UTC**, **giống nhau cho mọi module trong cùng một lần chạy**.
 - Mỗi lần chạy sinh file mới. `logs/*.jsonl` nằm trong `.gitignore`, nên log **không vào git**.
+- `run_id` chỉ có độ phân giải **1 giây**. File log mở bằng mode `"x"`, và `reports/product_run_<run_id>.json` cũng vậy: nếu file của `run_id` đó đã tồn tại thì lần chạy sau **báo `FileExistsError`** chứ không ghi đè. Hai lần chạy liên tiếp phải cách nhau ít nhất 1 giây.
 
 Giá trị `module` đang có:
 
@@ -267,31 +272,36 @@ Mỗi dòng log là một đối tượng JSON gồm chín trường, theo thứ
 
 ### 5.3 Enum `event` — đầy đủ
 
-| `module` | `event` | `decision` | Số dòng mỗi lần chạy |
-|---|---|---|---|
-| `matching` | `match_start` | `null` | 1 mỗi chuyến |
-| `matching` | `candidate_eval` | `null` | 1 cho **mỗi ứng viên được xét** |
-| `matching` | `candidate_pool` | `null` | 1 mỗi chuyến |
-| `matching` | `tie_break` | `null` | 0 hoặc 1 mỗi chuyến |
-| `matching` | `auto_accept_eval` | `null` | 0 hoặc 1 mỗi chuyến |
-| `matching` | **`match_result`** | **khác `null`** | **1 mỗi chuyến — QUYẾT ĐỊNH** |
-| `pricing` | `fare_start` | `null` | 1 mỗi chuyến |
-| `pricing` | `fare_tier` | `null` | 1 cho mỗi phần tử của khoá `tiers` trong `pricing.json`, mỗi chuyến |
-| `pricing` | `base_fare_computed` | `null` | 1 mỗi chuyến |
-| `pricing` | `time_coef_applied` | `null` | 1 mỗi chuyến |
-| `pricing` | `time_coef_cap` | `null` | 1 mỗi chuyến |
-| `pricing` | `fare_rounding` | `null` | 1 mỗi chuyến |
-| `pricing` | **`fare_result`** | **khác `null`** | **1 mỗi chuyến — QUYẾT ĐỊNH** |
-| `run_product` | `run_start` | `null` | 1 mỗi lần chạy |
-| `run_product` | `config_loaded` | `null` | 1 mỗi lần chạy |
-| `run_product` | `mock_data_generated` | `null` | 0 hoặc 1 mỗi lần chạy |
-| `run_product` | `data_loaded` | `null` | 1 mỗi lần chạy |
-| `run_product` | `ride_distance` | `null` | 1 mỗi chuyến |
-| `run_product` | `run_end` | `null` | 1 mỗi lần chạy |
-| `gen_mock` | `gen_start` | `null` | 1 mỗi lần sinh dữ liệu |
-| `gen_mock` | `record_generated` | `null` | 1 cho mỗi bản ghi tổng hợp được sinh |
-| `gen_mock` | `table_written` | `null` | 1 cho mỗi file dữ liệu được ghi |
-| `gen_mock` | `gen_end` | `null` | 1 mỗi lần sinh dữ liệu |
+| `module` | `event` | `decision` |
+|---|---|---|
+| `matching` | `match_start` | `null` |
+| `matching` | `candidate_eval` | `null` |
+| `matching` | `candidate_pool` | `null` |
+| `matching` | `tie_break` | `null` |
+| `matching` | `auto_accept_eval` | `null` |
+| `matching` | **`match_result`** | **khác `null` — QUYẾT ĐỊNH** |
+| `pricing` | `fare_start` | `null` |
+| `pricing` | `fare_tier` | `null` |
+| `pricing` | `base_fare_computed` | `null` |
+| `pricing` | `time_coef_applied` | `null` |
+| `pricing` | `time_coef_cap` | `null` |
+| `pricing` | `fare_rounding` | `null` |
+| `pricing` | `tier_kind_unsupported` | `null` |
+| `pricing` | `rounding_mode_unsupported` | `null` |
+| `pricing` | **`fare_result`** | **khác `null` — QUYẾT ĐỊNH** |
+| `run_product` | `run_start` | `null` |
+| `run_product` | `config_loaded` | `null` |
+| `run_product` | `config_version_missing` | `null` |
+| `run_product` | `mock_data_check` | `null` |
+| `run_product` | `mock_data_generated` | `null` |
+| `run_product` | `data_loaded` | `null` |
+| `run_product` | `ride_distance` | `null` |
+| `run_product` | `run_end` | `null` |
+| `gen_mock` | `gen_start` | `null` |
+| `gen_mock` | `config_version_missing` | `null` |
+| `gen_mock` | `record_generated` | `null` |
+| `gen_mock` | `table_written` | `null` |
+| `gen_mock` | `gen_end` | `null` |
 
 ### 5.4 Định nghĩa "một quyết định"
 
@@ -300,7 +310,7 @@ Trường `decision` **khác `null` chỉ ở hai event**: `match_result` (modul
 - **1 chuyến = 2 quyết định** (`match_result` + `fare_result`).
 - **1 lần chạy 1.000 chuyến = 2.000 quyết định.**
 - Mỗi quyết định có **ít nhất 1 dòng log** với `reason` **không rỗng**.
-- Trường `summary.n_decisions` của báo cáo ghi lại con số này.
+- Số quyết định kỳ vọng = số bản ghi trong `rides.json` × 2. `summary.n_decisions` là **con số sản phẩm tự báo**, dùng để đối chiếu chứ không dùng làm chuẩn.
 
 ### 5.5 Trường `reason`
 
@@ -327,7 +337,7 @@ Phải **bỏ** các thứ sau trước khi so sánh kết quả hai lần chạ
 
 ## 7. DANH SÁCH THUỘC TÍNH ĐƯỢC PHÉP
 
-> Hai bảng dưới đây chép cột `Thuộc tính` từ `docs/DECISIONS.md` mục Q02, bản chốt ở cổng G1 — đúng tên, đúng thứ tự, không thêm, không bớt, không đổi tên.
+> Hai bảng dưới đây chép cột `Thuộc tính` từ bản chốt ở cổng G1 — đúng tên, đúng thứ tự, không thêm, không bớt, không đổi tên.
 >
 > Đây là **danh sách trắng đóng**: thuộc tính nào không có tên trong bảng thì không được dùng làm đầu vào. Theo yêu cầu của Bách, chỉ ghi danh sách **được phép**, không ghi danh sách bị cấm.
 

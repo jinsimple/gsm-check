@@ -168,9 +168,9 @@ def write_tables(tables, logger):
 def main(run_id=None):
     enable_utf8_stdout()
     run_id = run_id or make_run_id()
-    config = load_json_config(CONFIG_PATH)
     logger = JsonlLogger("gen_mock", run_id)
     try:
+        config = load_json_config(CONFIG_PATH, logger=logger)
         tables = generate(config, logger)
         write_tables(tables, logger)
         logger.log(
