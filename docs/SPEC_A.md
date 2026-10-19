@@ -54,6 +54,8 @@ Phải chạy được bằng một lệnh: `python product/run_product.py`
 Chỉ gồm: chữ ký hàm, đường dẫn config, schema dữ liệu, schema log, **danh sách thuộc tính được phép dùng làm đầu vào matching và pricing**.
 **Không** mô tả logic bên trong. `coder-auditor` chỉ đọc file này.
 
+**Sửa 19/10 theo quyết định Q02 của Bách:** danh sách thuộc tính được phép **do lead chốt** ở `docs/DECISIONS.md` mục Q02; `coder-product` **chép nguyên** sang `INTERFACE.md` — không thêm, không bớt. Muốn thêm thuộc tính phải xin lead. Lý do: người viết code không tự viết tiêu chí dùng để chấm mình, nếu không thì M02 vô hiệu. Danh sách là **danh sách trắng đóng**: chỉ ghi thuộc tính được phép, không ghi thuộc tính bị cấm.
+
 ## 6. Ngoài phạm vi — ghi vào báo cáo là KHOẢNG TRỐNG ĐÃ BIẾT
 
 Thu nhập tài xế. Theo §4.2 hồ sơ v4, đây mới là phần có khả năng thuộc Phụ lục III điểm 4(b) Đạo luật AI.

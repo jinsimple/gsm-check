@@ -3,3 +3,9 @@ __pycache__/
 .DS_Store
 # Đáp án lỗi KHÔNG bao giờ nằm trong repo
 DEFECTS_KEY*
+
+# Log: moi lan chay sinh 1 file theo run_id (CLAUDE.md §3).
+# Chi commit log cua lan chay duoc trich lam bang chung, bang:
+#   git add -f logs/<module>_<run_id>.jsonl
+# Quyet dinh Q12, Bach chot 19/10/2026.
+logs/*.jsonl

@@ -7,6 +7,7 @@
 
 - Kết quả mỗi dòng: **ĐẠT** | **KHÔNG ĐẠT** | **CẦN NGƯỜI XEM**
 - Bằng chứng (cột Source): `file:dòng@commit`
+- **Mỗi phát hiện phải có bằng chứng `file:dòng` RIÊNG**, không chỉ tên file. Một dòng ma trận có nhiều phát hiện thì **liệt kê đủ từng cái**, không gộp. (Bách chốt 19/10)
 - **Nguyên tắc bất đối xứng:** nghi ngờ → CẦN NGƯỜI XEM. Không bao giờ tự cho ĐẠT khi thiếu bằng chứng. Bỏ lọt đắt hơn báo động giả.
 - Cột **Mechanism / Effect**: ĐỂ TRỐNG. Taxonomy nội bộ chưa được định nghĩa (§3.4 hồ sơ v4) — chị Ánh điền.
 
@@ -20,7 +21,7 @@
 | M04 | A.6.2.8 Log sự kiện | AI Act Đ.12 | Số quyết định ≠ số quyết định có log; hoặc có nhánh `return` không gọi log | AST + đối chiếu log |
 | M05 | A.6.2.3 Tài liệu thiết kế | AI Act Đ.11 | Hằng số số học nghiệp vụ trong code không có trong config | AST |
 | M06 | A.6.2.7 Tài liệu kỹ thuật | AI Act Đ.11 | File config thiếu trường `version` | đọc config |
-| M07 | A.9.2 Sử dụng có trách nhiệm | GDPR Đ.22; PWD Đ.10 | Có hành động bất lợi lên tài xế (khóa, phạt, hạ ưu tiên) mà không có bước/cờ con người xem xét | AST + log |
+| M07 | A.9.2 Sử dụng có trách nhiệm | GDPR Đ.22; PWD Đ.10 | Có hành động bất lợi hoặc ràng buộc lên tài xế (khóa, phạt, hạ ưu tiên, tự động nhận chuyến) mà không có bước/cờ con người xem xét | AST + log |
 | M08 | A.5.2 Quy trình đánh giá tác động | GDPR Đ.35; PWD Đ.8 | Không có tài liệu đánh giá tác động trong docs/ | quét docs/ |
 | M09 | A.8.2 Thông tin cho người dùng | PWD Đ.9 | Quyết định không kèm `reason` đọc được | log |
 | M10 | A.6.2.4 Kiểm chứng & xác nhận | AI Act Đ.15 | Cùng đầu vào chạy 3 lần → kết quả khác nhau | chạy lặp |
@@ -37,3 +38,5 @@
 
 `reports/audit_<commit>.json` và `.md`, mỗi dòng gồm:
 `ID | Control | Luật | Kết quả | Bằng chứng (file:dòng@commit) | Ghi chú | Mechanism (trống) | Effect (trống)`
+
+Cột Bằng chứng là **danh sách**, không phải một chuỗi: mỗi phát hiện một phần tử, mỗi phần tử có `file:dòng@commit` riêng. Dòng ra KHÔNG ĐẠT hoặc CẦN NGƯỜI XEM mà chỉ trỏ tên file, không trỏ dòng, thì coi là **chưa đủ bằng chứng**.

@@ -50,8 +50,8 @@ Bách (duyệt cuối mọi cổng)
 |---|---|---|---|---|
 | `pm` | Tab riêng | Chấm kế hoạch/báo cáo của lead: quá kỹ thuật, cứng nhắc, ảo giác, phá độc lập | Code; giao việc cho subagent | `lead`, Bách |
 | `lead` | Tab chính | Ghi `docs/TASKS.md`, gọi subagent, gửi kế hoạch cho `pm`, dừng ở cổng chờ Bách | Tự viết code nghiệp vụ; đọc đáp án; nhắn cho phiên ngoài `pm` | `pm`, subagent, Bách |
-| `coder-product` | Subagent có tên | Xây `product/`, viết `docs/INTERFACE.md` | Đọc `auditor/` | `lead` |
-| `coder-auditor` | Subagent có tên | Xây `auditor/` CHỈ từ `docs/MATRIX_v0.md` + `docs/INTERFACE.md` | Mở `product/*.py`, đọc `git log/diff` của `product/`; hỏi ai về nội dung `product/` | `lead` |
+| `coder-product` | Subagent có tên | Xây `product/`, viết `docs/INTERFACE.md`; **chép nguyên** danh sách thuộc tính được phép từ `docs/DECISIONS.md` Q02 | Đọc `auditor/`; tự thêm hoặc bớt danh sách thuộc tính được phép | `lead` |
+| `coder-auditor` | Subagent có tên | Xây `auditor/` CHỈ từ `docs/MATRIX_v0.md` + `docs/INTERFACE.md` | Mở `product/*.py` bằng tay, đọc `git log/diff` của `product/`; hỏi ai về nội dung `product/`; mở `docs/DECISIONS.md`, `docs/TASKS.md`, `docs/SPEC_A.md`, `docs/GREEN_SM_CONTEXT.md`, `docs/PROMPTS.md` | `lead` |
 | `reviewer` | Subagent có tên | Review code theo checklist | Sửa code; review `product/` sau khi security chạy; gửi nhận xét về `product/` cho `coder-auditor` | `lead` |
 | `security` | Tab trong cửa sổ cách ly | Cài lỗi theo đáp án; rà mạng / secret / dữ liệu cá nhân | Ghi đáp án vào repo; nhắn tin cho bất kỳ phiên nào | Chỉ Bách |
 | `qa` | Tab trong cửa sổ cách ly | Chấm agent kiểm thử theo đáp án | Sửa code; nhắn tin cho bất kỳ phiên nào | Chỉ Bách |
