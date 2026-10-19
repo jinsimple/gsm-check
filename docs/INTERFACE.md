@@ -77,6 +77,7 @@ main(run_id: str | None = None) -> dict
 make_run_id() -> str
 process_run_id() -> str
 load_json_config(path: str, logger=None) -> dict
+default_logger() -> JsonlLogger
 make_fallback_logger(module: str) -> JsonlLogger
 rel(path: str) -> str
 enable_utf8_stdout() -> None
@@ -253,6 +254,7 @@ Giá trị `module` đang có:
 | `matching` | `logs/matching_<run_id>.jsonl` |
 | `pricing` | `logs/pricing_<run_id>.jsonl` |
 | `gen_mock` | `logs/gen_mock_<run_id>.jsonl` |
+| `logger` | `logs/logger_<run_id>.jsonl` |
 
 ### 5.2 Chín trường bắt buộc
 
@@ -302,6 +304,7 @@ Mỗi dòng log là một đối tượng JSON gồm chín trường, theo thứ
 | `gen_mock` | `record_generated` | `null` |
 | `gen_mock` | `table_written` | `null` |
 | `gen_mock` | `gen_end` | `null` |
+| `logger` | `config_version_missing` | `null` |
 
 ### 5.4 Định nghĩa "một quyết định"
 

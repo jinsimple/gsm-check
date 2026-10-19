@@ -51,15 +51,17 @@ def _round_to_multiple(amount, mode, multiple, log=None):
         return int(math.floor(value / multiple + _FLOAT_EPSILON) * multiple)
     if mode == "nearest":
         return int(round(value / multiple) * multiple)
-    if log is not None:
-        log.log(
-            func="_round_to_multiple",
-            event="rounding_mode_unsupported",
-            inputs={"mode": mode, "multiple_vnd": multiple, "amount_vnd": amount},
-            outputs={},
-            decision=None,
-            reason="rounding_mode_khong_ho_tro_nen_bao_loi",
-        )
+    # Ghi log KHONG dieu kien: nguoi goi khong truyen logger thi dung logger
+    # du phong, de nhanh bao loi nay khong bao gio chay ma khong de lai log.
+    log = log if log is not None else default_logger()
+    log.log(
+        func="_round_to_multiple",
+        event="rounding_mode_unsupported",
+        inputs={"mode": mode, "multiple_vnd": multiple, "amount_vnd": amount},
+        outputs={},
+        decision=None,
+        reason="rounding_mode_khong_ho_tro_nen_bao_loi",
+    )
     raise ValueError("rounding.mode khong ho tro: %r" % mode)
 
 

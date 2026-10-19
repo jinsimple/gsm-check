@@ -32,6 +32,9 @@ REQUIRED_FIELDS = (
 REPO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 LOG_DIR = os.path.join(REPO_ROOT, "logs")
 
+MODULE_NAME = "logger"
+_FALLBACK_LOGGER = None
+
 _PROCESS_RUN_ID = None
 _LAST_RUN_ID = None
 
@@ -188,23 +191,37 @@ def make_fallback_logger(module):
     return logger
 
 
+def default_logger():
+    """Logger du phong cua chinh module logger.
+
+    Dung khi load_json_config() duoc goi ma nguoi goi khong truyen logger.
+    Khong tao vong phu thuoc: JsonlLogger va make_fallback_logger nam cung
+    module nay.
+    """
+    global _FALLBACK_LOGGER
+    if _FALLBACK_LOGGER is None:
+        _FALLBACK_LOGGER = make_fallback_logger(MODULE_NAME)
+    return _FALLBACK_LOGGER
+
+
 def load_json_config(path, logger=None):
     """Doc mot file config JSON. Moi file config bat buoc co truong version.
 
     Thieu version la mot quyet dinh ve du lieu nghiep vu doc tu config, nen
-    ghi log truoc khi bao loi (CLAUDE.md §3). Logger do nguoi goi truyen vao.
+    PHAI ghi log truoc khi bao loi (CLAUDE.md §3). Nguoi goi khong truyen logger
+    thi dung logger du phong, KHONG bo qua viec ghi log.
     """
     with open(path, "r", encoding="utf-8") as fh:
         data = json.load(fh)
     if "version" not in data:
-        if logger is not None:
-            logger.log(
-                func="load_json_config",
-                event="config_version_missing",
-                inputs={"config_path": rel(path), "keys": sorted(data.keys())},
-                outputs={},
-                decision=None,
-                reason="config_thieu_truong_version",
-            )
+        log = logger if logger is not None else default_logger()
+        log.log(
+            func="load_json_config",
+            event="config_version_missing",
+            inputs={"config_path": rel(path), "keys": sorted(data.keys())},
+            outputs={},
+            decision=None,
+            reason="config_thieu_truong_version",
+        )
         raise ValueError("Config thieu truong 'version': %s" % path)
     return data
