@@ -1,5 +1,29 @@
 # TASKS — lead cập nhật, Bách và pm đọc
 
+## 🔖 TRẠNG THÁI — đọc ô này TRƯỚC khi làm gì, sau mỗi lần dừng
+
+> **Quy tắc hạn mức (Bách chốt 19/10).** Sau **mỗi bước con**: cập nhật ô này (đang làm gì, bước tiếp theo, lệnh kiểm) rồi **commit**. Nếu bị dừng vì hết hạn mức rồi tự chạy tiếp: **đọc `docs/TASKS.md` trước, rồi mới làm.** **Không bao giờ tự vượt cổng đang chờ Bách đồng ý.**
+
+| | |
+|---|---|
+| **Cổng đang mở** | **G2a** |
+| **Vừa xong** | T09e + T09e-b. Lead chạy lại **toàn bộ** bộ kiểm trên bằng chứng mới: **15/15 kiểm máy, kiểm 17, 18, 19 (9/9), 20 — tất cả PASS, 0 FAIL** |
+| **`run_id` bằng chứng** | `20261019T143340880`, `commit_at_run` `d9f1f27`, `product_tree` `3b2892b` |
+| **Bước tiếp theo** | **T09f** — gọi `reviewer` review `product/` (Bách yêu cầu riêng: *"Reviewer kiểm lại trước khi đóng G2a"*) |
+| **Lệnh kiểm của bước tiếp theo** | bảng review của `reviewer` **hết mục "Chặn"** |
+| **Sau đó** | trình Bách **báo cáo G2a**. `pm` chấm ở mốc này |
+
+### ⛔ Cổng đang chờ Bách — KHÔNG tự vượt
+
+| Việc | Chờ gì |
+|---|---|
+| **Đóng G2a** | Bách duyệt báo cáo G2a. Lead **không** tự tuyên bố G2a qua |
+| **G2b (merge `security-pass`)** | Chỉ Bách merge, và **chỉ sau** tag `b-freeze` (Q21) |
+| **T14c** — chạy B trên A có lỗi | **blocked.** Q21 thiếu bước 6, và quy tắc 1 ở ô "Việc của lead ở G2b" đang **cấm** đúng lệnh đó. Xin Bách cấp ngoại lệ dưới dạng **loại**, không phải tên lệnh |
+| **`CLAUDE.md §5`** | bảng cổng còn ghi G2b (20/10) **trước** G3 (21/10), trái trình tự Q21. Lead không tự sửa `CLAUDE.md` |
+| **Chỉ thị 21:01** | lead **chỉ** nhận phần "PHỤ LỤC CHỈ THỊ"; phần gốc có mục A/B/C/D thì **chưa** nhận. Đã xin Bách gửi lại phần gốc |
+
+
 > Thay cho task list chung của agent teams (không chạy trong extension VS Code).
 > Trạng thái: pending | in_progress | completed | blocked. Chỉ ghi completed khi đã chạy lệnh kiểm.
 > Máy Bách chỉ có `python` (3.13.9), KHÔNG có `python3`. Mọi lệnh kiểm dùng `python`.
