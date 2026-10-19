@@ -1,6 +1,6 @@
 {
-  "ts": "2026-10-19T06:43:40.876128+00:00",
-  "run_id": "20261019T064336",
+  "ts": "2026-10-19T07:59:42.071843+00:00",
+  "run_id": "20261019T075936693",
   "schema_version": "0.1",
   "note": "[Suy luan] Ket qua tu du lieu tong hop. Khong phai so lieu that.",
   "config_versions": {
@@ -8,9 +8,9 @@
     "pricing": "0.1"
   },
   "log_files": [
-    "logs/run_product_20261019T064336.jsonl",
-    "logs/matching_20261019T064336.jsonl",
-    "logs/pricing_20261019T064336.jsonl"
+    "logs/run_product_20261019T075936693.jsonl",
+    "logs/matching_20261019T075936693.jsonl",
+    "logs/pricing_20261019T075936693.jsonl"
   ],
   "summary": {
     "n_rides": 1000,
@@ -18,6 +18,10 @@
     "n_unmatched": 0,
     "n_auto_accept": 572,
     "n_decisions": 2000,
+    "n_decisions_by_module": {
+      "matching": 1000,
+      "pricing": 1000
+    },
     "total_fare_vnd": 77808000
   },
   "results": [

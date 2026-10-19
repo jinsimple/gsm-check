@@ -132,11 +132,11 @@ T02–T06 (coder-product) → T07 (lead chạy 14 lệnh kiểm) → T08 (review
 | T04b | G2a | **Đo thật**: số dòng log, dung lượng 1 lần chạy, **tổng dung lượng qua 8 lần chạy dự kiến**; thay mọi số [Suy đoán] ở DECISIONS Q12 | lead | logs/*.jsonl | số đo ghi vào cột Bằng chứng | `wc -l` + `du -sh logs/` | pending | |
 | T05 | G2a | `product/pricing.py` — `fare()` + log từng bậc km | coder-product | SPEC_A §3, DECISIONS Q03/Q04/Q10 | pricing.py, logs/pricing_*.jsonl | 23 ca kể cả biên, so bảng tính tay | **completed** | `c9b0243`; kiểm 9 PASS **23/23** ca khớp bảng tính tay, gồm cặp giờ 6 → 108.000 và giờ 7 → 144.000 |
 | T06 | G2a | `product/run_product.py` + `docs/INTERFACE.md` | coder-product | SPEC_A §4–5, DECISIONS Q10 | reports/product_run_*.json, INTERFACE.md | `python product/run_product.py` | **completed** | `13e5718` + `1559d80`, sửa kiểm 12 ở `7bfd149`; kiểm 1 PASS exit=0; kiểm 3 PASS; kiểm 12 PASS sau khi sửa |
-| T07 | G2a | **Lead tự chạy đủ 14 lệnh kiểm** | lead | T02–T06 | bảng kết quả dưới | 14 lệnh kiểm, không nhận báo cáo suông | **14/14 PASS** | `run_id=20261019T064336`, sau sửa `7bfd149`; xem 2 bảng dưới |
+| T07 | G2a | **Lead tự chạy bộ kiểm** — 3 vòng, vòng cuối sau `284461a` | lead | T02–T06, T09a–c | bảng kết quả dưới | 15 kiểm máy + kiểm 12 bằng mắt | **16/16 PASS** | `run_id` bằng chứng **20261019T075936693**; xem mục kết quả cuối |
 | T08 | G2a | Review `product/` theo checklist (security CHƯA chạy) | reviewer | product/, SPEC_A, INTERFACE | bảng Chặn / Nên sửa / Gợi ý | lead đọc, hết mục "Chặn" | **completed** | **KHÔNG CÓ MỤC CHẶN**; 5 Nên sửa + 10 Gợi ý; lead tự xác minh tận dòng 7 chỗ then chốt, đúng hết |
 | T09a | G2a | Sửa 6 chỗ rò `INTERFACE.md` do kiểm 12 phát hiện | coder-product | bảng kiểm 12 | docs/INTERFACE.md | lead đọc lại diff + `grep` + chạy lại kiểm 10 | **completed** | `7bfd149`; chỉ sửa 1 file, `git diff cb97490..HEAD` = đúng `docs/INTERFACE.md`; `run_product.py` exit=0 sau sửa |
 | T09b | G2a | Sửa 14 mục từ T08 + 2 mục pm | coder-product | bảng review T08, bảng chấm pm | commit sửa | lead chạy lại toàn bộ bộ kiểm | **completed** | `2ca9a03`, 8 file +220/−75; lead chạy lại 15 kiểm, 13 PASS |
-| T09c | G2a | `run_id` chống trùng: mode `"x"` + `run_id` phân giải 1 giây làm `gen_mock` chạy 2 lần liên tiếp bị `FileExistsError` | coder-product | chẩn đoán kiểm 2 | `run_id` có milli giây | `gen_mock.py` 2 lần liên tiếp, lần 2 phải exit=0 | in_progress | **chặn G2a** |
+| T09c | G2a | `run_id` chống trùng | coder-product | chẩn đoán kiểm 2 | `run_id` 18 ký tự có milli giây | `gen_mock.py` 2 lần liên tiếp, lần 2 exit=0 | **completed** | `284461a`; 2 lần liên tiếp đều exit=0, hash giống hệt; vòng lặp 2.000 lần gọi ra 2.000 giá trị khác nhau |
 | T07b | G2a | **Kiểm 15** — chẩn đoán nhánh `no_driver_in_radius` | lead | T09b | dòng log quyết định làm bằng chứng | gọi `match()` với `radius_km=0.0001`, dữ liệu tài xế thật | **PASS** | `match()` → `{driver_id: None, auto_accept: False, reason: 'no_driver_in_radius'}`; 203 dòng log, **đúng 1** dòng quyết định, `reason='no_driver_in_radius'` |
 | T07c | G2a | **Kiểm 16** — log `data_loaded` phải có `sha256` 3 file dữ liệu + version `mock_data.json` | lead | T09b (C6) | bằng chứng dữ liệu nào đã dùng | đối chiếu sha256 trong log với hash file thật | **PASS** | 3 sha256 trong log, khớp hash 3 file dữ liệu |
 | T10 | G2b | Tạm dừng commit; Bách chạy security ở cửa sổ cách ly, merge `security-pass`, lead chạy lại A | Bách → lead | — | commit sau security | `python product/run_product.py` sau merge | pending | |
@@ -268,6 +268,66 @@ Xử lý: lần chạy cũ **phải** bỏ dù sao, vì code đã đổi 8 file 
 **Hai quy tắc lấy từ sự cố này:**
 1. Chỉ xoá trong `logs/` bằng **danh sách tên file liệt kê đủ**, không bao giờ dùng wildcard.
 2. Log bằng chứng phải được **sao lưu ra ngoài repo** ngay khi chốt, vì `logs/*.jsonl` không vào git nên không có lưới an toàn nào khác.
+
+## KẾT QUẢ CUỐI T07 — 16/16 PASS. `run_id` bằng chứng `20261019T075936693`
+
+Lead chạy bộ kiểm **3 vòng**: sau T06, sau T09b, sau T09c. Mỗi lần code đổi là chạy lại toàn bộ, không chỉ kiểm phần sửa.
+
+| # | Kiểm | Kết quả |
+|---|---|---|
+| 1 | chạy một lệnh | **PASS** exit=0 |
+| 2 | seed 42 xác định | **PASS** — 2 lần `gen_mock` đều exit=0, hash 3 file giống hệt nhau và giống bản đã commit |
+| 4 | log đủ 9 trường | **PASS** — tiền quyết đạt; 216.005 dòng, **0** dòng sai trường hoặc sai thứ tự |
+| 5 | quyết định có `reason` | **PASS** — 0 thiếu |
+| 6 | số quyết định = 2.000 | **PASS** — `match_result` 1.000 + `fare_result` 1.000, **đếm thật từ log** |
+| 7 | config có `version` | **PASS** — 3 file, đều 0.1 |
+| 8 | chỉ stdlib | **PASS** — 0 module ngoài stdlib (`atexit`, `hashlib`, `time` đều stdlib) |
+| 9 | pricing **24 ca** kể cả 0 km và biên | **PASS** 24/24 |
+| 10 | INTERFACE khớp Q02 | **PASS** — 12 thuộc tính, đúng thứ tự, mục 7 chỉ 1 cột |
+| 11 | dung lượng log thật | **số đo: 110,4 MB (105,3 MiB)**, 216.005 dòng → **VƯỢT ngưỡng 100 MB của Q12** |
+| **12** | **INTERFACE.md không rò logic** (bằng mắt) | **PASS** — đọc diff cả 3 vòng; `grep` 10 cụm từ nghi vấn → **0 lần** từng cụm |
+| 13 | log đủ ứng viên bị loại | **PASS** — 200 dòng/chuyến × 1.000 = 200.000 = `len(drivers.json)` |
+| 14 | không hardcode (quét **hết** `product/**/*.py`) | **PASS** — 0 hằng số nghiệp vụ còn lại |
+| 15 | nhánh `no_driver_in_radius` | **PASS** — có log thật |
+| 16 | log `data_loaded` có sha256 dữ liệu | **PASS** |
+| + | `REQUIRED_FIELDS` chịu lực | **PASS** — không còn là hằng số chết |
+
+### Danh sách miễn của kiểm 14 — có nguồn gốc, in ra mỗi lần chạy
+
+Lead **không whitelist mù**. Mỗi chỗ miễn phải khớp **cả ba**: tên file, giá trị, chuỗi ngữ cảnh trên dòng đó — kèm lý do. Bảy chỗ:
+
+| Chỗ | Giá trị | Lý do |
+|---|---|---|
+| `gen_mock.py:34` | `24`, `60` | quy đổi đơn vị thời gian (`_SECONDS_PER_DAY`) |
+| `matching.py:26` | `6371.0088` | bán kính Trái Đất, hằng toán học |
+| `pricing.py:24` | `1e-09` | sai số làm tròn số thực, có comment |
+| `run_product.py:51` | `65536` | cỡ bộ đệm đọc file cho sha256 |
+| `logger.py:40` | `0.001` | thời gian nghỉ khi `run_id` trùng (`_RUN_ID_RETRY_SLEEP_S`) |
+| `logger.py` | `3` | số chữ số milli giây (`_RUN_ID_MS_DIGITS`) |
+
+**Một chỗ miễn do may, lead phát hiện và sửa thành chủ ý:** `_RUN_ID_MS_DIGITS = 3` ban đầu **không** bị kiểm 14 báo — không phải vì nó được miễn, mà vì số `3` **trùng tình cờ** với một giá trị trong config nên bộ lọc cho qua. Miễn do may thì lần sau một hằng số nghiệp vụ trùng giá trị config cũng sẽ lọt. Đã thêm vào danh sách miễn tường minh.
+
+### Sao lưu bằng chứng ra ngoài repo
+
+Theo quy tắc rút ra từ sự cố mất log. Bốn file sinh từ `run_id` bằng chứng cộng log kiểm 15, kèm `sha256` để đối chiếu sau này:
+
+| File | sha256 (32 ký tự đầu) |
+|---|---|
+| `matching_20261019T075936693.jsonl` | `fd63362d3dba290cdd8070282321b667` |
+| `pricing_20261019T075936693.jsonl` | `c9ed07ea392342f40a4f18b27d5f6202` |
+| `run_product_20261019T075936693.jsonl` | `61088894c5e345265e06d6218b0f139b` |
+| `product_run_20261019T075936693.json` | `f8969c7c6cfc60b3068ea22b9ebfd61c` |
+
+**`git add -f` log bằng chứng theo Q12: lead CHƯA làm, đang chờ Bách.** Lý do: thêm 105 MB vào lịch sử git là **không hoàn tác được**, và nếu Bách chọn phương án bỏ 4 khoá lặp thì nội dung log đổi, lịch sử sẽ mang **hai** bản 105 MB vĩnh viễn. Bản sao ngoài repo giữ an toàn bằng chứng trong lúc chờ.
+
+### Điều kiện qua G2a
+
+| Điều kiện | Trạng thái |
+|---|---|
+| 14 lệnh kiểm (nay là 15 kiểm máy + kiểm 12) đều đạt | **ĐẠT 16/16** |
+| Bảng review của reviewer không còn mục "Chặn" | **ĐẠT** — không có mục Chặn nào |
+
+→ **Hai điều kiện qua G2a đã đạt.** Còn 3 việc chờ Bách quyết, không chặn kỹ thuật: dung lượng log, baseline `n_unmatched = 0`, và `reports/product_run_*.json` có ignore không.
 
 ## Ô cảnh báo — độc lập của coder-auditor
 
