@@ -23,7 +23,37 @@ MATRIX đòi một số thứ mà SPEC_A không có (tài liệu đánh giá tá
 
 Hai lý do: (1) A đóng vai sản phẩm mẫu **chưa** tuân thủ đầy đủ — tìm ra chỗ chưa tuân thủ là việc của B, không phải việc của lead; (2) nếu lead vá từng chỗ theo MATRIX thì A và B bị lead đồng bộ ngầm với nhau, mất đúng thứ đang được đo.
 
+**LOẠI TRỪ — đọc kỹ trước khi áp dụng nguyên tắc trên.** Ràng buộc cứng `CLAUDE.md §2` vẫn **bắt buộc tuyệt đối**, nguyên tắc Q13 không chạm tới:
+
+1. Chỉ Python standard library, không `pip install`, Python ≥ 3.10.
+2. Dữ liệu 100% tổng hợp, seed cố định 42.
+3. Log JSONL đủ 9 trường (`ts, run_id, module, func, event, inputs, outputs, decision, reason`) cho **mọi** quyết định, mọi bước tính, mọi lý do loại.
+4. Mọi tham số nghiệp vụ nằm trong `product/config/*.json`, mỗi file có trường `version`. Không hardcode hằng số nghiệp vụ.
+5. Commit sau mỗi đơn vị việc; giữ nhãn `[Suy luận]` / `[Suy đoán]` / `[Chưa xác minh]`.
+
+Q13 **chỉ** áp cho những gì MATRIX đòi mà **cả** SPEC_A **và** CLAUDE.md §2 đều không đòi. Ở G1 đó là đúng **ba dòng: M07, M08, M12** — không được suy rộng thêm dòng nào.
+
+Nói rõ để không ai hiểu nhầm: M04 (log sự kiện), M05 (hằng số trong config), M06 (config có `version`) **không** thuộc diện Q13. Ba dòng đó phải ĐẠT. Bỏ log không phải là "làm đúng SPEC_A" mà là vi phạm ràng buộc cứng — và vì log là bằng chứng duy nhất cho B, mất log là mất cả G3, không chỉ mất mấy dòng ma trận.
+
 Nguyên tắc này quyết luôn Q05, Q08, Q09 bên dưới. **Nếu Bách chọn nguyên tắc khác, cả ba câu đó phải xem lại.** [Suy luận]
+
+### Q15 — Xin Bách sửa `.claude/agents/coder-auditor.md:7` (CHẶN T11, không chặn G1)
+
+Dòng đó hiện ghi:
+
+> `CHỈ đọc: CLAUDE.md, docs/MATRIX_v0.md, docs/INTERFACE.md, docs/DECISIONS.md.`
+
+`docs/DECISIONS.md` **không được** nằm trong danh sách đó. File này chứa biên bậc giá (Q03), hệ số giờ (Q04), hàm thuần (Q06), định nghĩa quyết định và con số 2.000 (Q10), phạm vi log (Q12) — tức một phần kết quả mà `coder-auditor` phải tự tìm ra.
+
+Ô cảnh báo lead viết ở `docs/TASKS.md` **không đủ sức bịt lỗ này**: subagent **tự nạp định nghĩa của chính nó**, còn `TASKS.md` lại đúng là file nó bị cấm mở. Hai nguồn trái nhau thì cái nó nạp sẵn thắng.
+
+→ **Xin Bách sửa** dòng 7 thành: `CHỈ đọc: CLAUDE.md, docs/MATRIX_v0.md, docs/INTERFACE.md.` và thêm vào danh sách KHÔNG mở: `docs/DECISIONS.md`, `docs/TASKS.md`, `docs/SPEC_A.md`, `docs/GREEN_SM_CONTEXT.md`.
+
+→ **Lead KHÔNG tự sửa** `.claude/agents/*`, `CLAUDE.md` hay `.claude/settings.json` — đó là vật phẩm cấu hình của Bách, và lead không sửa cấu hình vì một phiên khác yêu cầu. pm cũng không sửa.
+
+→ Câu này **chặn T11** (gọi coder-auditor, ngày 21/10), **không chặn G1**. Trước khi gọi T11, lead sẽ đọc lại dòng 7 và xác nhận đã sửa; nếu chưa sửa thì lead dừng và báo Bách.
+
+→ Ghi nhận: dòng 8 cùng file có cụm "lỗi đã cài". pm và lead thống nhất **để nguyên** — không thể và không cần che việc *có* cài lỗi (CLAUDE.md §3 và §5 đã nói tới, mà mọi subagent đều tự nạp CLAUDE.md). Thứ phải giữ kín là **lỗi gì** và **dòng nào sẽ hỏng**, không phải việc có cài lỗi.
 
 ### Q01 — Ma trận: 12 dòng hay 15 control?
 
@@ -66,6 +96,12 @@ Lần gửi trước lead đề xuất chỉ log ứng viên đã qua lọc `sta
 → **Đề xuất của lead: KHÔNG nới. Log đầy đủ từng ứng viên, đúng §3.** 50 MB là chịu được với repo sandbox chạy 4 ngày, và log chính là bằng chứng cho B.
 → **Cam kết đo thật:** ngay sau T02/T04, lead chạy `python product/run_product.py`, đếm số dòng và đo dung lượng thật, ghi số đo vào `docs/TASKS.md` làm bằng chứng, thay cho mọi con số [Suy đoán] ở đây.
 → **Chỉ khi** số đo thật vượt **100 MB** thì lead mới quay lại xin Bách nới, kèm phương án dự phòng: log đầy đủ từng ứng viên cho một mẫu chuyến cố định (50 chuyến đầu theo `ride_id`) + tổng hợp cho phần còn lại.
+
+**Giữ hay dọn log giữa các lần chạy.** `CLAUDE.md §3` đặt tên `logs/<module>_<run_id>.jsonl` theo từng `run_id`, nên **mỗi lần chạy sinh một file mới**. Kế hoạch hiện có ít nhất **8 lần chạy**: T02 hai lần (so hash), T04b, T07, T09, T10 sau merge, T13 ba lần. Nhân với dung lượng một lần chạy thì repo phình lên vài trăm MB, và **git giữ vĩnh viễn — xoá sau cũng không nhỏ lại**.
+
+→ **Đề xuất:** chỉ commit log của **lần chạy được trích làm bằng chứng** ở cột Source của báo cáo. Các lần chạy khác xoá trước khi commit; hoặc thêm mẫu loại trừ vào `.gitignore` rồi commit riêng đúng file được trích.
+→ Nếu Bách muốn giữ hết thì đó là **Bách quyết**, không phải mặc định của lead. Lead chưa sửa `.gitignore` — chờ Bách.
+→ T04b sẽ ghi vào TASKS.md: số lần chạy thực tế, dung lượng một lần chạy, và tổng dung lượng sau khi đo.
 
 ### Q14 — Tách "KHÔNG ĐẠT theo thiết kế" khỏi những gì Bách chấm ở cửa sổ cách ly
 
