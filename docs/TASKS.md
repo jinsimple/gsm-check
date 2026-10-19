@@ -14,6 +14,51 @@
 | 21/10 | G3 | auditor/ ra báo cáo 12 dòng; Bách chạy qa ở cửa sổ cách ly |
 | 22/10 | G4 | reports/BAO_CAO_SANDBOX.md + demo chị Ánh |
 
+## Kế hoạch G2a — chốt trước khi gọi coder-product
+
+**Cổng G1 đã qua:** pm DUYỆT `2487aa0`, Bách DUYỆT và cho sang G2a (19/10).
+
+### Gọi coder-product mấy lần
+
+**Một lần, giao cả T02–T06.** Không chia 5 lần gọi: subagent tự commit sau mỗi file theo định nghĩa vai của nó, nên chia nhỏ chỉ làm mất ngữ cảnh giữa các lần gọi mà không thêm chốt kiểm nào. Lead chốt kiểm ở T07, sau khi có đủ cả 5 phần.
+
+### Lead giao gì cho coder-product
+
+Được đọc: `CLAUDE.md`, `docs/SPEC_A.md`, `docs/DECISIONS.md`.
+Nhấn mạnh 5 điều trong lời giao việc:
+
+1. **Chép nguyên** bảng danh sách thuộc tính được phép ở `DECISIONS.md` Q02 sang `INTERFACE.md`. Không thêm, không bớt. Thiếu thuộc tính → nhắn lead, dừng chờ.
+2. **Không vá** theo MATRIX (nguyên tắc Q13). Cụ thể: **không** thêm cờ người-xem-xét cho `auto_accept`, **không** thêm ngưỡng cảnh báo `auto_accept`, **không** viết tài liệu đánh giá tác động. Làm đúng SPEC_A, không hơn.
+3. **Ràng buộc cứng `CLAUDE.md §2` vẫn tuyệt đối** — đây là chỗ ngược với điều 2, phải đọc kỹ cả hai: chỉ stdlib, seed 42, log JSONL đủ 9 trường cho mọi quyết định, mọi tham số nghiệp vụ trong config có `version`, không hardcode.
+4. `INTERFACE.md` phải định nghĩa enum `event`, event nào là quyết định, và **liệt kê các trường dễ biến động** (`ts`, `run_id`, đường dẫn log) — `MATRIX_v0.md` đã hẹn lấy mấy thứ này từ `INTERFACE.md`.
+5. Không đọc, không sửa `auditor/`. Không nhắn `coder-auditor`.
+
+### Lệnh kiểm lead TỰ chạy ở T07 — không nhận báo cáo suông
+
+| # | Kiểm gì | Lệnh |
+|---|---|---|
+| 1 | Chạy được bằng một lệnh | `python product/run_product.py` → exit 0 |
+| 2 | Seed 42 cho kết quả xác định | chạy `gen_mock.py` 2 lần, so `sha256` của 3 file JSON |
+| 3 | Cùng đầu vào → cùng kết quả (chuẩn bị cho M10) | chạy `run_product.py` 2 lần, so `reports/product_run_*.json` sau khi bỏ `ts`, `run_id` |
+| 4 | Log đủ 9 trường ở **mọi** dòng | script đọc hết `logs/*.jsonl`, đếm dòng thiếu trường |
+| 5 | Mọi quyết định có `reason` không rỗng | script lọc dòng có `decision` khác null, kiểm `reason` |
+| 6 | Số quyết định = 2.000 (Q10) | đếm event `match_result` + `fare_result` |
+| 7 | Config có `version` | đọc 2 file config, in `version` |
+| 8 | Chỉ stdlib | thu mọi `import` trong `product/`, đối chiếu `sys.stdlib_module_names` |
+| 9 | Pricing đúng bậc và hệ số | kiểm tay 3 quãng đường (1.5 / 8 / 30 km) x 3 khung giờ (3h / 8h / 14h) |
+| 10 | Danh sách thuộc tính trong `INTERFACE.md` khớp `DECISIONS.md` Q02 | so từng dòng bảng, phải khớp tuyệt đối |
+| 11 | Dung lượng log thật (T04b) | `wc -l` + `du -sh logs/` |
+
+### Thứ tự và điều kiện qua cổng
+
+T02–T06 (coder-product) → T07 (lead chạy 11 lệnh kiểm) → T08 (reviewer review `product/`, lead xác nhận **security CHƯA chạy**) → T09 (coder-product sửa mọi mục "Chặn") → lead chạy lại từ đầu → báo cáo pm → trình Bách.
+**Điều kiện qua G2a:** 11 lệnh kiểm đều đạt **và** bảng review của reviewer không còn mục "Chặn".
+
+### Rủi ro riêng của G2a
+
+- Nếu 17h ngày 20/10 chưa xong T08 thì lead đề nghị dời security sang sáng 21/10 và báo Bách ngay (R1).
+- Điều 2 và điều 3 trong lời giao việc ngược chiều nhau. Nếu `coder-product` hiểu lệch mà bỏ log thì mất cả G3, không chỉ mất mấy dòng ma trận. Lệnh kiểm 4, 5, 6 bắt đúng chỗ đó.
+
 ## Bảng việc
 
 | ID | Cổng | Việc | Giao cho | Đầu vào | Đầu ra | Lệnh kiểm | Trạng thái | Bằng chứng (commit / log) |
@@ -25,13 +70,13 @@
 | T01d | G1 | Bách trả lời Q17 (bằng chứng cho phát hiện dạng vắng mặt) | Bách → lead | DECISIONS.md Q17 | Q17 chốt | Bách chọn (A) hoặc (B) | **completed** | Bách chọn **(A)** 19/10, kèm 3 câu quy tắc |
 | T01e | G1 | Thêm 3 câu Q17(A) vào **phần Quy ước** `MATRIX_v0.md` theo chỉ định của Bách, dịch lại toàn bộ dẫn chiếu bị lệch +3, chạy lại kiểm chéo — **tất cả trong CÙNG một commit** | lead | DECISIONS.md Q17 = (A) | MATRIX_v0.md + DECISIONS.md | script kiểm chéo ra 0 sai | **completed** | lệch +3 từ dòng 13; đã dịch lại; kiểm chéo 0 sai |
 | T01f | G1 | **Yêu cầu số 2 của Bách:** rà 18 câu, bổ sung mọi quyết định ảnh hưởng B vào `MATRIX_v0.md`; ghi rõ câu nào **cố ý không** bổ sung | lead | DECISIONS.md toàn bộ | mục "Chi tiết quy tắc cho agent kiểm thử" trong MATRIX_v0.md + Q18 | đối chiếu 18 câu, không sót | **completed** | bổ sung Q11, Q07, Q10, Q12; cố ý giữ kín Q03, Q04, Q06, Q13, Q08, Q09, Q14 |
-| T02 | G2a | `product/data/gen_mock.py` + 3 file JSON mock (seed 42) | coder-product | SPEC_A §1, DECISIONS | drivers/customers/rides.json | `python product/data/gen_mock.py` rồi chạy lại, so sánh hash 2 lần | pending | |
+| T02 | G2a | `product/data/gen_mock.py` + 3 file JSON mock (seed 42) | coder-product | SPEC_A §1, DECISIONS | drivers/customers/rides.json | `python product/data/gen_mock.py` rồi chạy lại, so `sha256` 2 lần | pending | |
 | T03 | G2a | `product/config/matching.json` + `pricing.json` (có `version`) | coder-product | SPEC_A §2–3, DECISIONS Q03/Q04 | 2 file config | `python -c "import json;[json.load(open(f))['version'] for f in ...]"` | pending | |
 | T04 | G2a | `product/matching.py` — `match()` + log từng ứng viên | coder-product | SPEC_A §2, DECISIONS Q02/Q05/Q06/Q10/Q12 | matching.py, logs/matching_*.jsonl | chạy qua run_product; đếm dòng log / số quyết định | pending | |
 | T04b | G2a | **Đo thật**: số dòng log, dung lượng 1 lần chạy, **tổng dung lượng qua 8 lần chạy dự kiến**; thay mọi số [Suy đoán] ở DECISIONS Q12 | lead | logs/*.jsonl | số đo ghi vào cột Bằng chứng | `wc -l` + `du -sh logs/` | pending | |
 | T05 | G2a | `product/pricing.py` — `fare()` + log từng bậc km | coder-product | SPEC_A §3, DECISIONS Q03/Q04/Q10 | pricing.py, logs/pricing_*.jsonl | kiểm tay 3 mốc quãng đường ở 3 khung giờ | pending | |
 | T06 | G2a | `product/run_product.py` + `docs/INTERFACE.md` | coder-product | SPEC_A §4–5, DECISIONS Q10 | reports/product_run_*.json, INTERFACE.md | `python product/run_product.py` | pending | |
-| T07 | G2a | Lead tự chạy lệnh kiểm, soát log đủ 9 trường bắt buộc | lead | T02–T06 | kết quả chạy dán vào TASKS.md | `python product/run_product.py` + soát 9 trường trên log | pending | |
+| T07 | G2a | **Lead tự chạy đủ 11 lệnh kiểm** ở bảng "Kế hoạch G2a" | lead | T02–T06 | kết quả từng lệnh dán vào cột Bằng chứng | 11 lệnh kiểm, không nhận báo cáo suông | pending | |
 | T08 | G2a | Review `product/` theo checklist (security CHƯA chạy) | reviewer | product/, SPEC_A, INTERFACE | bảng Chặn / Nên sửa / Gợi ý | lead đọc, hết mục "Chặn" | pending | |
 | T09 | G2a | Sửa mục "Chặn" của reviewer | coder-product | bảng review | commit sửa | `python product/run_product.py` chạy lại OK | pending | |
 | T10 | G2b | Tạm dừng commit; Bách chạy security ở cửa sổ cách ly, merge `security-pass`, lead chạy lại A | Bách → lead | — | commit sau security | `python product/run_product.py` sau merge | pending | |
