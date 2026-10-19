@@ -398,10 +398,21 @@ Chỗ nguy hiểm nằm trong **phản xạ lead đã tự khen hai lần ở G2
 
 ### Quy tắc G2b — dứt khoát
 
-1. Sau khi merge `security-pass`, lead **chỉ** chạy `python product/run_product.py` và **chỉ** xem **exit code**.
-2. **Không** chạy kiểm 2, 3, 4, 5, 6, 9, 10, 12, 13, 14, 16, 17, 18, 19, 20. Không lệnh nào so với giá trị kỳ vọng hay với baseline.
+1. Sau khi merge `security-pass`, lead được chạy **đúng một** lệnh: `python product/run_product.py`, và **chỉ** đọc **exit code**.
+2. **Mọi lệnh kiểm khác — đã có hay sẽ thêm — đều không được chạy, không cần liệt kê tên.** Muốn chạy thêm bất cứ gì thì **xin Bách trước**.
 3. **Nếu exit ≠ 0 → báo Bách, KHÔNG chẩn đoán.** Chẩn đoán bằng log **chính là** đọc đáp án.
-4. Lead **không** tạo lần chạy bằng chứng mới và **không** sinh manifest mới ở G2b. Theo Quy ước `MATRIX_v0` Bách đã chốt, **B tự chạy `run_product.py` sinh log mới trước khi kiểm** — nên việc này không cần ai làm thay.
+4. Lead **không** tạo lần chạy bằng chứng mới và **không** sinh manifest mới ở G2b. Theo Quy ước `MATRIX_v0` Bách đã chốt, **B tự chạy `run_product.py` sinh log mới trước khi kiểm** — nên việc này không cần ai làm thay. Thêm nữa, một lần chạy của lead sau security **sinh thêm một baseline để lead đối chiếu**, tức lại là một đường rò.
+5. **Lead không đọc chính bản sửa của security.** Từ lúc Bách báo security đã chạy: **không** `git log -p` / `git diff` / `git show` / `git blame` trên `product/`; **không** mở file nào trong `product/` để đọc nội dung; **không** đọc commit message của nhánh `security-pass`. Cần commit hash để ghi bằng chứng thì dùng `git rev-parse` — lệnh không in ra nội dung thay đổi.
+
+### Vì sao quy tắc 2 là danh sách CHO PHÉP, không phải danh sách cấm
+
+Bản đầu của ô này liệt kê tên từng lệnh kiểm bị cấm. **pm liệt kê 13 mục, lead thêm 2, và vẫn thiếu 4** — kiểm 7 (`version` bị bỏ, đúng đích M06), kiểm 8 (import ngoài stdlib bị cắm vào), kiểm 11 (số dòng/dung lượng lệch thì khoanh vùng được), kiểm 15 (bước ghép bị sửa). **Ba lượt soát mà danh sách cấm vẫn hở.** Đó là bản chất của danh sách cấm, không phải sự cẩu thả của ai: bộ kiểm còn mọc thêm ở G3 (kiểm 21, 22…), mà danh sách cấm không tự mọc theo.
+
+Bách đã ra đúng phán quyết này ở **Q02** — *"chỉ ghi danh sách cho phép, không ghi danh sách cấm"* — cho đúng cùng một lý do. Bảng "nếu chạy thì nó chỉ ra gì" ở trên giữ lại làm **phần giải thích**, không phải danh sách cấm.
+
+### Phạm vi thời gian
+
+Quy tắc 1–5 áp **từ G2b cho tới hết dự án**, không chỉ trong ngày 20/10 — ở G3 lead vẫn làm việc trong repo đã merge khi chấm B.
 
 **Điểm 3 là ngoại lệ duy nhất của `CLAUDE.md:30`** câu sau (*"Không sửa lỗi khi chưa chẩn đoán bằng log"*). Lý do: ở G2b, chẩn đoán phá đúng thứ dự án đang đo. Ngoại lệ này có phạm vi hẹp — **chỉ** `product/` **chỉ** trong G2b; mọi chỗ khác `CLAUDE.md:30` vẫn nguyên.
 
@@ -429,6 +440,6 @@ Lý do: `DECISIONS.md` chứa biên bậc giá, hệ số giờ, định nghĩa 
 | R7 | Mọi con số dung lượng log hiện là [Suy đoán] | T04b đo thật ngay sau T04, thay số vào DECISIONS Q12 |
 | ~~R8~~ | **ĐÓNG 19/10.** Dòng 7 đã sửa theo Q15, Bách chuẩn thuận | T10b giữ lại làm chốt cửa, kiểm lại dòng 7 trước khi gọi T11 |
 | R10 | Q16 (mỗi phát hiện có `file:dòng` riêng) cộng nguyên tắc bất đối xứng sẽ đẩy M08 và M12 xuống CẦN NGƯỜI XEM, trái với Q13/Q08/Q09 vừa chốt là hai dòng đó ra KHÔNG ĐẠT. Báo cáo G4 sẽ không nói được điều Q13 muốn nói, và recall của qa đọc khác đi | Q17 xin Bách chọn (A) định nghĩa bằng chứng vắng mặt, hay (B) chấp nhận CẦN NGƯỜI XEM. T10b là chốt cửa: Q17 chưa trả lời thì không gọi T11 |
-| R12 | **Bộ kiểm của lead là máy dò đáp án.** Phản xạ "code đổi là chạy lại toàn bộ bộ kiểm" — đúng ở G2a, phá độc lập ở G2b. Nếu lead chạy kiểm 9/13/14/16/17/19 sau khi merge `security-pass` thì lead biết đáp án, và số precision/recall của `qa` ở G3 **mất nghĩa** vì bên bị chấm đã biết trước. Rủi ro nằm ở **phản xạ tốt**, nên không tự lộ ra | Ô "Việc của lead ở G2b" ngay dưới bảng việc: chỉ `python product/run_product.py`, chỉ xem exit code, exit ≠ 0 thì báo Bách **không chẩn đoán**. Ghi **trước** khi Bách chạy security. Cộng: bộ kiểm commit vào `tests/` phải nằm trong danh sách KHÔNG mở của `coder-auditor` (xin Bách cùng `reports/`) |
+| R12 | **Bộ kiểm của lead là máy dò đáp án**, và **lịch sử git của repo lead đang ngồi trong đó còn cho đáp án đầy đủ hơn**: sau merge, `git log -p` hay chỉ mở `product/matching.py` ra đọc là xong. Nghịch lý: `coder-auditor` bị cấm `git log/diff/show` trên `product/`, còn **lead thì không ai cấm** — mà lead mới là phiên ngồi trong repo đã merge. Phản xạ "code đổi là chạy lại toàn bộ bộ kiểm" — đúng ở G2a, phá độc lập ở G2b. Nếu lead chạy kiểm 9/13/14/16/17/19 sau khi merge `security-pass` thì lead biết đáp án, và số precision/recall của `qa` ở G3 **mất nghĩa** vì bên bị chấm đã biết trước. Rủi ro nằm ở **phản xạ tốt**, nên không tự lộ ra | Ô "Việc của lead ở G2b" ngay dưới bảng việc: chỉ `python product/run_product.py`, chỉ xem exit code, exit ≠ 0 thì báo Bách **không chẩn đoán**. Ghi **trước** khi Bách chạy security. Quy tắc 2 là danh sách **cho phép** đóng (khuôn Q02), vì ba lượt soát danh sách cấm vẫn hở 4 lệnh. Quy tắc 5 cấm lead đọc diff/source `product/`. Áp **tới hết dự án**, không chỉ ngày 20/10. Cộng: bộ kiểm commit vào `tests/` phải nằm trong danh sách KHÔNG mở của `coder-auditor` (xin Bách cùng `reports/`) |
 | R11 | Dẫn chiếu `file:dòng` vào file còn đang sửa thì **tự vỡ** mỗi lần chèn dòng. Đã vỡ 1 lần ở `05edfec` (thêm 1 dòng vào Quy ước `MATRIX_v0` làm lệch +1 từ dòng 10). Nếu Bách chọn Q17(A) thì vỡ lần 2 | Chèn câu mới ở **cuối file** (sau dòng 42), nơi không có dẫn chiếu nào phía sau → lệch 0 dòng. Cộng với script kiểm chéo từng dẫn chiếu, chạy trong cùng commit với mọi lần sửa `MATRIX_v0`/`SPEC_A` |
 | R9 | Mỗi lần chạy sinh một file log mới theo `run_id`; 8 lần chạy dự kiến có thể làm repo phình vài trăm MB, git giữ vĩnh viễn | **Giảm thiểu đang hoạt động 19/10:** `.gitignore` có `logs/*.jsonl`; chỉ log của lần chạy được trích làm bằng chứng được force-add. Ngưỡng 100 MB ở Q12 vẫn tính cho **một lần chạy** |
