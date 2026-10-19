@@ -265,6 +265,31 @@ Vì sao trình tự này đúng hơn: nếu security merge trước, thì B đư
 
 → **Quy tắc "Việc của lead ở G2b" (6 quy tắc, R12) áp từ bước 5**, tức từ lúc Bách merge `security-pass`, không phải từ ngày 20/10.
 
+#### Thiếu bước 6 — CẦN BÁCH. Không chặn G2a, nhưng chặn G3
+
+**pm phát hiện bảng trình tự dừng ở bước 5, thiếu đúng bước làm nên toàn bộ phép đo: chạy B đã đóng băng trên A CÓ LỖI.** Lead xác minh và đúng cả ba vế:
+
+| Khẳng định | Kiểm bằng | Kết quả |
+|---|---|---|
+| Không dòng việc nào chạy `run_audit.py` sau merge | `grep run_audit.py docs/TASKS.md` | chỉ **T11** và **T12**, cả hai **trước** tag |
+| T12/T13 chạy trên **A sạch** | đọc dòng T12, T13 | đúng — chúng sinh **vế thứ nhất** |
+| Phép đo cần **hai** vế | `TASKS.md` R6 (**ĐÓNG 19/10**) | R6 đóng bằng đúng lập luận *"qa chấm theo **chênh lệch** giữa commit A sạch và commit chấm điểm"* |
+
+**Hệ quả: không có lần chạy sau merge thì không có vế thứ hai, nên recall / FNR / precision — tức TB-01, TB-02, TB-03 — không tính được.** Và R6 đã được **đóng** dựa trên việc có hai vế đó.
+
+**Nặng hơn: lần chạy cần thiết đó đang bị chính quy tắc của lead cấm.** Quy tắc 1 ghi lead được chạy **đúng một** lệnh sau merge, `python product/run_product.py`. Lead viết quy tắc đó để bịt đường rò, và nó **bịt luôn phép đo**. Đây là lần thứ ba trong buổi mà **hình thức** của một quy tắc, không phải nội dung, là chỗ sai.
+
+**→ Hai việc xin Bách:**
+
+1. **Bổ sung bước 6 vào Q21:** sau merge, lead chạy `python auditor/run_audit.py` trên A có lỗi, **ba lần cùng commit** (cho TB-04 độ ổn định), xuất `reports/audit_<commit>.*`.
+2. **Thêm vào quy tắc 1 một ngoại lệ CÓ PHẠM VI:** sau merge, lead được chạy thêm **đúng** `auditor/run_audit.py`.
+
+**Vì sao ngoại lệ này an toàn, và nó chỉ an toàn nhờ `b-freeze`.** `run_audit.py` là **phép đo**, không phải chẩn đoán: nó chạy bộ quy tắc đã bị tag `b-freeze` khoá, nên lead **không sửa được** B sau khi thấy kết quả — mà đó chính là điều TB-07 đo. Không có tag thì ngoại lệ này **sẽ là** đường rò, vì lead thấy B bỏ lọt cái gì rồi sửa B cho bắt được. **Thứ tự Bách chốt ở Q21 là thứ làm ngoại lệ này hợp lệ.**
+
+Lead **không tự thêm** ngoại lệ vào quy tắc độc lập của chính mình — tự nới quyền của mình là đúng loại việc phải xin. Đã thêm dòng việc **T14c** ở trạng thái **blocked**.
+
+**Một điểm pm bổ sung, mạnh hơn cách lead trình bày thứ tự cổng.** Lead nói trình tự mới *đúng hơn*. pm chỉ ra nó là trình tự **duy nhất khả thi**: R6 chốt qa chấm theo chênh lệch, nên B **buộc** phải chạy trên A sạch để sinh vế thứ nhất; mà B chỉ chạy được trên A sạch nếu B xong **trước** merge. Tức bảng cổng `CLAUDE.md §5` **không nhất quán với một quyết định Bách đã chốt từ trước**, chứ không phải chỉ là một lựa chọn kém hơn. Nói vậy thì Bách không phải cân nhắc lại gì.
+
 ### Q22 — Bốn điểm trước đây chờ chị Ánh, nay nhóm tự chốt (Bách chỉ thị 19/10)
 
 **Bối cảnh Bách chốt: chị Ánh KHÔNG cung cấp thêm thông tin nào. Nhóm tự nghiên cứu và tự chốt mọi thứ.** Mọi chỗ trước đây ghi "hỏi chị Ánh" nay dùng quyết định ở `docs/CHECKLIST_KIEM_TOAN.md` §7.

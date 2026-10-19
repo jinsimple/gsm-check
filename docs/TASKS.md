@@ -148,7 +148,8 @@ T02–T06 (coder-product) → T07 (lead chạy 14 lệnh kiểm) → T08 (review
 | T13 | G3 | Chạy audit 3 lần cùng commit, so sánh JSON (bỏ ts/run_id) → độ ổn định | lead | T12 | ghi chú độ ổn định | 3 lần chạy + so sánh | pending | |
 | T14 | G3 | Review `auditor/` (KHÔNG review product/ nữa) | reviewer | auditor/, MATRIX_v0 | bảng review | hết mục "Chặn" | pending | |
 | T14b | G3 | **Đóng băng B — chốt cửa Q21.** Gắn tag `b-freeze` khi: B đã chạy trên **A sạch** (T12, T13) **và** T14 hết mục Chặn. Rồi báo Bách. Bách **mới** merge `security-pass` | lead | T12, T13, T14 | tag `b-freeze` | `git tag` có `b-freeze`; `git log auditor/` không commit nào sau tag | pending | TB-07 đo bằng chính tag này |
-| T15 | G3 | Bách chạy qa ở cửa sổ cách ly, merge `qa-score` | Bách | reports/audit_*.json | reports/qa_score_*.md | — | pending | |
+| T14c | G3 | **Chạy B đã đóng băng trên A CÓ LỖI — vế thứ hai của phép đo.** `python auditor/run_audit.py` sau khi Bách merge `security-pass`, **3 lần cùng commit** cho TB-04 | lead | T14b (tag `b-freeze`), merge `security-pass` | `reports/audit_<commit>.json` + `.md` + `.log.jsonl` | 12 dòng có `result` + `evidence`; 3 lần ra JSON giống hệt sau khi bỏ `ts`/`run_id` | **blocked** | **Chờ Bách**: Q21 thiếu bước 6, và quy tắc 1 ở ô G2b đang **cấm** đúng lệnh này. Không có dòng này thì TB-01/02/03 không tính được |
+| T15 | G3 | Bách chạy qa ở cửa sổ cách ly, merge `qa-score` | Bách | reports/audit_*.json (**cả hai** vế: A sạch từ T12, A có lỗi từ T14c) | reports/qa_score_*.md | — | pending | R6 đóng dựa trên việc có **hai** vế |
 | T16 | G4 | `reports/BAO_CAO_SANDBOX.md` theo PROMPTS 4.1, **đã sửa cấu trúc theo phụ lục chỉ thị 19/10** — xem ô dưới bảng | lead | tất cả trên + `docs/CHECKLIST_KIEM_TOAN.md` | báo cáo | pm chấm lần cuối + Bách duyệt | pending | |
 | T17 | G4 | **Chấm kết quả B theo checklist §3B** (TB-01 → TB-12): recall, FNR, precision, độ ổn định, truy nguồn, độc lập, đóng băng, nguồn gốc quy tắc, Legal/DPO, log của B, phạm vi dùng B, chạy lại bộ đo khi đổi MATRIX | lead | `reports/qa_score_*.md` (T15), `reports/audit_*.json` | một phần riêng trong báo cáo G4, 12 dòng | mỗi dòng TB có số đo hoặc ghi rõ **chưa đo được** và vì sao | pending | ngưỡng ở checklist §3B là **[Suy luận]**, không phải chuẩn |
 
@@ -416,6 +417,7 @@ Chỗ nguy hiểm nằm trong **phản xạ lead đã tự khen hai lần ở G2
 ### Quy tắc G2b — dứt khoát
 
 1. Sau khi merge `security-pass`, lead được chạy **đúng một** lệnh: `python product/run_product.py`, và **chỉ** đọc **exit code**.
+   - **[Chờ Bách] Ngoại lệ đang xin, chưa có hiệu lực:** thêm `python auditor/run_audit.py` (T14c) — xem DECISIONS Q21 mục *"Thiếu bước 6"*. Nó là **phép đo**, không phải chẩn đoán, và chỉ an toàn nhờ tag `b-freeze` khoá B trước đó. **Chưa được Bách duyệt thì chưa chạy.**
 2. **Mọi lệnh kiểm khác — đã có hay sẽ thêm — đều không được chạy, không cần liệt kê tên.** Muốn chạy thêm bất cứ gì thì **xin Bách trước**.
 3. **Nếu exit ≠ 0 → báo Bách, KHÔNG chẩn đoán.** Chẩn đoán bằng log **chính là** đọc đáp án.
 4. Lead **không** tạo lần chạy bằng chứng mới và **không** sinh manifest mới ở G2b. Theo Quy ước `MATRIX_v0` Bách đã chốt, **B tự chạy `run_product.py` sinh log mới trước khi kiểm** — nên việc này không cần ai làm thay. Thêm nữa, một lần chạy của lead sau security **sinh thêm một baseline để lead đối chiếu**, tức lại là một đường rò.
