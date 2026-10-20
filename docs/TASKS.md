@@ -7,9 +7,10 @@
 | | |
 |---|---|
 | **Cổng đang mở** | **G3a ĐÓNG — tag `b-freeze` tại `cce80bf`.** Chờ Bách merge `security-pass` (G2b) |
-| **Vừa xong** | `reviewer` soát lần 3: **hết Chặn**, grep toàn `auditor/rules/*.py` xác nhận không còn `ev()` nào trỏ file gitignored. T14b: `git tag b-freeze` tại `cce80bf` |
-| **Bước tiếp theo** | Báo Bách: `b-freeze` xong, xin merge `security-pass`. Sau merge: lead không chạm `product/` (3 quy tắc G2b), chỉ đọc kết quả sau khi Bách merge `qa-score` |
-| **Lệnh kiểm của bước tiếp theo** | — (chờ Bách merge) |
+| **Vừa xong** | pm vòng 2 mục 1-3 xong (`9836c66`): TB-04 chạy đúng 3 lần B@`b-freeze`, sổ sách T10b-T14b đóng dùng. Mục 4-5 là câu hỏi cho Bách, **CHƯA merge** — xem dưới |
+| **Bước tiếp theo** | **Chờ Bách trả lời 1 tin gộp (mục 4+5) rồi mới merge `security-pass`** |
+| **Lệnh kiểm của bước tiếp theo** | — (chờ Bách) |
+| **Câu hỏi cho Bách (1 tin, trước merge)** | (4) M08 không bao giờ lên được KHÔNG ĐẠT vì B bị cấm đọc nội dung `docs/` — mâu thuẫn ý Q17(A). Lùi Q17(B) hay giữ + giải trình G4? (5) M05/M07 CẦN NGƯỜI XEM trên A sạch là **báo động giả** (0/2 hằng số nghiệp vụ thật) — nếu security cài lỗi đúng chỗ đó, nhãn không đổi (CNX→CNX). Đề xuất: báo qa so theo **tập bằng chứng** (`file:dòng`), không theo nhãn, trước khi merge |
 | **Lịch (chỉ thị 21:01)** | 20/10: T09g → T11 → B chạy trên A sạch → ổn định 3 lần → reviewer `auditor/` → `b-freeze` trước tối nay. **Nếu tối nay chưa `b-freeze`**: cắt ma trận còn 8 dòng (M01,M02,M04,M05,M07,M09,M10,M11), báo Bách trước khi cắt. 21/10: Bách merge + QA chấm, lead nháp G4. 22/10: hoàn thiện, pm duyệt, demo |
 | **Chế độ gọn** | Không đặt nguyên tắc mới trừ khi thiếu nó thì sai kết quả đo. Câu hỏi không chặn → vào báo cáo G4. Hỏi Bách tối đa 1 tin/cổng, mỗi câu kèm đề xuất. pm chỉ chấm 4 điểm: G2a, `b-freeze`, kết quả sau merge, G4. Không đọc log lớn vào ngữ cảnh. Báo cáo cổng tối đa 15 dòng |
 
