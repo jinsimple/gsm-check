@@ -6,10 +6,10 @@
 
 | | |
 |---|---|
-| **Cổng đang mở** | **pm DUYỆT G4 — mốc chấm thứ 4, mốc CUỐI của pm** (vòng 3). Còn 1 việc nhỏ gộp đã xong: thêm `Q24` vào `DECISIONS.md` làm Source cho câu xác nhận của Bách (commit `fc7085c`). **pm DUYỆT không mở cổng G4** — chờ Bách duyệt trực tiếp + quyết demo |
-| **Vừa xong** | Thêm `Q24` (`DECISIONS.md`): Bách xác nhận 2 lỗi sót nằm trong vùng 12 dòng ma trận, hỏi/trả lời **sau** khi `qa-score` merge — mốc thời gian bảo vệ tính mù. Báo cáo trích `Q24` thay câu không nguồn |
-| **Bước tiếp theo** | Báo Bách: G4 đã qua đủ 4 mốc chấm của pm, xin Bách duyệt cổng G4 + quyết định demo. Hai việc còn lại là của Bách: (1) điền hoặc xoá ô `[MỞ ĐÁP ÁN SAU THÍ NGHIỆM]` (tên 2 dòng Mxx/Myy) trước demo; (2) tự duyệt gate |
-| **Lệnh kiểm của bước tiếp theo** | `python tests/verify_refs.py .` (đã chạy lại sau sửa, 0 lỗi, exit 0 cả khi redirect) |
+| **Cổng đang mở** | **G4 — BÁCH ĐÃ ĐỒNG Ý.** pm duyệt mốc chấm thứ 4 (cuối), Bách duyệt gate trực tiếp (commit `0ad269b`). Dự án coi như **hoàn tất các cổng**; còn lại là demo |
+| **Vừa xong** | Theo chỉ thị cuối của Bách: (1) Ô `[MỞ ĐÁP ÁN SAU THÍ NGHIỆM]` chốt **giữ dạng tổng quát**, không công khai số dòng Mxx/Myy; (2) `Q24` cập nhật câu nguyên văn của Bách; (3) dọn tên người thật trong comment `auditor/rules/m07_adverse_action_review.py:13` (đổi sau `b-freeze`, thuần cosmetic, docstring, `ast.parse` xác nhận hợp lệ, Bách tự yêu cầu); (4) Bách đồng ý G4 |
+| **Bước tiếp theo** | Không còn việc chặn. Sẵn sàng cho demo khi Bách quyết định thời điểm |
+| **Lệnh kiểm của bước tiếp theo** | — |
 | **⚠️ ĐANG HIỆU LỰC — từ C0→C1** | Lead **không đọc nội dung `product/` qua BẤT KỲ đường nào**: không lệnh git local (`diff`/`log`/`show`), không trình duyệt/GitHub web UI/API, không bản clone khác, không ảnh chụp màn hình, không người khác kể lại. Nếu ai dán cho lead một đoạn diff của `product/` → **dừng, báo Bách ngay, không dùng**. Chỉ đọc kết quả sau khi Bách merge `qa-score` |
 | **🚨 RỦI RO PM BÁO 20/10 — ĐÃ ĐÓNG** | Bách đã chuyển repo **Private** (pm xác nhận: `ls-remote` không xác thực → `exit 128`; trước đó đọc được không cần đăng nhập). `main` đã đẩy đúng `b2515ae`. Nhánh `security-pass` vẫn còn trên remote nhưng nay nằm trong repo private — không còn là đường rò. Sau G3b, Bách mở lại public thì không hại gì (điểm đã chấm xong) |
 | **✅ pm — mốc chấm 3 (kết quả sau merge security-pass): DUYỆT** | Kiểm bằng lệnh (không mở nội dung `product/`): `git log b-freeze..HEAD -- auditor/` trống (B không bị sửa sau đóng băng); `git log 83229ff..HEAD --name-only -- product/ tests/` trống; commit `b2515ae` của lead chỉ chạm `docs/TASKS.md`; không file bằng chứng/log mới sinh sau merge (Bách tự chạy A 2 lần sau merge, không phải lead/B). Lưu ý của pm: chỉ thấy *vật phẩm+commit*, không thấy *lệnh đã gõ trong tab lead* — câu đúng trong G4 là "không có dấu vết nào của việc chạm `product/`", không phải "chắc chắn không ai chạm" (cùng mức độ dè dặt như "mã tái lập được" ở G2a) |
