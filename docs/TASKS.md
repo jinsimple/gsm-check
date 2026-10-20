@@ -6,10 +6,10 @@
 
 | | |
 |---|---|
-| **Cổng đang mở** | **G3b ĐÃ MERGE** (`qa-score` tại `a3453cb`). Số đo: recall 0.667, FNR 0.333 — **không đạt** mục tiêu [Suy luận]; precision 1.000. Chờ gửi `pm` chấm mốc thứ 4 (báo cáo G4), rồi Bách duyệt |
-| **Vừa xong** | T17 (điền TB-01→TB-12) + T16 (hoàn thiện `BAO_CAO_SANDBOX.md`) — nguyên văn từ `reports/qa_score_83229ff.md`, không tự tính lại. `verify_refs.py` 0 lỗi |
-| **Bước tiếp theo** | Gửi `pm` chấm lần cuối báo cáo G4 (mốc chấm thứ 4). Sau đó trình Bách duyệt G4/demo |
-| **Lệnh kiểm của bước tiếp theo** | `python tests/verify_refs.py .` (đã chạy, 0 lỗi) trước khi gửi `pm` |
+| **Cổng đang mở** | **G3b ĐÃ MERGE** (`qa-score` tại `a3453cb`). Số đo: recall 0.667, FNR 0.333 — **không đạt** cả §3B và mục tiêu riêng qa; precision 1.000. pm chấm vòng 1 = **SỬA RỒI GỬI LẠI**, đã sửa đủ 5 điểm (commit `972e9e3`), đang chờ pm chấm vòng 2 |
+| **Vừa xong** | Sửa G4 theo 5 điểm pm: (1) thêm "Vì sao sót 2 lỗi" ở mục 4; (2) TB-06 khai rủi ro repo-public-đã-quản-lý; (3) tách mục tiêu riêng qa khỏi ngưỡng gốc §3B; (4) M05 đổi "xác nhận riêng" → Source thật (`TASKS.md:381-382`@`100f2a0`); (5) bỏ nhãn "Nháp", đổi tên người thật → vai trong thân báo cáo. Cộng: `verify_refs.py` fix UnicodeEncodeError khi stdout redirect |
+| **Bước tiếp theo** | Chờ `pm` chấm vòng 2. Nếu DUYỆT → trình Bách duyệt G4/demo |
+| **Lệnh kiểm của bước tiếp theo** | `python tests/verify_refs.py .` (đã chạy lại sau sửa, 0 lỗi, exit 0 cả khi redirect) |
 | **⚠️ ĐANG HIỆU LỰC — từ C0→C1** | Lead **không đọc nội dung `product/` qua BẤT KỲ đường nào**: không lệnh git local (`diff`/`log`/`show`), không trình duyệt/GitHub web UI/API, không bản clone khác, không ảnh chụp màn hình, không người khác kể lại. Nếu ai dán cho lead một đoạn diff của `product/` → **dừng, báo Bách ngay, không dùng**. Chỉ đọc kết quả sau khi Bách merge `qa-score` |
 | **🚨 RỦI RO PM BÁO 20/10 — ĐÃ ĐÓNG** | Bách đã chuyển repo **Private** (pm xác nhận: `ls-remote` không xác thực → `exit 128`; trước đó đọc được không cần đăng nhập). `main` đã đẩy đúng `b2515ae`. Nhánh `security-pass` vẫn còn trên remote nhưng nay nằm trong repo private — không còn là đường rò. Sau G3b, Bách mở lại public thì không hại gì (điểm đã chấm xong) |
 | **✅ pm — mốc chấm 3 (kết quả sau merge security-pass): DUYỆT** | Kiểm bằng lệnh (không mở nội dung `product/`): `git log b-freeze..HEAD -- auditor/` trống (B không bị sửa sau đóng băng); `git log 83229ff..HEAD --name-only -- product/ tests/` trống; commit `b2515ae` của lead chỉ chạm `docs/TASKS.md`; không file bằng chứng/log mới sinh sau merge (Bách tự chạy A 2 lần sau merge, không phải lead/B). Lưu ý của pm: chỉ thấy *vật phẩm+commit*, không thấy *lệnh đã gõ trong tab lead* — câu đúng trong G4 là "không có dấu vết nào của việc chạm `product/`", không phải "chắc chắn không ai chạm" (cùng mức độ dè dặt như "mã tái lập được" ở G2a) |
