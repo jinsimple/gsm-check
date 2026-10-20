@@ -1,6 +1,6 @@
 # Báo cáo sandbox GSM — kiểm định phương pháp cho matching + pricing
 
-> **[Suy luận]** Nháp của `lead`, bắt đầu 20/10/2026. `security-pass` merge tại `83229ff`, `qa-score` merge tại `a3453cb` — số đo qa đã điền nguyên văn vào mục 4 và TB-01/02/03 (mục 8). Sẽ gửi `pm` chấm lần cuối (mốc chấm thứ 4) trước khi trình Bách.
+> **[Suy luận]** Kết quả kiểm định phương pháp cho `product/` (A) và `auditor/` (B), dự án sandbox GSM. `security-pass` merge tại `83229ff`, `qa-score` merge tại `a3453cb`.
 
 ## 1. Mục tiêu & phạm vi
 
@@ -39,7 +39,7 @@ Nguồn: `reports/audit_8869ebd.md` (hash cây `auditor/` giống `b-freeze`, đ
 | M02 | A.7.4 | PWD Đ.7 | **ĐẠT** | `product/matching.py` — không truy cập thuộc tính ngoài whitelist 10 thuộc tính (Q02) |
 | M03 | A.7.5 | GDPR Đ.5(1)(c) | **ĐẠT** | quét regex 4 file `data/`+`config/`, không khớp SĐT/email/CCCD/CMND |
 | M04 | A.6.2.8 | AI Act Đ.12 | **ĐẠT** | 2000/2000 quyết định có log, `reason` không rỗng |
-| M05 | A.6.2.3 | AI Act Đ.11 | **CẦN NGƯỜI XEM** | `matching.py:26` (`6371.0088`), `pricing.py:24` (`1e-09`) — **[Chưa xác minh]** heuristic, 2 hằng số này thực chất là bán kính Trái Đất và epsilon làm tròn, không phải hằng số nghiệp vụ (xác nhận riêng bởi `reviewer`/`lead`, B không có quyền biết) |
+| M05 | A.6.2.3 | AI Act Đ.11 | **CẦN NGƯỜI XEM** | `matching.py:26` (`6371.0088`), `pricing.py:24` (`1e-09`) — **[Chưa xác minh]** heuristic, 2 hằng số này thực chất là bán kính Trái Đất và epsilon làm tròn, không phải hằng số nghiệp vụ. Nguồn: `docs/TASKS.md:381-382` — danh sách miễn của kiểm 14, khớp tên file + giá trị + ngữ cảnh kèm lý do, vào repo tại commit `100f2a0` (19/10, **trước** khi security chạy). B không có quyền biết điều này |
 | M06 | A.6.2.7 | AI Act Đ.11 | **ĐẠT** | cả 3 file config có `version` |
 | M07 | A.9.2 | GDPR Đ.22; PWD Đ.10 | **CẦN NGƯỜI XEM** | `auto_accept` có thật (554/1000 quyết định), nhưng B chỉ quét được **từ khoá** cho bước xem xét con người, không xác nhận được cơ chế thật |
 | M08 | A.5.2 | GDPR Đ.35; PWD Đ.8 | **CẦN NGƯỜI XEM** | xem mục 5 — **giới hạn của phép đo**, không phải A tuân thủ |
@@ -63,22 +63,28 @@ Nguyên văn từ `reports/qa_score_83229ff.md` (qa chấm, merge `a3453cb`) —
 | FN (bỏ sót lỗi cài) | 2 |
 | FP (báo động giả trên mục sạch) | 0 |
 
-| Số đo | Kết quả | Mục tiêu [Suy luận] | Đạt? |
-|---|---|---|---|
-| precision | **1.000** | (không đặt mục tiêu cứng) | — |
-| recall | **0.667** | ≥ 0.833 | Không |
-| FNR | **0.333** | ≤ 0.167 | Không |
+| Số đo | Kết quả | Mục tiêu riêng của qa [Suy luận] | So mục tiêu §3B (≥80% / ≤20%) | Đạt? |
+|---|---|---|---|---|
+| precision | **1.000** | (không đặt mục tiêu cứng) | — | — |
+| recall | **0.667** | ≥ 0.833 (5/6) | ≥ 0.80 | Không đạt cả hai |
+| FNR | **0.333** | ≤ 0.167 (1/6) | ≤ 0.20 | Không đạt cả hai |
+
+Lưu ý: `0.833`/`0.167` là mục tiêu **riêng qa đặt**, chặt hơn ngưỡng gốc của checklist §3B (`CHECKLIST_KIEM_TOAN.md:133-134`: recall ≥ 80%, FNR ≤ 20%). Dù dùng ngưỡng nào, kết luận không đổi: 0.667 không đạt.
 
 Độ ổn định (qa, trên `83229ff`): chạy `run_audit.py` 3 lần, so JSON sau chuẩn hoá — **3/3 giống hệt** toàn bộ 12 dòng ma trận. Khớp hướng với TB-04 ở mục 8 (lead tự chạy trên `b-freeze`).
 
 Ghi chú của qa (nguyên văn, không diễn giải lại): 2 dòng ma trận đã CNX trên A sạch có sinh bằng chứng mới ở C1, nhưng bằng chứng đó rơi vào vị trí của (các) lỗi đã được dòng khác bắt đúng — không rơi vào vị trí của 2 lỗi còn bị bỏ sót, nên không tính thêm TP.
+
+### Vì sao sót 2 lỗi (FN=2) — giải thích được mà không cần biết đáp án
+
+FN đo **độ phủ của `MATRIX_v0`**, không đo năng lực của B: B chỉ có 12 quy tắc, là ánh xạ trực tiếp của `MATRIX_v0`. Một lỗi nằm ngoài vùng 12 dòng đó **vô hình với B theo cấu tạo**, không phải vì B kém. Hai ứng viên cấu trúc đã có sẵn trong báo cáo này: M08 bị bịt hoàn toàn (B không có quyền đọc `docs/`, mục 5), và M05/M07 còn tín hiệu yếu (CẦN NGƯỜI XEM trên A sạch, mục 3). Chỉ Bách xác nhận được chắc, và Bách trả lời được **mà không tiết lộ lỗi là gì**: chỉ cần nói 2 lỗi bị sót có nằm trong vùng 12 dòng ma trận hay không.
 
 ## 5. Khoảng trống đã biết
 
 - **Thu nhập tài xế**: ngoài phạm vi (`CLAUDE.md §6`).
 - **M08 không bao giờ lên `KHÔNG ĐẠT`** (Q23, Bách chốt 20/10): B bị cấm đọc nội dung `docs/` nên không thể xác nhận có/không có tài liệu đánh giá tác động. `CẦN NGƯỜI XEM` ở M08 là **giới hạn của phép đo** do chính nguyên tắc độc lập tạo ra, không phải bằng chứng A có/không có DPIA.
 - **M05, M07 là CẦN NGƯỜI XEM trên A sạch, không phải trên A có lỗi** — nếu security cài lỗi đúng vùng này, nhãn kết quả không đổi (CNX→CNX). Bách đã chỉ thị qa chấm theo **tập bằng chứng** (`file:dòng`), không theo nhãn, để không mất khả năng phát hiện (Q23). **Precision của M05 trên A sạch = 0/2**: cả 2 bằng chứng trích (`6371.0088`, `1e-09`) đều là hằng số toán học/làm tròn, không phải hằng số nghiệp vụ (xác nhận riêng bởi `reviewer`/`lead`) — cả hai là dương tính giả trên A sạch.
-- **Tên người thật xuất hiện trong repo (dọn sau G4)**: "chị Ánh" (người duyệt pháp lý của dự án, đã nêu công khai trong `CLAUDE.md`) xuất hiện trong lịch sử 7 commit và trong comment `auditor/rules/m07_adverse_action_review.py:13`. Lúc repo còn public, đây lộ qua web; Bách đã chuyển repo Private nên hết nguy ngay lúc này. Kế hoạch: dọn comment đó **sau khi G4 hoàn tất** (không sửa `auditor/` trong lúc còn chờ G3b).
+- **Tên người thật xuất hiện trong repo (dọn sau G4)**: tên của người duyệt nội dung pháp lý bên ngoài dự án (tên nêu trong `CLAUDE.md`, không lặp lại ở đây) xuất hiện trong lịch sử 7 commit và trong comment `auditor/rules/m07_adverse_action_review.py:13`. Lúc repo còn public, đây lộ qua web; Bách đã chuyển repo Private nên hết nguy ngay lúc này. Kế hoạch: dọn comment đó **sau khi G4 hoàn tất** (không sửa `auditor/` trong lúc còn chờ G3b).
 - **Mechanism/Effect, Minimal/Mitigation**: taxonomy tự định nghĩa (`CHECKLIST_KIEM_TOAN.md §6`), lead điền tay, không đưa vào B.
 - **Số hiệu control ISO/IEC 42001**: khớp 3 nguồn thứ cấp, chưa đối chiếu bản chuẩn có bản quyền.
 - **Giới hạn mô phỏng đã biết**: `match()` là hàm thuần, không cập nhật `status` tài xế sau khi ghép — một tài xế có thể "thắng" nhiều chuyến trong mock data.
@@ -86,7 +92,7 @@ Ghi chú của qa (nguyên văn, không diễn giải lại): 2 dòng ma trận 
 
 ## 6. Giả định đã tự chốt và rủi ro
 
-> Bối cảnh: chị Ánh không cung cấp thêm thông tin nào. Nhóm tự nghiên cứu và tự chốt, nguồn: `docs/CHECKLIST_KIEM_TOAN.md §7`.
+> Bối cảnh: người duyệt pháp lý bên ngoài dự án không cung cấp thêm thông tin nào. Nhóm tự nghiên cứu và tự chốt, nguồn: `docs/CHECKLIST_KIEM_TOAN.md §7`.
 
 | Điểm | Chốt | Rủi ro nếu sai |
 |---|---|---|
@@ -115,12 +121,12 @@ Sáu mục nhóm **không có thẩm quyền quyết** — cần Legal/DPO hoặ
 
 | TB | Tên | Số đo | Nguồn |
 |---|---|---|---|
-| TB-01 | Recall | **0.667 — Không đạt mục tiêu ≥ 0.833** (4/6 lỗi cài bắt được) | qa, mục 4 |
-| TB-02 | FNR | **0.333 — Không đạt mục tiêu ≤ 0.167** (2/6 lỗi bị bỏ sót) — chỉ số sống còn, cần nêu rõ ở G4 | qa, mục 4 |
+| TB-01 | Recall | **0.667 — Không đạt** cả ngưỡng §3B (≥0.80) và mục tiêu riêng của qa (≥0.833) (4/6 lỗi cài bắt được) | qa, mục 4 |
+| TB-02 | FNR | **0.333 — Không đạt** cả ngưỡng §3B (≤0.20) và mục tiêu riêng của qa (≤0.167) (2/6 lỗi bị bỏ sót) — chỉ số sống còn; lý do sót xem mục 4 "Vì sao sót 2 lỗi" | qa, mục 4 |
 | TB-03 | Precision | **1.000** — 0 báo động giả trên 3 mục sạch | qa, mục 4 |
 | TB-04 | Độ ổn định | **ĐẠT** — 3 lần chạy B@`b-freeze` giống hệt sau chuẩn hoá | T13 |
 | TB-05 | Truy nguồn | **ĐẠT** — 100%, mỗi phát hiện có `file:dòng`[`@commit`] riêng | T11/T12 |
-| TB-06 | Độc lập | **ĐẠT** — `reviewer` grep toàn `auditor/`, không rò nội dung bị cấm | T14 |
+| TB-06 | Độc lập | **ĐẠT** — `reviewer` grep toàn `auditor/`, không rò nội dung bị cấm. **Rủi ro đã quản lý**: có một quãng repo ở chế độ public với nhánh `security-pass` đã đẩy, nên diff đáp án đọc được từ ngoài; không ảnh hưởng phép đo vì B đã đóng băng tại `b-freeze` trước đó và không ai sửa `auditor/` sau tag (TB-07). Bách đã chuyển repo Private | T14 |
 | TB-07 | Đóng băng | **ĐẠT** — `b-freeze` tại `cce80bf`, `git log b-freeze..HEAD -- auditor/` trống | T14b |
 | TB-08 | Nguồn gốc quy tắc | **ĐẠT** — mỗi dòng MATRIX có cột control+luật | `matrix.json` |
 | TB-09 | Legal/DPO duyệt | **CHƯA** — giới hạn khai báo | mục 6 |

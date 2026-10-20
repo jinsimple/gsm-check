@@ -2,6 +2,8 @@
 """Kiem tra moi dan chieu file:dong trong DECISIONS.md va TASKS.md tro dung cho.
 Chay lai sau MOI lan sua MATRIX_v0.md hay SPEC_A.md (rui ro R11)."""
 import io, re, sys, os
+if hasattr(sys.stdout, 'reconfigure'):
+    sys.stdout.reconfigure(encoding='utf-8')
 ROOT = sys.argv[1]
 
 EXPECT = {
