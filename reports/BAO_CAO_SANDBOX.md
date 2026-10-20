@@ -139,8 +139,8 @@ Sáu mục nhóm **không có thẩm quyền quyết** — cần Legal/DPO hoặ
 | TB-03 | Precision | **1.000** — 0 báo động giả trên 3 mục sạch | qa, mục 4 |
 | TB-04 | Độ ổn định | **ĐẠT** — 3 lần chạy B@`b-freeze` giống hệt sau chuẩn hoá | T13 |
 | TB-05 | Truy nguồn | **ĐẠT** — 100%, mỗi phát hiện có `file:dòng`[`@commit`] riêng | T11/T12 |
-| TB-06 | Độc lập | **ĐẠT** — `reviewer` grep toàn `auditor/`, không rò nội dung bị cấm. **Rủi ro đã quản lý**: có một quãng repo ở chế độ public với nhánh `security-pass` đã đẩy, nên diff đáp án đọc được từ ngoài; không ảnh hưởng phép đo vì B đã đóng băng tại `b-freeze` trước đó và không ai sửa `auditor/` sau tag (TB-07). Bách đã chuyển repo Private | T14 |
-| TB-07 | Đóng băng | **ĐẠT** — `b-freeze` tại `cce80bf`, `git log b-freeze..HEAD -- auditor/` trống | T14b |
+| TB-06 | Độc lập | **ĐẠT** — `reviewer` grep toàn `auditor/`, không rò nội dung bị cấm. **Rủi ro đã quản lý**: có một quãng repo ở chế độ public với nhánh `security-pass` đã đẩy, nên diff đáp án đọc được từ ngoài; không ảnh hưởng phép đo vì B đã đóng băng tại `b-freeze` trước khi security chạy. Bách đã chuyển repo Private | T14 |
+| TB-07 | Đóng băng | **ĐẠT** — theo đúng ngưỡng §3B ("không có commit nào sau `b-freeze` **mà không báo**"), không theo nghĩa "không commit nào". Có **đúng một** commit chạm `auditor/` sau `b-freeze` (`cce80bf`): `0ad269b`, **sau khi Bách đã duyệt G4**, do Bách yêu cầu trực tiếp — chỉ đổi 1 dòng docstring (`m07_adverse_action_review.py:13`) để bỏ tên người thật. Hành vi B không đổi: chứng minh bằng AST giống hệt sau khi bỏ node docstring (`tests/kiem22_m07_docstring.py`, PASS), và `git diff --name-only b-freeze HEAD -- auditor/` ra đúng 1 file. Lead đã tự khai commit này cho `pm` trước khi `pm` tự phát hiện bằng lệnh kiểm | T14b, `tests/kiem22_m07_docstring.py` |
 | TB-08 | Nguồn gốc quy tắc | **ĐẠT** — mỗi dòng MATRIX có cột control+luật | `matrix.json` |
 | TB-09 | Legal/DPO duyệt | **CHƯA** — giới hạn khai báo | mục 6 |
 | TB-10 | Log của B commit | **ĐẠT** — `reports/audit_<commit>.log.jsonl` | — |
