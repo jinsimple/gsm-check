@@ -7,9 +7,9 @@
 | | |
 |---|---|
 | **Cổng đang mở** | **G2a ĐỒNG Ý (Bách, 20/10). Đang trong G3a** |
-| **Vừa xong** | **T11b xong (`5375876`), lead tự xác minh độc lập** (không nhận lời agent): `raw`+`run_id`+`cmd` có thật trong `reports/audit_5375876.log.jsonl`; `git status` sạch — chỉ sửa `auditor/`+`reports/audit_*`; chạy 3 lần so JSON sau khi bỏ `ts` → giống hệt; 12/12 kết quả không đổi (chỉ M07 evidence 11→14 mục do thêm dòng trích) |
-| **Bước tiếp theo** | Giao lại `reviewer` soát đúng mục Chặn cũ đã sửa chưa, rồi T14b gắn tag `b-freeze` |
-| **Lệnh kiểm của bước tiếp theo** | bảng review hết mục "Chặn" → `git tag b-freeze` |
+| **Vừa xong** | **`reviewer` soát lại: Chặn chưa hết hẳn** — M01/M04/M07/M09 đã đúng, nhưng `m10_repeat_stability.py:89` (nhánh KHÔNG ĐẠT) còn sót, cùng lỗi (trỏ `reports/product_run_*.json` gitignored). Xác minh đúng (`sed` đọc trực tiếp). Đã giao `coder-auditor` sửa (T11c), đang chạy |
+| **Bước tiếp theo** | Chờ T11c → lead tự xác minh → `reviewer` soát lại lần 3 → T14b gắn `b-freeze` |
+| **Lệnh kiểm của bước tiếp theo** | `m10_repeat_stability.py` nhánh KHÔNG ĐẠT dùng `cite_log_line`; 12/12 không đổi |
 | **Lịch (chỉ thị 21:01)** | 20/10: T09g → T11 → B chạy trên A sạch → ổn định 3 lần → reviewer `auditor/` → `b-freeze` trước tối nay. **Nếu tối nay chưa `b-freeze`**: cắt ma trận còn 8 dòng (M01,M02,M04,M05,M07,M09,M10,M11), báo Bách trước khi cắt. 21/10: Bách merge + QA chấm, lead nháp G4. 22/10: hoàn thiện, pm duyệt, demo |
 | **Chế độ gọn** | Không đặt nguyên tắc mới trừ khi thiếu nó thì sai kết quả đo. Câu hỏi không chặn → vào báo cáo G4. Hỏi Bách tối đa 1 tin/cổng, mỗi câu kèm đề xuất. pm chỉ chấm 4 điểm: G2a, `b-freeze`, kết quả sau merge, G4. Không đọc log lớn vào ngữ cảnh. Báo cáo cổng tối đa 15 dòng |
 
