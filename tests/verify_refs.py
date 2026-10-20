@@ -50,8 +50,8 @@ EXPECT = {
     ('docs/GREEN_SM_CONTEXT.md', 15): '70%',
     ('docs/GREEN_SM_CONTEXT.md', 22): 'Hà Lan',
     ('.claude/agents/coder-auditor.md', 7): 'CHỈ đọc',
-    ('docs/TASKS.md', 381): '6371.0088',
-    ('docs/TASKS.md', 382): '1e-09',
+    ('docs/TASKS.md', 382): '6371.0088',
+    ('docs/TASKS.md', 383): '1e-09',
 }
 
 cache = {}

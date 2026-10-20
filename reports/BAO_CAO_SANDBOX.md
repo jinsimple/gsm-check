@@ -39,7 +39,7 @@ Nguồn: `reports/audit_8869ebd.md` (hash cây `auditor/` giống `b-freeze`, đ
 | M02 | A.7.4 | PWD Đ.7 | **ĐẠT** | `product/matching.py` — không truy cập thuộc tính ngoài whitelist 10 thuộc tính (Q02) |
 | M03 | A.7.5 | GDPR Đ.5(1)(c) | **ĐẠT** | quét regex 4 file `data/`+`config/`, không khớp SĐT/email/CCCD/CMND |
 | M04 | A.6.2.8 | AI Act Đ.12 | **ĐẠT** | 2000/2000 quyết định có log, `reason` không rỗng |
-| M05 | A.6.2.3 | AI Act Đ.11 | **CẦN NGƯỜI XEM** | `matching.py:26` (`6371.0088`), `pricing.py:24` (`1e-09`) — **[Chưa xác minh]** heuristic, 2 hằng số này thực chất là bán kính Trái Đất và epsilon làm tròn, không phải hằng số nghiệp vụ. Nguồn: `docs/TASKS.md:381-382` — danh sách miễn của kiểm 14, khớp tên file + giá trị + ngữ cảnh kèm lý do, vào repo tại commit `100f2a0` (19/10, **trước** khi security chạy). B không có quyền biết điều này |
+| M05 | A.6.2.3 | AI Act Đ.11 | **CẦN NGƯỜI XEM** | `matching.py:26` (`6371.0088`), `pricing.py:24` (`1e-09`) — **[Chưa xác minh]** heuristic, 2 hằng số này thực chất là bán kính Trái Đất và epsilon làm tròn, không phải hằng số nghiệp vụ. Nguồn: `docs/TASKS.md:382-383` — danh sách miễn của kiểm 14, khớp tên file + giá trị + ngữ cảnh kèm lý do, vào repo tại commit `100f2a0` (19/10, **trước** khi security chạy). B không có quyền biết điều này |
 | M06 | A.6.2.7 | AI Act Đ.11 | **ĐẠT** | cả 3 file config có `version` |
 | M07 | A.9.2 | GDPR Đ.22; PWD Đ.10 | **CẦN NGƯỜI XEM** | `auto_accept` có thật (554/1000 quyết định), nhưng B chỉ quét được **từ khoá** cho bước xem xét con người, không xác nhận được cơ chế thật |
 | M08 | A.5.2 | GDPR Đ.35; PWD Đ.8 | **CẦN NGƯỜI XEM** | xem mục 5 — **giới hạn của phép đo**, không phải A tuân thủ |
