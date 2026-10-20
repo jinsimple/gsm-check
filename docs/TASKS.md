@@ -7,12 +7,12 @@
 | | |
 |---|---|
 | **Cổng đang mở** | **G2a — mọi lệnh kiểm kỹ thuật đã ĐẠT, chờ Bách duyệt báo cáo** |
-| **Vừa xong** | **pm chấm báo cáo G2a vòng 2: SỬA RỒI GỬI LẠI — 2 mục, cả hai trong file manifest.** `worktree_clean` đổi `true`→`false` chỉ vì lead chạy lại kiểm 19 (ghi đè file bằng chứng đã commit) — tách thành `worktree_clean_at_run`/`_at_manifest`. Ba lệnh kiểm (17/18/19) không chạy được khi thiếu đối số (`IndexError`) hoặc thiếu thư mục sao lưu — đã thêm usage + exit 2, và SKIPPED có lý do cho kiểm 18. Lead tự kiểm chéo thêm, tìm ra **lỗi vacuous-pass thứ tư** (bản sao trong `kiem19_manifest.py`, chưa được vá nhất quán với 2 chỗ khác) — đã sửa và test bằng run_id giả 0 file. `kiem19_manifest.py` nay **từ chối ghi đè** manifest đã commit (exit 2) |
-| **`run_id` bằng chứng** | `20261019T143340880`, `commit_at_run` `d9f1f27`, `product_tree` `3b2892b` — manifest giữ nguyên, chỉ sửa schema 2 trường |
-| **Bước tiếp theo** | Gửi lại pm chấm vòng 3 |
-| **Lệnh kiểm của bước tiếp theo** | — (chờ pm đọc lại; không có lệnh máy) |
-| **Việc mới cần Bách** | Mục 7.1 báo cáo G2a nay có **hai lựa chọn rõ** (A: đưa hoà thật vào dữ liệu, Q19 hết ngoại lệ / B: giữ dữ liệu, Q19 có 1 ngoại lệ có lý do) — **không chặn G2a**, chặn G3 (M10) |
-| **Sau đó** | Chờ Bách duyệt G2a. Lead **không** tự tuyên bố G2a qua |
+| **Vừa xong** | **pm DUYỆT báo cáo G2a từ phía pm** (không mở cổng — Bách kết luận). 2 việc housekeeping cuối: `schema_version` file cổng lên **0.4** (2 manifest cũ giữ 0.3, đúng hình dạng của chúng); kiểm 19 nay **không viết file** khi 0 log khớp (thoát trước khi ghi, không còn ghi manifest cho lần chạy chưa từng xảy ra) |
+| **`run_id` bằng chứng** | `20261019T143340880`, `commit_at_run` `d9f1f27`, `product_tree` `3b2892b`, manifest `schema_version 0.4` |
+| **Bước tiếp theo** | **Trình Bách báo cáo G2a** — pm đã duyệt, chỉ còn Bách kết luận cổng |
+| **Lệnh kiểm của bước tiếp theo** | — (chờ Bách quyết định cổng) |
+| **Việc cần Bách quyết cùng lúc** | (1) Mục 4b/7.1 báo cáo G2a: lựa chọn A/B cho nhánh phá hoà; (2) bước 6 Q21 + ngoại lệ dạng loại cho quy tắc 1; (3) bảng cổng `CLAUDE.md §5`; (4) mục A/C/D chỉ thị 21:01 nếu còn |
+| **Sau đó** | Khi Bách duyệt G2a → gọi T14b? Không — T14b là tag `b-freeze`, cần T11–T14 (xây B) trước. Việc kế tiếp thật sự là bắt đầu **G3**: giao T11 cho `coder-auditor` |
 
 ### ⛔ Cổng đang chờ Bách — KHÔNG tự vượt
 
