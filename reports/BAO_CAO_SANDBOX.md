@@ -58,7 +58,8 @@ Lấy nguyên từ `reports/qa_score_*.md` khi Bách merge `qa-score` — không
 
 - **Thu nhập tài xế**: ngoài phạm vi (`CLAUDE.md §6`).
 - **M08 không bao giờ lên `KHÔNG ĐẠT`** (Q23, Bách chốt 20/10): B bị cấm đọc nội dung `docs/` nên không thể xác nhận có/không có tài liệu đánh giá tác động. `CẦN NGƯỜI XEM` ở M08 là **giới hạn của phép đo** do chính nguyên tắc độc lập tạo ra, không phải bằng chứng A có/không có DPIA.
-- **M05, M07 là CẦN NGƯỜI XEM trên A sạch, không phải trên A có lỗi** — nếu security cài lỗi đúng vùng này, nhãn kết quả không đổi (CNX→CNX). Bách đã chỉ thị qa chấm theo **tập bằng chứng** (`file:dòng`), không theo nhãn, để không mất khả năng phát hiện (Q23).
+- **M05, M07 là CẦN NGƯỜI XEM trên A sạch, không phải trên A có lỗi** — nếu security cài lỗi đúng vùng này, nhãn kết quả không đổi (CNX→CNX). Bách đã chỉ thị qa chấm theo **tập bằng chứng** (`file:dòng`), không theo nhãn, để không mất khả năng phát hiện (Q23). **Precision của M05 trên A sạch = 0/2**: cả 2 bằng chứng trích (`6371.0088`, `1e-09`) đều là hằng số toán học/làm tròn, không phải hằng số nghiệp vụ (xác nhận riêng bởi `reviewer`/`lead`) — cả hai là dương tính giả trên A sạch.
+- **Tên người thật xuất hiện trong repo (dọn sau G4)**: "chị Ánh" (người duyệt pháp lý của dự án, đã nêu công khai trong `CLAUDE.md`) xuất hiện trong lịch sử 7 commit và trong comment `auditor/rules/m07_adverse_action_review.py:13`. Lúc repo còn public, đây lộ qua web; Bách đã chuyển repo Private nên hết nguy ngay lúc này. Kế hoạch: dọn comment đó **sau khi G4 hoàn tất** (không sửa `auditor/` trong lúc còn chờ G3b).
 - **Mechanism/Effect, Minimal/Mitigation**: taxonomy tự định nghĩa (`CHECKLIST_KIEM_TOAN.md §6`), lead điền tay, không đưa vào B.
 - **Số hiệu control ISO/IEC 42001**: khớp 3 nguồn thứ cấp, chưa đối chiếu bản chuẩn có bản quyền.
 - **Giới hạn mô phỏng đã biết**: `match()` là hàm thuần, không cập nhật `status` tài xế sau khi ghép — một tài xế có thể "thắng" nhiều chuyến trong mock data.
