@@ -9,11 +9,13 @@
 
 Bách chốt 19/10, đã ghi vào `.claude/agents/coder-auditor.md`. Lý do: `t07b_check.py` chứa **24 ca giá tính tay với số tiền kỳ vọng**, tên `tier_id`, tên `event`, và kỳ vọng độ phủ nhánh — tức là **đặc tả bên trong `product/`**. Agent kiểm thử B phải tự tìm những thứ đó bằng quy tắc tự động; đó chính là điều đang được đo.
 
-### 2. Từ G2b trở đi, KHÔNG chạy bất cứ file nào ở đây
+### 2. Từ G2b trở đi, KHÔNG chạy lệnh kiểm nào **chạm `product/`** hoặc **so với giá trị kỳ vọng do lead giữ**
 
-Sau khi Bách merge `security-pass`, bộ kiểm này là một **máy dò đáp án chính xác**: kiểm 9 chỉ ra ca giá nào lệch, kiểm 13 chỉ ra bước lọc bị sửa, kiểm 14 chỉ ra hằng số bị cắm vào, kiểm 17 chỉ ra chỗ log bị bỏ, kiểm 19 chỉ ra nhánh bị đổi, kiểm 20 so thẳng với **số tiền**. Chạy nó là `lead` tự đọc đáp án, phá `CLAUDE.md §3`.
+Cấm theo **loại**, không theo tên file cụ thể: sau khi Bách merge `security-pass`, mọi lệnh kiểm **đọc/chạy `product/`** hoặc **so sánh với số/chuỗi kỳ vọng do lead tự tay nhập** là một **máy dò đáp án chính xác** — kiểm 9 chỉ ra ca giá nào lệch, kiểm 13 chỉ ra bước lọc bị sửa, kiểm 14 chỉ ra hằng số bị cắm vào, kiểm 17 chỉ ra chỗ log bị bỏ, kiểm 19 chỉ ra nhánh bị đổi, kiểm 20 so thẳng với **số tiền**. Chạy nó là `lead` tự đọc đáp án, phá `CLAUDE.md §3`.
 
-Quy tắc đầy đủ ở `docs/TASKS.md`, ô **"Việc của lead ở G2b"** — 6 quy tắc, và rủi ro **R12**. Tóm lại: ở G2b `lead` được chạy **đúng một** lệnh, `python product/run_product.py`, và chỉ đọc exit code.
+Một lệnh kiểm **chỉ đọc `auditor/`** (không chạm `product/`, không so kỳ vọng tay nhập) nằm **ngoài** diện cấm — ví dụ `kiem22_m07_docstring.py` (so AST của `auditor/` với bản tại `b-freeze`, không đọc `product/`). **Mọi lệnh kiểm mới thêm sau G2b phải nói rõ trong tên/docstring nó đọc thư mục nào**, để việc này không phải tự suy ra mỗi lần.
+
+Quy tắc đầy đủ ở `docs/TASKS.md`, ô **"Việc của lead ở G2b"** — 6 quy tắc, và rủi ro **R12**. Tóm lại: trên `product/`, `lead` chỉ được chạy **đúng một** lệnh, `python product/run_product.py`, và chỉ đọc exit code.
 
 ## Cách chạy
 
@@ -27,6 +29,7 @@ Mọi script nhận **đường dẫn tuyệt đối** làm đối số, không 
 | `kiem20_cap.py` | `<repo>` | **kiểm 20** — nhánh trần hệ số giờ, bằng bản sao config **trong bộ nhớ**; không sửa `product/config/pricing.json` |
 | `kiem21_tiebreak.py` | `<repo>` | **kiểm 21** — chẩn đoán nhánh phá hoà trong `match()`, gọi trực tiếp với dữ liệu dựng tay; không sửa `mock_data.json`. PASS chỉ chứng minh code đúng **khi bị buộc hoà**, không chứng minh nhánh đã chạy thật trên `rides.json` |
 | `verify_refs.py` | `<repo>` | mọi dẫn chiếu `file:dòng` trong `docs/` còn trỏ đúng chỗ, **và** không có dẫn chiếu nào chưa được đăng ký |
+| `kiem22_m07_docstring.py` | (không cần đối số, chạy từ gốc repo) | **kiểm 22** — chỉ đọc `auditor/`, không chạm `product/`. So AST của `auditor/rules/m07_adverse_action_review.py` tại `b-freeze` và HEAD sau khi bỏ node docstring — chứng minh 1 commit dọn tên thật sau `b-freeze` không đổi hành vi B |
 
 ## Ba nguyên tắc dựng bộ kiểm này
 
