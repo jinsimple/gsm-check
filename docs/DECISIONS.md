@@ -396,7 +396,11 @@ Sau khi `qa-score` merge (`a3453cb`), lead hỏi để viết mục "Vì sao só
 
 **Bách xác nhận trực tiếp (không qua `pm`): cả 2 lỗi bị sót nằm TRONG vùng 12 dòng ma trận.** → Bỏ giả thuyết "FN đo độ phủ `MATRIX_v0`" ở bản nháp trước của báo cáo — giả thuyết đó **sai**.
 
-**Mốc thời gian là phần quan trọng nhất của quyết định này**, không chỉ nội dung: câu trả lời này được hỏi và trả lời **sau** khi `qa-score` đã merge và điền xong vào báo cáo — đáp án không mở trước hoặc trong lúc đo, nên không làm bẩn tính mù của phép đo. Tên cụ thể 2 dòng (`Mxx`/`Myy`) **chưa** được mở ở đây — Bách tự quyết điền hoặc xoá ô `[MỞ ĐÁP ÁN SAU THÍ NGHIỆM]` trong báo cáo trước khi demo.
+**Mốc thời gian là phần quan trọng nhất của quyết định này**, không chỉ nội dung: câu trả lời này được hỏi và trả lời **sau** khi `qa-score` đã merge và điền xong vào báo cáo — đáp án không mở trước hoặc trong lúc đo, nên không làm bẩn tính mù của phép đo.
+
+**CHỐT 20/10 (Bách, nguyên văn):** "20/10/2026 — Bách mở đáp án ở mức dòng ma trận cho 2 lỗi bị sót, SAU khi qa chấm xong (`qa_score_83229ff`). Không mở nội dung lỗi."
+
+**Quyết định công khai trong báo cáo G4:** Bách đã xác định nội bộ 2 dòng ma trận cụ thể và ca tương ứng (tín hiệu yếu đã khai báo trước / vacuous pass), nhưng chọn **giữ dạng tổng quát, không công khai số dòng cụ thể** trong `reports/BAO_CAO_SANDBOX.md` — báo cáo ghi "đã xác định nội bộ, không công khai số dòng" thay cho tên `Mxx`/`Myy` thật.
 
 ### Q16 — Yêu cầu thêm của Bách cho agent kiểm thử B (chốt 19/10)
 

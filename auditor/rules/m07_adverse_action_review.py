@@ -10,7 +10,7 @@ dau hieu "con nguoi xem xet" (human/review/manual/approve/override...).
 
 Day la phat hien hop: mot phan tinh (auto_accept co that, trich dong AST)
 + mot phan vang mat (khong thay co/buoc review). Theo nguyen tac bat doi
-xung va vi Mechanism/Effect de trong cho nguoi (chi Anh) dien, ket qua
+xung va vi Mechanism/Effect de trong cho nguoi co tham quyen phap ly dien, ket qua
 CHI o muc CAN NGUOI XEM (khong tu ket luan KHONG DAT mot phat hien can
 dien giai y nghia nghiep vu/phap ly).
 """

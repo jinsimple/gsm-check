@@ -90,7 +90,7 @@ Phân biệt (i)/(ii) được bằng cách đọc câu quy tắc của dòng đ
 - Nếu rơi vào M05, M07 hoặc M08 (ba dòng vốn đã CẦN NGƯỜI XEM trên A sạch): tín hiệu ở đó yếu từ đầu, M08 bị bịt hoàn toàn (mục 5) — đây là **giới hạn đã khai báo trước khi đo**, không phải phát hiện mới.
 - Nếu rơi vào một trong 8 dòng ra ĐẠT: dòng đó ra **ĐẠT trên chính A có lỗi** — một **vacuous pass**: quy tắc chạy xong và báo an toàn đúng tại chỗ có lỗi. Ca này nặng hơn nhiều vì nói về phương pháp chấm, không chỉ về một dòng.
 
-**[MỞ ĐÁP ÁN SAU THÍ NGHIỆM — Bách điền trực tiếp hoặc xoá mục này.]** Hai dòng bị sót là `Mxx` và `Myy`; phân loại theo (i)/(ii) ở trên, dựa trên `auditor/` tại `b-freeze`, không sửa B. Tách hẳn khỏi phần đo phía trên để người đọc phân biệt đâu là kết quả mù, đâu là giải thích khi đã biết đáp án.
+**MỞ ĐÁP ÁN SAU THÍ NGHIỆM (`docs/DECISIONS.md` Q24, chốt 20/10 — hỏi/trả lời SAU khi `qa-score` đã chấm xong):** Bách đã xác định nội bộ 2 dòng ma trận cụ thể bị sót và ca tương ứng — **chọn giữ dạng tổng quát, không công khai số dòng cụ thể** trong báo cáo này. Tách hẳn khỏi phần đo phía trên để người đọc phân biệt đâu là kết quả mù, đâu là giải thích khi đã biết đáp án.
 
 ## 5. Khoảng trống đã biết
 
