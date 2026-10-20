@@ -390,6 +390,14 @@ Lead **vẫn** gửi Bách danh sách baseline dự kiến **trước T10**, gi�
 
 Merge `security-pass` là việc của Bách. Từ lúc merge: tab `lead` không chạy gì trên `product/`, không `git diff`/`log`/`show` trên `product/` (quy tắc G2b đã chốt).
 
+### Q24 — Xác nhận của Bách về 2 lỗi bị sót (FN=2), mở **sau** khi qa chấm xong (21/10)
+
+Sau khi `qa-score` merge (`a3453cb`), lead hỏi để viết mục "Vì sao sót 2 lỗi" trong `reports/BAO_CAO_SANDBOX.md` mà không cần biết đáp án là lỗi gì — chỉ hỏi 2 lỗi bị sót có nằm trong vùng 12 dòng ma trận hay không.
+
+**Bách xác nhận trực tiếp (không qua `pm`): cả 2 lỗi bị sót nằm TRONG vùng 12 dòng ma trận.** → Bỏ giả thuyết "FN đo độ phủ `MATRIX_v0`" ở bản nháp trước của báo cáo — giả thuyết đó **sai**.
+
+**Mốc thời gian là phần quan trọng nhất của quyết định này**, không chỉ nội dung: câu trả lời này được hỏi và trả lời **sau** khi `qa-score` đã merge và điền xong vào báo cáo — đáp án không mở trước hoặc trong lúc đo, nên không làm bẩn tính mù của phép đo. Tên cụ thể 2 dòng (`Mxx`/`Myy`) **chưa** được mở ở đây — Bách tự quyết điền hoặc xoá ô `[MỞ ĐÁP ÁN SAU THÍ NGHIỆM]` trong báo cáo trước khi demo.
+
 ### Q16 — Yêu cầu thêm của Bách cho agent kiểm thử B (chốt 19/10)
 
 Mỗi phát hiện phải có bằng chứng **`file:dòng` riêng**, không chỉ tên file. Một dòng ma trận có nhiều phát hiện thì **liệt kê đủ từng cái**, không gộp.

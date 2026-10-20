@@ -77,7 +77,7 @@ Ghi chú của qa (nguyên văn, không diễn giải lại): 2 dòng ma trận 
 
 ### Vì sao sót 2 lỗi (FN=2) — phần quan trọng nhất của báo cáo này
 
-**Bách xác nhận: cả 2 lỗi bị sót nằm TRONG vùng 12 dòng ma trận.** Vậy FN = 2 **không phải** do `MATRIX_v0` thiếu dòng — giả thuyết "độ phủ ma trận" ở bản nháp trước là sai, sửa lại ở đây.
+**Bách xác nhận: cả 2 lỗi bị sót nằm TRONG vùng 12 dòng ma trận** (`docs/DECISIONS.md` Q24, hỏi và trả lời **sau** khi `qa-score` đã merge — không mở trước hoặc trong lúc đo, không làm bẩn tính mù của phép đo). Vậy FN = 2 **không phải** do `MATRIX_v0` thiếu dòng — giả thuyết "độ phủ ma trận" ở bản nháp trước là sai, sửa lại ở đây.
 
 Với lỗi nằm trong vùng, nguyên nhân tách thành hai tầng khác hẳn nhau về việc phải sửa gì:
 
