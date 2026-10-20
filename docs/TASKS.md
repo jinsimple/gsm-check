@@ -6,9 +6,9 @@
 
 | | |
 |---|---|
-| **Cổng đang mở** | **G3b ĐÃ MERGE** (`qa-score` tại `a3453cb`). pm chấm vòng 2 = **SỬA RỒI GỬI LẠI**, còn đúng 1 mục (mục 1 — vì sao sót 2 lỗi). Đã sửa theo chỉ thị **trực tiếp của Bách** (commit `67f5498`), đang chờ pm chấm vòng 3 |
-| **Vừa xong** | Viết lại mục 1: Bách xác nhận 2 lỗi sót **nằm trong** vùng 12 dòng ma trận (bỏ giả thuyết "độ phủ MATRIX_v0" — sai). Khung 2 tầng nguyên nhân (i) câu quy tắc yếu → sửa ma trận, backlog, kéo TB-12; (ii) hiện thực yếu hơn câu chữ → sửa B, đo lại bộ lỗi mới. 2 ca nặng-nhẹ ghi là **ứng viên [Chưa xác minh]**, không kết luận. Chỗ dành Bách tự điền/xoá tên 2 dòng cụ thể (mở đáp án sau thí nghiệm) |
-| **Bước tiếp theo** | Chờ `pm` chấm vòng 3. Nếu DUYỆT → trình Bách duyệt G4/demo. Nếu Bách gửi tên 2 dòng Mxx/Myy: điền vào ô "[MỞ ĐÁP ÁN SAU THÍ NGHIỆM]", không tự đoán |
+| **Cổng đang mở** | **pm DUYỆT G4 — mốc chấm thứ 4, mốc CUỐI của pm** (vòng 3). Còn 1 việc nhỏ gộp đã xong: thêm `Q24` vào `DECISIONS.md` làm Source cho câu xác nhận của Bách (commit `fc7085c`). **pm DUYỆT không mở cổng G4** — chờ Bách duyệt trực tiếp + quyết demo |
+| **Vừa xong** | Thêm `Q24` (`DECISIONS.md`): Bách xác nhận 2 lỗi sót nằm trong vùng 12 dòng ma trận, hỏi/trả lời **sau** khi `qa-score` merge — mốc thời gian bảo vệ tính mù. Báo cáo trích `Q24` thay câu không nguồn |
+| **Bước tiếp theo** | Báo Bách: G4 đã qua đủ 4 mốc chấm của pm, xin Bách duyệt cổng G4 + quyết định demo. Hai việc còn lại là của Bách: (1) điền hoặc xoá ô `[MỞ ĐÁP ÁN SAU THÍ NGHIỆM]` (tên 2 dòng Mxx/Myy) trước demo; (2) tự duyệt gate |
 | **Lệnh kiểm của bước tiếp theo** | `python tests/verify_refs.py .` (đã chạy lại sau sửa, 0 lỗi, exit 0 cả khi redirect) |
 | **⚠️ ĐANG HIỆU LỰC — từ C0→C1** | Lead **không đọc nội dung `product/` qua BẤT KỲ đường nào**: không lệnh git local (`diff`/`log`/`show`), không trình duyệt/GitHub web UI/API, không bản clone khác, không ảnh chụp màn hình, không người khác kể lại. Nếu ai dán cho lead một đoạn diff của `product/` → **dừng, báo Bách ngay, không dùng**. Chỉ đọc kết quả sau khi Bách merge `qa-score` |
 | **🚨 RỦI RO PM BÁO 20/10 — ĐÃ ĐÓNG** | Bách đã chuyển repo **Private** (pm xác nhận: `ls-remote` không xác thực → `exit 128`; trước đó đọc được không cần đăng nhập). `main` đã đẩy đúng `b2515ae`. Nhánh `security-pass` vẫn còn trên remote nhưng nay nằm trong repo private — không còn là đường rò. Sau G3b, Bách mở lại public thì không hại gì (điểm đã chấm xong) |
