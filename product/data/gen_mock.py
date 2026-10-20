@@ -87,7 +87,10 @@ def _select_overlay_indices(rnd, n_rides, out_cfg, long_cfg, logger):
     """Chon chi so chuyen cho hai nhom. Hai nhom khong giao nhau.
 
     Dong ngau nhien rieng (cung seed), nen moi chuyen khong duoc chon giu nguyen
-    tung byte gia tri da sinh o vong truoc.
+    tung byte gia tri da sinh o vong truoc. Ham nay KHONG duoc tieu thu them
+    bat ky lan goi rnd nao ngoai hai dong rnd.sample duoi day: moi lan goi them
+    se lam lech toan bo cac gia tri toa do sinh SAU do bang cung doi tuong rnd
+    (xem ham _select_coincident_indices dung doi tuong Random RIENG vi ly do nay).
     """
     k_out = int(round(out_cfg["share"] * n_rides))
     k_long = int(round(long_cfg["share"] * n_rides))
@@ -115,24 +118,64 @@ def _select_overlay_indices(rnd, n_rides, out_cfg, long_cfg, logger):
     return idx_out, idx_long
 
 
+def _select_coincident_indices(seed, n_rides, idx_out, idx_long, coincident_cfg, logger):
+    """Chon chi so chuyen cho nhom thu ba (diem don trung toa do), tren phan
+    chi so CON LAI sau khi tru hai nhom dau.
+
+    Dung MOT doi tuong Random RIENG, tach khoi doi tuong rnd dung cho hai nhom
+    dau va cho viec sinh toa do cua chung: neu dung chung mot doi tuong, moi
+    lan rnd.sample() them o day se tieu thu ngau nhien va lam lech tung byte
+    toa do da sinh cho hai nhom dau (da xay ra va duoc phat hien khi doi chieu
+    rides.json truoc/sau). Dung doi tuong rieng loai bo hoan toan rui ro nay.
+    """
+    k_coincident = sum(a["ride_count"] for a in coincident_cfg["assignments"])
+    taken = set(idx_out) | set(idx_long)
+    remaining = [i for i in range(n_rides) if i not in taken]
+    rnd_coincident = random.Random(seed)
+    idx_coincident = sorted(rnd_coincident.sample(remaining, k_coincident))
+    logger.log(
+        func="_select_coincident_indices",
+        event="coincident_selection",
+        inputs={
+            "n_rides": n_rides,
+            "n_already_taken": len(taken),
+            "n_coincident_point": k_coincident,
+        },
+        outputs={
+            "n_coincident_point": len(idx_coincident),
+            "indices_coincident_point": idx_coincident,
+        },
+        decision=None,
+        reason="chon_chi_so_chuyen_cho_nhom_diem_don_trung_toa_do_tren_rnd_rieng",
+    )
+    return idx_coincident
+
+
 def apply_ride_overlays(rides, drivers, config, logger):
-    """Dat lai toa do cho hai nhom chuyen, tren danh sach rides da sinh.
+    """Dat lai toa do cho ba nhom chuyen, tren danh sach rides da sinh.
 
     Nhom 1: diem don va diem den chuyen sang bbox rieng (rides_in_secondary_bbox).
     Nhom 2: giu diem don, dat lai diem den theo khoang cach rut tu distance_km_bands.
+    Nhom 3: dat lai diem don dung bang toa do mot cap diem co dinh
+    (rides_with_pickup_at_coincident_point).
     Chuyen khong thuoc nhom nao: khong doi mot byte.
     """
     out_cfg = config["rides_in_secondary_bbox"]
     long_cfg = config["long_distance_rides"]
+    coincident_cfg = config["rides_with_pickup_at_coincident_point"]
     decimals = config["coord_decimals"]
     rnd = random.Random(config["seed"])
     n_rides = len(rides)
 
     idx_out, idx_long = _select_overlay_indices(rnd, n_rides, out_cfg, long_cfg, logger)
+    idx_coincident = _select_coincident_indices(
+        config["seed"], n_rides, idx_out, idx_long, coincident_cfg, logger
+    )
     set_out = set(idx_out)
     set_long = set(idx_long)
+    set_coincident = set(idx_coincident)
 
-    # Moi chuyen di qua dung mot trong ba nhanh; ghi log ca ba nhanh.
+    # Moi chuyen di qua dung mot trong bon nhanh; ghi log ca bon nhanh.
     for i in range(n_rides):
         if i in set_out:
             group = "secondary_bbox"
@@ -140,6 +183,9 @@ def apply_ride_overlays(rides, drivers, config, logger):
         elif i in set_long:
             group = "long_distance"
             reason = "chuyen_thuoc_nhom_diem_den_xa"
+        elif i in set_coincident:
+            group = "coincident_point"
+            reason = "chuyen_thuoc_nhom_diem_don_trung_toa_do"
         else:
             group = "base"
             reason = "chuyen_giu_nguyen_gia_tri_da_sinh"
@@ -263,7 +309,112 @@ def apply_ride_overlays(rides, drivers, config, logger):
             reason="dat_lai_diem_den_theo_band_khoang_cach",
         )
 
+    pairs = config["coincident_driver_points"]["pairs"]
+    coincident_vehicle_type = coincident_cfg["vehicle_type"]
+    pos = 0
+    for assignment in coincident_cfg["assignments"]:
+        pair = pairs[assignment["pair_index"]]
+        point = pair["point"]
+        count = assignment["ride_count"]
+        for i in idx_coincident[pos : pos + count]:
+            ride = rides[i]
+            before = {
+                k: ride[k] for k in ("pickup_lat", "pickup_lon", "vehicle_type")
+            }
+            ride["pickup_lat"] = point["lat"]
+            ride["pickup_lon"] = point["lon"]
+            ride["vehicle_type"] = coincident_vehicle_type
+            logger.log(
+                func="apply_ride_overlays",
+                event="ride_adjusted",
+                inputs={
+                    "index": i,
+                    "ride_id": ride["ride_id"],
+                    "group": "coincident_point",
+                    "pair_index": assignment["pair_index"],
+                    "point": point,
+                    "before": before,
+                },
+                outputs={
+                    "pickup_lat": ride["pickup_lat"],
+                    "pickup_lon": ride["pickup_lon"],
+                    "vehicle_type": ride["vehicle_type"],
+                    "dropoff_lat": ride["dropoff_lat"],
+                    "dropoff_lon": ride["dropoff_lon"],
+                    "trip_distance_km": haversine_km(
+                        ride["pickup_lat"],
+                        ride["pickup_lon"],
+                        ride["dropoff_lat"],
+                        ride["dropoff_lon"],
+                    ),
+                },
+                decision=None,
+                reason="dat_lai_diem_don_trung_toa_do_cap_diem_co_dinh",
+            )
+        pos += count
+
     return rides
+
+
+def apply_coincident_driver_points(drivers, config, logger):
+    """Dat lai lat/lon/status/vehicle_type/trips_today cua tung cap tai xe
+    duoc neu ten trong coincident_driver_points, de hai tai xe trong cung mot
+    cap nam DUNG mot toa do. Khong doi vi tri tai xe nao khac.
+    """
+    pairs = config["coincident_driver_points"]["pairs"]
+    by_id = {d["driver_id"]: d for d in drivers}
+
+    for pair_index, pair in enumerate(pairs):
+        point = pair["point"]
+        driver_ids = pair["driver_ids"]
+        trips_today_list = pair["trips_today"]
+        for member_index, driver_id in enumerate(driver_ids):
+            driver = by_id.get(driver_id)
+            if driver is None:
+                logger.log(
+                    func="apply_coincident_driver_points",
+                    event="driver_point_override",
+                    inputs={
+                        "pair_index": pair_index,
+                        "driver_id": driver_id,
+                        "point": point,
+                    },
+                    outputs={},
+                    decision=None,
+                    reason="driver_id_khong_ton_tai_nen_bao_loi",
+                )
+                raise ValueError(
+                    "coincident_driver_points: driver_id %r khong ton tai" % driver_id
+                )
+            before = {
+                k: driver[k]
+                for k in ("lat", "lon", "status", "vehicle_type", "trips_today")
+            }
+            driver["lat"] = point["lat"]
+            driver["lon"] = point["lon"]
+            driver["status"] = pair["status"]
+            driver["vehicle_type"] = pair["vehicle_type"]
+            driver["trips_today"] = trips_today_list[member_index]
+            logger.log(
+                func="apply_coincident_driver_points",
+                event="driver_point_override",
+                inputs={
+                    "pair_index": pair_index,
+                    "driver_id": driver_id,
+                    "point": point,
+                    "before": before,
+                },
+                outputs={
+                    "lat": driver["lat"],
+                    "lon": driver["lon"],
+                    "status": driver["status"],
+                    "vehicle_type": driver["vehicle_type"],
+                    "trips_today": driver["trips_today"],
+                },
+                decision=None,
+                reason="dat_lai_toa_do_tai_xe_dung_mot_diem_chung_voi_tai_xe_khac_trong_cap",
+            )
+    return drivers
 
 
 def _write_json(path, payload):
@@ -318,6 +469,8 @@ def generate(config, logger):
             decision=None,
             reason="sinh_ban_ghi_tai_xe_tong_hop",
         )
+
+    drivers = apply_coincident_driver_points(drivers, config, logger)
 
     customers = []
     for i in range(1, counts["customers"] + 1):
