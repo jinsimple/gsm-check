@@ -7,9 +7,9 @@
 | | |
 |---|---|
 | **Cổng đang mở** | **G2a ĐỒNG Ý (Bách, 20/10). Đang trong G3a** |
-| **Vừa xong** | **T09g xong (`4b90e1c`), kiểm 19 PASS 10/10 — lần đầu tiên không ngoại lệ.** `run_id` bằng chứng `20261020T010947062`. Toàn bộ bộ kiểm **0 FAIL** (15 kiểm máy + 17/18/20/21). Kiểm 17 flag 1 dương tính giả (`apply_coincident_driver_points` return cuối sau vòng lặp đã log) — thêm vào `MIEN17_RETURN`, cùng mẫu `_min_distance_to_drivers` |
-| **Bước tiếp theo** | Giao **T11** cho `coder-auditor` — xây `auditor/` từ `MATRIX_v0.md` + `INTERFACE.md` |
-| **Lệnh kiểm của bước tiếp theo** | `python auditor/run_audit.py` ra 12 dòng; chạy 3 lần cùng commit, so JSON sau khi bỏ `ts`/`run_id` |
+| **Vừa xong** | **T11 xong (`4652a6e`), T12+T13 lead tự xác minh.** `auditor/` chạy 12/12 dòng: 6 ĐẠT (M01–M04,M06,M09–M11 — gộp), 3 CẦN NGƯỜI XEM (M05,M07,M08), 1 KHÔNG ĐẠT (M12). Chạy 3 lần, so JSON sau khi bỏ `ts` — **giống hệt** (M10 độ ổn định ĐẠT). Đã commit `reports/audit_4652a6e.*` (coder-auditor dừng tay vì phạm vi hẹp; lead commit theo đúng Q17) |
+| **Bước tiếp theo** | Giao **T14** cho `reviewer` — review `auditor/` (không còn review `product/`) |
+| **Lệnh kiểm của bước tiếp theo** | bảng review hết mục "Chặn" → T14b gắn tag `b-freeze` |
 | **Lịch (chỉ thị 21:01)** | 20/10: T09g → T11 → B chạy trên A sạch → ổn định 3 lần → reviewer `auditor/` → `b-freeze` trước tối nay. **Nếu tối nay chưa `b-freeze`**: cắt ma trận còn 8 dòng (M01,M02,M04,M05,M07,M09,M10,M11), báo Bách trước khi cắt. 21/10: Bách merge + QA chấm, lead nháp G4. 22/10: hoàn thiện, pm duyệt, demo |
 | **Chế độ gọn** | Không đặt nguyên tắc mới trừ khi thiếu nó thì sai kết quả đo. Câu hỏi không chặn → vào báo cáo G4. Hỏi Bách tối đa 1 tin/cổng, mỗi câu kèm đề xuất. pm chỉ chấm 4 điểm: G2a, `b-freeze`, kết quả sau merge, G4. Không đọc log lớn vào ngữ cảnh. Báo cáo cổng tối đa 15 dòng |
 
