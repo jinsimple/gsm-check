@@ -75,9 +75,22 @@ Lưu ý: `0.833`/`0.167` là mục tiêu **riêng qa đặt**, chặt hơn ngư�
 
 Ghi chú của qa (nguyên văn, không diễn giải lại): 2 dòng ma trận đã CNX trên A sạch có sinh bằng chứng mới ở C1, nhưng bằng chứng đó rơi vào vị trí của (các) lỗi đã được dòng khác bắt đúng — không rơi vào vị trí của 2 lỗi còn bị bỏ sót, nên không tính thêm TP.
 
-### Vì sao sót 2 lỗi (FN=2) — giải thích được mà không cần biết đáp án
+### Vì sao sót 2 lỗi (FN=2) — phần quan trọng nhất của báo cáo này
 
-FN đo **độ phủ của `MATRIX_v0`**, không đo năng lực của B: B chỉ có 12 quy tắc, là ánh xạ trực tiếp của `MATRIX_v0`. Một lỗi nằm ngoài vùng 12 dòng đó **vô hình với B theo cấu tạo**, không phải vì B kém. Hai ứng viên cấu trúc đã có sẵn trong báo cáo này: M08 bị bịt hoàn toàn (B không có quyền đọc `docs/`, mục 5), và M05/M07 còn tín hiệu yếu (CẦN NGƯỜI XEM trên A sạch, mục 3). Chỉ Bách xác nhận được chắc, và Bách trả lời được **mà không tiết lộ lỗi là gì**: chỉ cần nói 2 lỗi bị sót có nằm trong vùng 12 dòng ma trận hay không.
+**Bách xác nhận: cả 2 lỗi bị sót nằm TRONG vùng 12 dòng ma trận.** Vậy FN = 2 **không phải** do `MATRIX_v0` thiếu dòng — giả thuyết "độ phủ ma trận" ở bản nháp trước là sai, sửa lại ở đây.
+
+Với lỗi nằm trong vùng, nguyên nhân tách thành hai tầng khác hẳn nhau về việc phải sửa gì:
+
+- **(i) Câu quy tắc trong `MATRIX_v0` quá yếu** để bắt loại lỗi đó, dù `auditor/rules/mXX.py` hiện thực đúng câu chữ. Việc sửa là sửa **ma trận** — thuộc backlog sau 22/10 — và theo TB-12, đổi `MATRIX_v0` thì phải chạy lại toàn bộ TB-01→TB-05.
+- **(ii) Câu quy tắc đủ mạnh, nhưng `auditor/rules/mXX.py` hiện thực yếu hơn câu chữ** của `MATRIX_v0`. Việc sửa là sửa **B**, và phải đo lại với một bộ lỗi **mới** (bộ lỗi hiện tại đã dùng để chấm, không dùng lại được để kiểm bản B đã sửa).
+
+Phân biệt (i)/(ii) được bằng cách đọc câu quy tắc của dòng đó trong `MATRIX_v0` rồi so với hiện thực tại `b-freeze` — **không cần biết đáp án là lỗi gì**. Đây đúng loại lỗi "hình thức của quy tắc" (câu chữ đúng nhưng cách đóng không phủ hết, hoặc hiện thực không theo sát câu chữ) mà đội đã bắt **bốn lần** ở G1–G3 (Q02, Q19, R12, manifest).
+
+**Mức độ nặng còn phụ thuộc dòng nào bị sót, theo hai ca — cả hai là ứng viên [Chưa xác minh], chưa biết ca nào đúng:**
+- Nếu rơi vào M05, M07 hoặc M08 (ba dòng vốn đã CẦN NGƯỜI XEM trên A sạch): tín hiệu ở đó yếu từ đầu, M08 bị bịt hoàn toàn (mục 5) — đây là **giới hạn đã khai báo trước khi đo**, không phải phát hiện mới.
+- Nếu rơi vào một trong 8 dòng ra ĐẠT: dòng đó ra **ĐẠT trên chính A có lỗi** — một **vacuous pass**: quy tắc chạy xong và báo an toàn đúng tại chỗ có lỗi. Ca này nặng hơn nhiều vì nói về phương pháp chấm, không chỉ về một dòng.
+
+**[MỞ ĐÁP ÁN SAU THÍ NGHIỆM — Bách điền trực tiếp hoặc xoá mục này.]** Hai dòng bị sót là `Mxx` và `Myy`; phân loại theo (i)/(ii) ở trên, dựa trên `auditor/` tại `b-freeze`, không sửa B. Tách hẳn khỏi phần đo phía trên để người đọc phân biệt đâu là kết quả mù, đâu là giải thích khi đã biết đáp án.
 
 ## 5. Khoảng trống đã biết
 
