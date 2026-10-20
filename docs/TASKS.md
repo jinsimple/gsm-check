@@ -7,9 +7,9 @@
 | | |
 |---|---|
 | **Cổng đang mở** | **G2a ĐỒNG Ý (Bách, 20/10). Đang trong G3a** |
-| **Vừa xong** | **T11 xong (`4652a6e`), T12+T13 lead tự xác minh.** `auditor/` chạy 12/12 dòng: 6 ĐẠT (M01–M04,M06,M09–M11 — gộp), 3 CẦN NGƯỜI XEM (M05,M07,M08), 1 KHÔNG ĐẠT (M12). Chạy 3 lần, so JSON sau khi bỏ `ts` — **giống hệt** (M10 độ ổn định ĐẠT). Đã commit `reports/audit_4652a6e.*` (coder-auditor dừng tay vì phạm vi hẹp; lead commit theo đúng Q17) |
-| **Bước tiếp theo** | Giao **T14** cho `reviewer` — review `auditor/` (không còn review `product/`) |
-| **Lệnh kiểm của bước tiếp theo** | bảng review hết mục "Chặn" → T14b gắn tag `b-freeze` |
+| **Vừa xong** | **T14 reviewer xong — 1 mục CHẶN** (verify độc lập: đúng). Bằng chứng log (M01/M04/M07/M09) chỉ ghi số dòng, không ghi nguyên văn (`MATRIX_v0.md:15-18`); 3 dòng evidence M07 trỏ file log không có trong git. Đã giao `coder-auditor` sửa (T11b), đang chạy |
+| **Bước tiếp theo** | Chờ T11b → `reviewer` soát lại đúng mục đó → T14b gắn tag `b-freeze` |
+| **Lệnh kiểm của bước tiếp theo** | `reports/audit_<commit>.log.jsonl` có nguyên văn dòng trích, không chỉ số dòng; 12/12 kết quả không đổi; 3 lần chạy vẫn giống hệt |
 | **Lịch (chỉ thị 21:01)** | 20/10: T09g → T11 → B chạy trên A sạch → ổn định 3 lần → reviewer `auditor/` → `b-freeze` trước tối nay. **Nếu tối nay chưa `b-freeze`**: cắt ma trận còn 8 dòng (M01,M02,M04,M05,M07,M09,M10,M11), báo Bách trước khi cắt. 21/10: Bách merge + QA chấm, lead nháp G4. 22/10: hoàn thiện, pm duyệt, demo |
 | **Chế độ gọn** | Không đặt nguyên tắc mới trừ khi thiếu nó thì sai kết quả đo. Câu hỏi không chặn → vào báo cáo G4. Hỏi Bách tối đa 1 tin/cổng, mỗi câu kèm đề xuất. pm chỉ chấm 4 điểm: G2a, `b-freeze`, kết quả sau merge, G4. Không đọc log lớn vào ngữ cảnh. Báo cáo cổng tối đa 15 dòng |
 
