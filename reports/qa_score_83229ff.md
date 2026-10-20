@@ -39,5 +39,9 @@
 
 ## Ghi chú phương pháp
 
-- TP/FN được chấm theo cặp (C0, C1): một mục lỗi cài được tính TP khi có dòng ma trận chuyển từ ĐẠT ở C0 sang KHÔNG ĐẠT/CẦN NGƯỜI XEM ở C1 **với bằng chứng mới trỏ đúng vị trí cụ thể** của lỗi đó (không chỉ trùng tên file); nếu dòng ma trận không đổi trạng thái và không có bằng chứng mới gắn với lỗi cụ thể, tính là FN dù trạng thái đang là CẦN NGƯỜI XEM từ trước.
+- Chấm theo **tập bằng chứng** (`file:dòng`) của từng dòng ma trận, không chấm theo nhãn ĐẠT/KHÔNG ĐẠT/CẦN NGƯỜI XEM.
+- Với mỗi dòng ma trận có bằng chứng dạng `file:dòng`, lấy tập bằng chứng ở C1 trừ tập bằng chứng ở C0 (phần tử mới). Số dòng được quy chiếu qua `git diff` giữa hai commit A để biết dòng nào thực sự là nội dung mới/đổi, dòng nào chỉ trùng số do dịch dòng từ các thay đổi khác — so khớp bằng **nội dung dòng**, không chỉ số dòng.
+- Một dòng ma trận **đã** CẦN NGƯỜI XEM/KHÔNG ĐẠT trên A sạch (trước khi cài lỗi) mà tập bằng chứng ở C1 không có phần tử mới, hoặc phần tử mới không rơi vào vùng mã nguồn bị thay đổi của lỗi đang xét → **không** tính là bắt được lỗi đó qua dòng này (nhãn không đổi không tự động là TP, và cũng không bị tính là FP vì nhãn đó không phải do lần cài lỗi này sinh ra).
+- Một dòng ma trận không có bằng chứng dạng `file:dòng` (chỉ có bằng chứng dạng số lượng/thống kê trong log của B) vẫn được xét TP nếu số liệu đó thay đổi theo đúng cơ chế của lỗi; ghi nhận riêng vì không kiểm được bằng ánh xạ dòng.
 - FP được chấm trên 3 mục sạch: dòng ma trận tương ứng phải ra ĐẠT ở C1; cả 3 đều ĐẠT nên không có FP.
+- Áp dụng phương pháp trên không đổi kết quả TP/FN so với lần chấm theo nhãn trước đó, nhưng xác nhận chắc hơn: 2 dòng ma trận vốn đã CẦN NGƯỜI XEM trên A sạch có sinh bằng chứng mới ở C1, nhưng bằng chứng mới đó rơi vào vị trí của (các) lỗi khác đã được một dòng ma trận khác bắt đúng, không rơi vào vị trí của lỗi còn bị bỏ sót.
