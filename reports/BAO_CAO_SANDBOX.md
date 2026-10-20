@@ -1,6 +1,6 @@
 # Báo cáo sandbox GSM — kiểm định phương pháp cho matching + pricing
 
-> **[Suy luận]** Nháp của `lead`, bắt đầu 20/10/2026, trong lúc chờ Bách merge `security-pass` và `qa-score`. Các phần phụ thuộc kết quả qa (mục 4, một phần mục 7) để trống, đánh dấu **[CHỜ G3b]**. Sẽ gửi `pm` chấm lần cuối trước khi trình Bách.
+> **[Suy luận]** Nháp của `lead`, bắt đầu 20/10/2026. `security-pass` merge tại `83229ff`, `qa-score` merge tại `a3453cb` — số đo qa đã điền nguyên văn vào mục 4 và TB-01/02/03 (mục 8). Sẽ gửi `pm` chấm lần cuối (mốc chấm thứ 4) trước khi trình Bách.
 
 ## 1. Mục tiêu & phạm vi
 
@@ -48,11 +48,30 @@ Nguồn: `reports/audit_8869ebd.md` (hash cây `auditor/` giống `b-freeze`, đ
 | M11 | A.5.4 (pricing) | Luật tiêu dùng EU [Suy luận] | **ĐẠT** | `fare()` không đọc `segment`/`customer`, không `open`/`load` file ngoài hợp đồng |
 | M12 | A.6.2.6 | AI Act Đ.72 [Suy luận] | **KHÔNG ĐẠT** | quét đủ 3 config + 5 file `.py`: không có ngưỡng cảnh báo cho tỷ lệ `auto_accept` **tổng hợp** (chỉ có ngưỡng từng chuyến) |
 
-**[CHỜ G3b]** Kết quả B chạy trên A **có lỗi** (sau merge `security-pass`) — do QA chạy ở cửa sổ cách ly, so với kết quả trên A sạch ở bảng trên để tính TB-01/02/03.
+Kết quả B chạy trên A **có lỗi** (sau merge `security-pass`) — do qa chạy ở cửa sổ cách ly, so với kết quả trên A sạch ở bảng trên để tính TB-01/02/03. Số đo: xem mục 4.
 
-## 4. Số đo QA [CHỜ G3b]
+## 4. Số đo QA
 
-Lấy nguyên từ `reports/qa_score_*.md` khi Bách merge `qa-score` — không tự tính lại.
+Nguyên văn từ `reports/qa_score_83229ff.md` (qa chấm, merge `a3453cb`) — không tự tính lại.
+
+- Phạm vi: B đóng băng tại `b-freeze` (`cce80bf`), không đổi giữa C0=`2abeafd` và C1=`83229ff` (`git diff b-freeze <commit> -- auditor/` rỗng ở cả hai). 6 mục lỗi cài + 3 mục sạch được chấm.
+- Chấm theo **tập bằng chứng** (`file:dòng`), không theo nhãn ĐẠT/KHÔNG ĐẠT/CNX — ánh xạ qua `git diff` giữa C0/C1 theo nội dung dòng, không chỉ số dòng (Q23).
+
+| | Số lượng |
+|---|---|
+| TP (bắt đúng lỗi cài) | 4 |
+| FN (bỏ sót lỗi cài) | 2 |
+| FP (báo động giả trên mục sạch) | 0 |
+
+| Số đo | Kết quả | Mục tiêu [Suy luận] | Đạt? |
+|---|---|---|---|
+| precision | **1.000** | (không đặt mục tiêu cứng) | — |
+| recall | **0.667** | ≥ 0.833 | Không |
+| FNR | **0.333** | ≤ 0.167 | Không |
+
+Độ ổn định (qa, trên `83229ff`): chạy `run_audit.py` 3 lần, so JSON sau chuẩn hoá — **3/3 giống hệt** toàn bộ 12 dòng ma trận. Khớp hướng với TB-04 ở mục 8 (lead tự chạy trên `b-freeze`).
+
+Ghi chú của qa (nguyên văn, không diễn giải lại): 2 dòng ma trận đã CNX trên A sạch có sinh bằng chứng mới ở C1, nhưng bằng chứng đó rơi vào vị trí của (các) lỗi đã được dòng khác bắt đúng — không rơi vào vị trí của 2 lỗi còn bị bỏ sót, nên không tính thêm TP.
 
 ## 5. Khoảng trống đã biết
 
@@ -96,9 +115,9 @@ Sáu mục nhóm **không có thẩm quyền quyết** — cần Legal/DPO hoặ
 
 | TB | Tên | Số đo | Nguồn |
 |---|---|---|---|
-| TB-01 | Recall | **[CHỜ G3b]** | qa |
-| TB-02 | FNR | **[CHỜ G3b]** | qa |
-| TB-03 | Precision | **[CHỜ G3b]** | qa |
+| TB-01 | Recall | **0.667 — Không đạt mục tiêu ≥ 0.833** (4/6 lỗi cài bắt được) | qa, mục 4 |
+| TB-02 | FNR | **0.333 — Không đạt mục tiêu ≤ 0.167** (2/6 lỗi bị bỏ sót) — chỉ số sống còn, cần nêu rõ ở G4 | qa, mục 4 |
+| TB-03 | Precision | **1.000** — 0 báo động giả trên 3 mục sạch | qa, mục 4 |
 | TB-04 | Độ ổn định | **ĐẠT** — 3 lần chạy B@`b-freeze` giống hệt sau chuẩn hoá | T13 |
 | TB-05 | Truy nguồn | **ĐẠT** — 100%, mỗi phát hiện có `file:dòng`[`@commit`] riêng | T11/T12 |
 | TB-06 | Độc lập | **ĐẠT** — `reviewer` grep toàn `auditor/`, không rò nội dung bị cấm | T14 |
