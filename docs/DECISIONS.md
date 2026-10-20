@@ -383,6 +383,13 @@ Lead **vẫn** gửi Bách danh sách baseline dự kiến **trước T10**, gi�
 
 ---
 
+### Q23 — M08 và cách qa chấm chênh lệch (Bách chốt 20/10, sau `b-freeze`)
+
+1. **M08 giữ nguyên Q17(A), không lùi, không sửa B.** B bị cấm đọc nội dung `docs/` nên M08 không thể lên `KHÔNG ĐẠT` — báo cáo G4 ghi đây là **giới hạn của phép đo**: `CẦN NGƯỜI XEM` ở M08 không phải bằng chứng A tuân thủ.
+2. **qa chấm theo tập bằng chứng** (dòng ma trận + `file:dòng`), không theo nhãn kết quả — Bách đã cập nhật cách chấm của qa, kể cả ánh xạ số dòng bị dịch chuyển. Lead không cần làm gì thêm.
+
+Merge `security-pass` là việc của Bách. Từ lúc merge: tab `lead` không chạy gì trên `product/`, không `git diff`/`log`/`show` trên `product/` (quy tắc G2b đã chốt).
+
 ### Q16 — Yêu cầu thêm của Bách cho agent kiểm thử B (chốt 19/10)
 
 Mỗi phát hiện phải có bằng chứng **`file:dòng` riêng**, không chỉ tên file. Một dòng ma trận có nhiều phát hiện thì **liệt kê đủ từng cái**, không gộp.
