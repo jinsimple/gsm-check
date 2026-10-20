@@ -10,7 +10,7 @@ truong 9, va 5.4).
 Phuong phap: doc toan bo logs/matching_<run_id>.jsonl va
 logs/pricing_<run_id>.jsonl tu lan chay fresh, kiem tung dong quyet dinh.
 """
-from common import make_result, ev, read_jsonl
+from common import make_result, ev, read_jsonl, cite_log_line
 
 
 def check(ctx):
@@ -48,11 +48,13 @@ def check(ctx):
                 n_decisions += 1
                 reason = obj.get("reason")
                 if not isinstance(reason, str) or not reason.strip():
-                    bad.append((path, it["line"], reason))
+                    bad.append((path, it, reason))
 
-    for path, line, reason in bad[:30]:
-        evidence.append(ev(path, line, commit))
-        audit_log.log(rid, "empty_reason", {"line": line, "reason": reason})
+    for path, it, reason in bad[:30]:
+        evidence.extend(cite_log_line(
+            audit_log, rid, commit, path, it["line"], it["raw"],
+            run.get("run_id"), run.get("cmd"), {"reason": reason},
+        ))
 
     n_sum = audit_log.log(rid, "scan_summary", {"n_decisions": n_decisions, "n_empty_reason": len(bad), "run_id": run.get("run_id")})
     evidence.append(ev(audit_log.path, n_sum, commit))

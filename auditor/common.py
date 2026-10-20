@@ -85,6 +85,31 @@ def ev(path, line, commit):
     return f"{r}:{line}"
 
 
+def cite_log_line(audit_log, rid, commit, source_path, line_no, raw, run_id, cmd, extra=None):
+    """Khi trich MOT dong log/report san pham lam bang chung: chep NGUYEN
+    VAN dong do vao reports/audit_<commit>.log.jsonl (duoc commit), kem
+    run_id da sinh va lenh da chay (chot MATRIX_v0.md dong 15-18). Can vi
+    logs/*.jsonl va reports/product_run_*.json KHONG vao git (.gitignore)
+    nen neu chi tro vao do, bang chung da commit se khong tai lap duoc
+    sau khi file bien mat.
+
+    Tra ve list 2 evidence: (1) dong goc trong file san pham (khong
+    @commit - ngoai le duy nhat cua quy uoc file:dong@commit), (2) dong
+    tuong ung trong audit log cua B (co @commit, duoc commit, tai lap
+    duoc doc lap voi logs/ san pham)."""
+    detail = {
+        "source_file": rel(source_path),
+        "source_line": line_no,
+        "raw": raw,
+        "run_id": run_id,
+        "cmd": cmd,
+    }
+    if extra:
+        detail.update(extra)
+    n = audit_log.log(rid, "cite_log_line", detail)
+    return [ev(source_path, line_no, commit), ev(audit_log.path, n, commit)]
+
+
 def make_result(id_, status, evidence_list, note):
     assert status in ("ĐẠT", "KHÔNG ĐẠT", "CẦN NGƯỜI XEM"), status
     return {

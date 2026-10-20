@@ -19,7 +19,7 @@ khong chung minh duoc coverage runtime tuyet doi -> neu nghi ngo, CAN
 NGUOI XEM, khong tu KHONG DAT.
 """
 import ast
-from common import make_result, ev, parse_ast, find_functions, read_jsonl, repo_path, load_json_file
+from common import make_result, ev, parse_ast, find_functions, read_jsonl, repo_path, load_json_file, cite_log_line
 
 
 def _contains_log_call(stmts):
@@ -138,7 +138,11 @@ def check(ctx):
     actual = len(match_decisions) + len(fare_decisions)
 
     for it in empty_reason[:10]:
-        evidence.append(ev(run["log_paths"]["matching" if it["obj"].get("event") == "match_result" else "pricing"], it["line"], commit))
+        src_path = run["log_paths"]["matching" if it["obj"].get("event") == "match_result" else "pricing"]
+        evidence.extend(cite_log_line(
+            audit_log, rid, commit, src_path, it["line"], it["raw"],
+            run.get("run_id"), run.get("cmd"), {"reason_check": "empty_reason"},
+        ))
 
     n_sum = audit_log.log(
         rid, "decision_count",

@@ -10,7 +10,7 @@ Nguong chenh lech: 10% (chot G1), tinh theo chenh lech tuong doi
 XEM, khong tu ket luan DAT tuyet doi khi vuot nguong (nguyen tac bat doi
 xung + Phan ML don gian trong MATRIX_v0.md).
 """
-from common import make_result, ev, find_line_containing, load_json_file
+from common import make_result, ev, find_line_containing, load_json_file, cite_log_line
 
 THRESHOLD = 0.10
 
@@ -73,7 +73,11 @@ def check(ctx):
                 needle = f'"ride_id": "{r.get("ride_id")}"' if r.get("ride_id") else None
                 ln = find_line_containing(lines, needle) if needle else None
                 if ln:
-                    evidence.append(ev(report_path, ln, commit))
+                    raw = lines[ln - 1]
+                    evidence.extend(cite_log_line(
+                        audit_log, rid, commit, report_path, ln, raw,
+                        run.get("run_id"), run.get("cmd"), {"group": "customer_segment", "value": seg},
+                    ))
             notes.append(
                 f"[Suy luận] Tỷ lệ ghép theo customer_segment: {seg_rates}. "
                 f"Chênh lệch tương đối giữa '{best_seg}' và '{worst_seg}' = {rel_diff:.2%} >= ngưỡng {THRESHOLD:.0%}."
@@ -111,7 +115,11 @@ def check(ctx):
                     needle = f'"ride_id": "{r.get("ride_id")}"' if r.get("ride_id") else None
                     ln = find_line_containing(lines, needle) if needle else None
                     if ln:
-                        evidence.append(ev(report_path, ln, commit))
+                        raw = lines[ln - 1]
+                        evidence.extend(cite_log_line(
+                            audit_log, rid, commit, report_path, ln, raw,
+                            run.get("run_id"), run.get("cmd"), {"group": "vehicle_type", "value": vt},
+                        ))
             notes.append(
                 f"[Suy luận] Khoảng cách trung bình (distance_km) theo vehicle_type của chuyến đã ghép: "
                 f"{ {k: round(v[0],3) for k,v in vt_means.items()} }. "

@@ -16,7 +16,7 @@ dien giai y nghia nghiep vu/phap ly).
 """
 import ast
 import re
-from common import make_result, ev, parse_ast, read_jsonl, repo_path
+from common import make_result, ev, parse_ast, read_jsonl, repo_path, cite_log_line
 
 REVIEW_KEYWORDS = re.compile(r"human|review|manual|approve|override|xac_nhan|phe_duyet|nguoi_xem|nguoi_duyet", re.IGNORECASE)
 
@@ -73,9 +73,12 @@ def check(ctx):
             if dec_outputs.get("auto_accept") is True:
                 n_auto_true += 1
                 if len(sample_log_ev) < 3:
-                    sample_log_ev.append(it["line"])
-    for ln in sample_log_ev:
-        evidence.append(ev(run["log_paths"]["matching"], ln, commit))
+                    sample_log_ev.append(it)
+    for it in sample_log_ev:
+        evidence.extend(cite_log_line(
+            audit_log, rid, commit, run["log_paths"]["matching"], it["line"], it["raw"],
+            run.get("run_id"), run.get("cmd"), {"check": "auto_accept_true"},
+        ))
     audit_log.log(rid, "auto_accept_runtime_count", {"n_auto_accept_true": n_auto_true, "run_id": run.get("run_id")})
 
     # 3) quet toan bo product/ tim dau hieu "nguoi xem xet"

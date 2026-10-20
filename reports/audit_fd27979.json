@@ -1,8 +1,8 @@
 {
-  "ts": "2026-10-20T01:32:58.643078+00:00",
-  "run_id": "20261020T013232437",
-  "commit": "4652a6e",
-  "product_run_id": "20261020T013232517",
+  "ts": "2026-10-20T01:44:53.839394+00:00",
+  "run_id": "20261020T014427321",
+  "commit": "fd27979",
+  "product_run_id": "20261020T014427404",
   "schema_version": "0.1",
   "note": "[Suy luận] Bao cao agent kiem thu B, sinh boi auditor/run_audit.py tu docs/MATRIX_v0.md + docs/INTERFACE.md.",
   "rows": [
@@ -13,9 +13,9 @@
       "rule": "Chênh lệch tỷ lệ được ghép hoặc khoảng cách trung bình giữa các nhóm vượt ngưỡng (mặc định 10%)",
       "result": "ĐẠT",
       "evidence": [
-        "reports/audit_4652a6e.log.jsonl:6"
+        "reports/audit_fd27979.log.jsonl:6"
       ],
-      "note": "Đã quét toàn bộ 1000 dòng results trong E:\\AI Thực chiến\\gms-test-check\\gsm-sandbox\\reports\\product_run_20261020T013232517.json (phương pháp: nhóm theo customer_segment và vehicle_type, so chênh lệch tương đối, ngưỡng 10%). Tỷ lệ ghép theo customer_segment trong ngưỡng: {'B': (0.9628865979381444, 467, 485), 'A': (0.9572815533980582, 493, 515)} (chênh lệch 0.58% < 10%). Khoảng cách trung bình theo vehicle_type trong ngưỡng (chênh lệch 4.52% < 10%).",
+      "note": "Đã quét toàn bộ 1000 dòng results trong E:\\AI Thực chiến\\gms-test-check\\gsm-sandbox\\reports\\product_run_20261020T014427404.json (phương pháp: nhóm theo customer_segment và vehicle_type, so chênh lệch tương đối, ngưỡng 10%). Tỷ lệ ghép theo customer_segment trong ngưỡng: {'B': (0.9628865979381444, 467, 485), 'A': (0.9572815533980582, 493, 515)} (chênh lệch 0.58% < 10%). Khoảng cách trung bình theo vehicle_type trong ngưỡng (chênh lệch 4.52% < 10%).",
       "mechanism": "",
       "effect": ""
     },
@@ -26,7 +26,7 @@
       "rule": "Code matching đọc thuộc tính KHÔNG nằm trong danh sách cho phép ở INTERFACE",
       "result": "ĐẠT",
       "evidence": [
-        "reports/audit_4652a6e.log.jsonl:8"
+        "reports/audit_fd27979.log.jsonl:8"
       ],
       "note": "Quét toàn bộ product/matching.py bằng ast.parse (mọi Subscript[string] và .get(\"...\") trên biến suy ra là ride=['ride'] hoặc driver=['driver', 'driver_id', 'driver_lat', 'driver_lon', 'driver_vehicle_type']); không có truy cập nằm ngoài danh sách cho phép ở INTERFACE.md §7, và không có truy cập động không xác minh được.",
       "mechanism": "",
@@ -39,7 +39,7 @@
       "rule": "Mock data có trường mang định dạng dữ liệu cá nhân thật (SĐT, email, CCCD…)",
       "result": "ĐẠT",
       "evidence": [
-        "reports/audit_4652a6e.log.jsonl:9"
+        "reports/audit_fd27979.log.jsonl:9"
       ],
       "note": "Quét regex toàn bộ 4 file trong product/data/ và product/config/mock_data.json (['product/data/drivers.json (1802 dòng)', 'product/data/customers.json (1202 dòng)', 'product/data/rides.json (10002 dòng)', 'product/config/mock_data.json (86 dòng)']), patterns: ['phone_vn', 'email', 'cccd_12_digit', 'cmnd_9_digit']. Không tìm thấy chuỗi khớp định dạng SĐT/email/CCCD/CMND.",
       "mechanism": "",
@@ -52,9 +52,9 @@
       "rule": "Số quyết định ≠ số quyết định có log; hoặc có nhánh return không gọi log",
       "result": "ĐẠT",
       "evidence": [
-        "reports/audit_4652a6e.log.jsonl:13"
+        "reports/audit_fd27979.log.jsonl:13"
       ],
-      "note": "Tự chạy fresh `python product/run_product.py` (run_id=20261020T013232517), đọc toàn bộ logs/matching_*.jsonl và logs/pricing_*.jsonl: 2000/2000 quyết định khớp số lượng kỳ vọng (n_rides=1000 x 2), mọi reason không rỗng. AST heuristic trên match()/fare() không thấy return thiếu log.",
+      "note": "Tự chạy fresh `python product/run_product.py` (run_id=20261020T014427404), đọc toàn bộ logs/matching_*.jsonl và logs/pricing_*.jsonl: 2000/2000 quyết định khớp số lượng kỳ vọng (n_rides=1000 x 2), mọi reason không rỗng. AST heuristic trên match()/fare() không thấy return thiếu log.",
       "mechanism": "",
       "effect": ""
     },
@@ -65,9 +65,9 @@
       "rule": "Hằng số số học nghiệp vụ trong code không có trong config",
       "result": "CẦN NGƯỜI XEM",
       "evidence": [
-        "product/matching.py:26@4652a6e",
-        "product/pricing.py:24@4652a6e",
-        "reports/audit_4652a6e.log.jsonl:18"
+        "product/matching.py:26@fd27979",
+        "product/pricing.py:24@fd27979",
+        "reports/audit_fd27979.log.jsonl:18"
       ],
       "note": "ast.parse product/matching.py + product/pricing.py: 2 hằng số numeric (ngoài [-1, 0, 1, 2]) không khớp bất kỳ giá trị nào trong matching.json/pricing.json/mock_data.json: product/matching.py:26 = 6371.0088; product/pricing.py:24 = 1e-09. Heuristic — có thể là chỉ số/độ dài hợp lệ, cần người xem từng dòng để xác nhận có phải hằng số nghiệp vụ hay không.",
       "mechanism": "",
@@ -80,10 +80,10 @@
       "rule": "File config thiếu trường version",
       "result": "ĐẠT",
       "evidence": [
-        "product/config/matching.json:1@4652a6e",
-        "product/config/pricing.json:1@4652a6e",
-        "product/config/mock_data.json:1@4652a6e",
-        "reports/audit_4652a6e.log.jsonl:22"
+        "product/config/matching.json:1@fd27979",
+        "product/config/pricing.json:1@fd27979",
+        "product/config/mock_data.json:1@fd27979",
+        "reports/audit_fd27979.log.jsonl:22"
       ],
       "note": "Quét đầy đủ cả 3 file config theo INTERFACE.md §3; cả 3 đều có trường 'version' dạng chuỗi không rỗng: ['product/config/matching.json', 'product/config/pricing.json', 'product/config/mock_data.json'].",
       "mechanism": "",
@@ -96,19 +96,22 @@
       "rule": "Có hành động bất lợi hoặc ràng buộc lên tài xế (khóa, phạt, hạ ưu tiên, tự động nhận chuyến) mà không có bước/cờ con người xem xét",
       "result": "CẦN NGƯỜI XEM",
       "evidence": [
-        "product/matching.py:156@4652a6e",
-        "product/matching.py:210@4652a6e",
-        "product/matching.py:219@4652a6e",
-        "product/matching.py:228@4652a6e",
-        "product/matching.py:242@4652a6e",
-        "logs/matching_20261020T013232517.jsonl:410",
-        "logs/matching_20261020T013232517.jsonl:615",
-        "logs/matching_20261020T013232517.jsonl:1230",
-        "product/data/gen_mock.py:376@4652a6e",
-        "product/data/gen_mock.py:400@4652a6e",
-        "reports/audit_4652a6e.log.jsonl:32"
+        "product/matching.py:156@fd27979",
+        "product/matching.py:210@fd27979",
+        "product/matching.py:219@fd27979",
+        "product/matching.py:228@fd27979",
+        "product/matching.py:242@fd27979",
+        "logs/matching_20261020T014427404.jsonl:410",
+        "reports/audit_fd27979.log.jsonl:29",
+        "logs/matching_20261020T014427404.jsonl:615",
+        "reports/audit_fd27979.log.jsonl:30",
+        "logs/matching_20261020T014427404.jsonl:1230",
+        "reports/audit_fd27979.log.jsonl:31",
+        "product/data/gen_mock.py:376@fd27979",
+        "product/data/gen_mock.py:400@fd27979",
+        "reports/audit_fd27979.log.jsonl:35"
       ],
-      "note": "auto_accept (hành động tự động nhận chuyến) có thật: gán ở dòng [156, 210, 219, 228, 242] của matching.py, 554 quyết định auto_accept=true trong lần chạy fresh run_id=20261020T013232517. Quét product/ bằng regex tìm thấy 2 chỗ có từ khoá liên quan 'review/human/manual/approve/override' — cần người xem có phải là bước xem xét con người thực sự hay chỉ trùng từ khoá.",
+      "note": "auto_accept (hành động tự động nhận chuyến) có thật: gán ở dòng [156, 210, 219, 228, 242] của matching.py, 554 quyết định auto_accept=true trong lần chạy fresh run_id=20261020T014427404. Quét product/ bằng regex tìm thấy 2 chỗ có từ khoá liên quan 'review/human/manual/approve/override' — cần người xem có phải là bước xem xét con người thực sự hay chỉ trùng từ khoá.",
       "mechanism": "",
       "effect": ""
     },
@@ -119,7 +122,7 @@
       "rule": "Không có tài liệu đánh giá tác động trong docs/",
       "result": "CẦN NGƯỜI XEM",
       "evidence": [
-        "reports/audit_4652a6e.log.jsonl:34"
+        "reports/audit_fd27979.log.jsonl:37"
       ],
       "note": "Liệt kê toàn bộ 8 tên file trong docs/ (os.walk, không đọc nội dung — coder-auditor bị cấm mở phần lớn file trong docs/ theo quy tắc đội). Không có tên file khớp các từ khoá DPIA/impact assessment/đánh giá tác động/risk assessment. [Chưa xác minh] Đây là quét VẮNG MẶT chỉ ở mức TÊN FILE, không phải nội dung đầy đủ — theo MATRIX_v0.md, phát hiện vắng mặt chỉ ra KHÔNG ĐẠT khi quét đầy đủ; ở đây phạm vi quét bị giới hạn do ràng buộc nội bộ của agent kiểm thử nên KHÔNG tự suy ra KHÔNG ĐẠT, giữ ở CẦN NGƯỜI XEM.",
       "mechanism": "",
@@ -132,9 +135,9 @@
       "rule": "Quyết định không kèm reason đọc được",
       "result": "ĐẠT",
       "evidence": [
-        "reports/audit_4652a6e.log.jsonl:36"
+        "reports/audit_fd27979.log.jsonl:39"
       ],
-      "note": "Đọc toàn bộ 204920 dòng E:\\AI Thực chiến\\gms-test-check\\gsm-sandbox\\logs\\matching_20261020T013232517.jsonl và 10000 dòng E:\\AI Thực chiến\\gms-test-check\\gsm-sandbox\\logs\\pricing_20261020T013232517.jsonl (run_id=20261020T013232517), xét đủ 2000 dòng quyết định (match_result/fare_result): mọi reason là chuỗi không rỗng.",
+      "note": "Đọc toàn bộ 204920 dòng E:\\AI Thực chiến\\gms-test-check\\gsm-sandbox\\logs\\matching_20261020T014427404.jsonl và 10000 dòng E:\\AI Thực chiến\\gms-test-check\\gsm-sandbox\\logs\\pricing_20261020T014427404.jsonl (run_id=20261020T014427404), xét đủ 2000 dòng quyết định (match_result/fare_result): mọi reason là chuỗi không rỗng.",
       "mechanism": "",
       "effect": ""
     },
@@ -145,9 +148,9 @@
       "rule": "Cùng đầu vào chạy 3 lần → kết quả khác nhau",
       "result": "ĐẠT",
       "evidence": [
-        "reports/audit_4652a6e.log.jsonl:40"
+        "reports/audit_fd27979.log.jsonl:43"
       ],
-      "note": "Chạy `python product/run_product.py` 3 lần với cùng product/data/*.json và config hiện có (run_id=['20261020T013232517', '20261020T013248329', '20261020T013253482']). Sau khi bỏ ts/run_id/log_files (INTERFACE.md §6) và so sánh sâu toàn bộ report (summary + results), 3 bản giống hệt nhau.",
+      "note": "Chạy `python product/run_product.py` 3 lần với cùng product/data/*.json và config hiện có (run_id=['20261020T014427404', '20261020T014443429', '20261020T014448546']). Sau khi bỏ ts/run_id/log_files (INTERFACE.md §6) và so sánh sâu toàn bộ report (summary + results), 3 bản giống hệt nhau.",
       "mechanism": "",
       "effect": ""
     },
@@ -158,7 +161,7 @@
       "rule": "Giá phụ thuộc thuộc tính của khách ngoài quãng đường và thời điểm",
       "result": "ĐẠT",
       "evidence": [
-        "reports/audit_4652a6e.log.jsonl:43"
+        "reports/audit_fd27979.log.jsonl:46"
       ],
       "note": "ast.parse fare() trong product/pricing.py: tham số đúng hợp đồng INTERFACE.md (distance_km, requested_at, config, logger). Quét regex toàn file không thấy từ khoá segment/customer, không có lời gọi open/load/loads. ",
       "mechanism": "",
@@ -171,10 +174,10 @@
       "rule": "Không có ngưỡng cảnh báo cho tỷ lệ auto_accept",
       "result": "KHÔNG ĐẠT",
       "evidence": [
-        "product/config/matching.json:1@4652a6e",
-        "product/config/pricing.json:1@4652a6e",
-        "product/config/mock_data.json:1@4652a6e",
-        "reports/audit_4652a6e.log.jsonl:44"
+        "product/config/matching.json:1@fd27979",
+        "product/config/pricing.json:1@fd27979",
+        "product/config/mock_data.json:1@fd27979",
+        "reports/audit_fd27979.log.jsonl:47"
       ],
       "note": "Quét đầy đủ khoá của cả 3 file config (['product/config/matching.json', 'product/config/pricing.json', 'product/config/mock_data.json']) và toàn bộ 5 file .py liệt kê trong INTERFACE.md (['product/matching.py', 'product/pricing.py', 'product/run_product.py', 'product/logger.py', 'product/data/gen_mock.py']): không có khoá config hay dòng code nào thể hiện ngưỡng cảnh báo cho tỷ lệ auto_accept tổng hợp. Khoá 'auto_accept_threshold' trong matching.json chỉ là ngưỡng quyết định từng chuyến (per-ride), không phải ngưỡng cảnh báo vận hành trên tỷ lệ tổng hợp (summary.n_auto_accept / n_rides).",
       "mechanism": "",
