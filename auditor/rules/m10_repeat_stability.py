@@ -9,7 +9,10 @@ rieng. So sanh report sau khi bo cac truong de bien dong theo
 INTERFACE.md muc 6 (ts, run_id, log_files, ten file). Khac nhau -> KHONG
 DAT. Thieu du 3 ban de so -> CAN NGUOI XEM (khong tu KHONG DAT/DAT).
 """
-from common import make_result, ev, load_json_file, strip_volatile
+import re
+from common import make_result, ev, load_json_file, strip_volatile, find_line_containing, cite_log_line
+
+_RESULT_IDX_RE = re.compile(r"\.results\[(\d+)\]")
 
 
 def _diff_paths(a, b, path=""):
@@ -69,7 +72,7 @@ def check(ctx):
     for other in reports[1:]:
         diffs = _diff_paths(base, other["data"])
         if diffs:
-            all_diffs.append((other["path"], diffs))
+            all_diffs.append((other, diffs))
 
     n_sum = audit_log.log(
         rid, "compare_summary",
@@ -83,10 +86,29 @@ def check(ctx):
 
     if all_diffs:
         detail_parts = []
-        for path, diffs in all_diffs:
+        for other, diffs in all_diffs:
+            path = other["path"]
+            lines = other["lines"]
+            raw_results = other["raw_data"].get("results", [])
+            run_id = other["run"].get("run_id")
+            cmd = other["run"].get("cmd")
             for d in diffs[:10]:
                 detail_parts.append(f"{path}: {d}")
-                evidence.append(ev(path, 1, commit))
+                ln, raw = None, None
+                m = _RESULT_IDX_RE.search(d)
+                if m:
+                    idx = int(m.group(1))
+                    if 0 <= idx < len(raw_results):
+                        ride_id = raw_results[idx].get("ride_id")
+                        if ride_id:
+                            needle = f'"ride_id": "{ride_id}"'
+                            ln = find_line_containing(lines, needle)
+                if ln is None:
+                    ln = 1
+                raw = lines[ln - 1] if lines and 0 <= ln - 1 < len(lines) else d
+                evidence.extend(cite_log_line(
+                    audit_log, rid, commit, path, ln, raw, run_id, cmd, {"diff_description": d},
+                ))
         return make_result(
             rid, "KHÔNG ĐẠT", evidence,
             f"Chạy `python product/run_product.py` 3 lần với cùng product/data/*.json và config hiện có "
