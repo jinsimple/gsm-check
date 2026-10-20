@@ -6,11 +6,12 @@
 
 | | |
 |---|---|
-| **Cổng đang mở** | **G3a ĐÓNG, `b-freeze` tại `cce80bf`.** Bách đã trả lời mục 4+5 (Q23) — **chờ Bách tự merge `security-pass`**, lead không tự merge |
+| **Cổng đang mở** | **G2b ĐÃ MERGE** (fast-forward, không có commit merge). Mốc ranh giới: **C0 = `2abeafd`** (trước merge) → **C1 = `83229ff`** (`[security] hardening pass`, HEAD hiện tại). Chờ Bách merge `qa-score` (G3b) |
 | **Vừa xong** | **Nháp `reports/BAO_CAO_SANDBOX.md` xong 8 mục** (mục tiêu, kiến trúc, M01-M12, giới hạn, §7 checklist, việc pháp lý, chấm B theo §3B). Mục 4 (số đo qa) và TB-01/02/03 để trống **[CHỜ G3b]** |
-| **Bước tiếp theo** | Chờ Bách merge `security-pass` rồi `qa-score`. Khi có `reports/qa_score_*.md`: điền mục 4+8, gửi `pm` chấm lần cuối (mốc chấm thứ 4), rồi trình Bách |
+| **Bước tiếp theo** | Chờ Bách merge `qa-score`. Khi có `reports/qa_score_*.md`: điền mục 4+8, gửi `pm` chấm lần cuối (mốc chấm thứ 4), rồi trình Bách |
 | **Lệnh kiểm của bước tiếp theo** | — (chờ merge) |
-| **⚠️ Từ lúc Bách báo đã merge** | Lead **không chạy gì** trên `product/`, **không** `git diff`/`log`/`show` trên `product/`. Chỉ đọc kết quả sau khi Bách merge `qa-score` |
+| **⚠️ ĐANG HIỆU LỰC — từ C0→C1** | Lead **không đọc nội dung `product/` qua BẤT KỲ đường nào**: không lệnh git local (`diff`/`log`/`show`), không trình duyệt/GitHub web UI/API, không bản clone khác, không ảnh chụp màn hình, không người khác kể lại. Nếu ai dán cho lead một đoạn diff của `product/` → **dừng, báo Bách ngay, không dùng**. Chỉ đọc kết quả sau khi Bách merge `qa-score` |
+| **🚨 RỦI RO PM BÁO 20/10** | Repo đã đẩy công khai; trang compare `github.com/jinsimple/gsm-check/compare/2abeafd...83229ff` (và nhánh `security-pass` nếu còn) đọc được đáp án lỗi qua web, không cần lệnh git. pm đã báo Bách, đề nghị để repo **Private tới sau G3b**. Lead **không tự đổi** visibility repo — chờ Bách quyết, **không mở** link compare/diff đó dưới bất kỳ hình thức |
 | **Lịch (chỉ thị 21:01)** | 20/10: T09g → T11 → B chạy trên A sạch → ổn định 3 lần → reviewer `auditor/` → `b-freeze` trước tối nay. **Nếu tối nay chưa `b-freeze`**: cắt ma trận còn 8 dòng (M01,M02,M04,M05,M07,M09,M10,M11), báo Bách trước khi cắt. 21/10: Bách merge + QA chấm, lead nháp G4. 22/10: hoàn thiện, pm duyệt, demo |
 | **Chế độ gọn** | Không đặt nguyên tắc mới trừ khi thiếu nó thì sai kết quả đo. Câu hỏi không chặn → vào báo cáo G4. Hỏi Bách tối đa 1 tin/cổng, mỗi câu kèm đề xuất. pm chỉ chấm 4 điểm: G2a, `b-freeze`, kết quả sau merge, G4. Không đọc log lớn vào ngữ cảnh. Báo cáo cổng tối đa 15 dòng |
 
