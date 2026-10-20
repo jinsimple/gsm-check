@@ -206,7 +206,11 @@ def run(run_id=None):
 
             price_log.set_context(context)
             fare_result = pricing.fare(
-                distance_km, ride["requested_at"], pricing_config, price_log
+                distance_km,
+                ride["requested_at"],
+                pricing_config,
+                price_log,
+                customer_segment=segment_of.get(ride["customer_id"]),
             )
 
             results.append(

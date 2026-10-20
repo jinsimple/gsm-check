@@ -1,1202 +1,1502 @@
 [
   {
     "customer_id": "C0001",
-    "segment": "A"
+    "segment": "A",
+    "phone": "0985822412"
   },
   {
     "customer_id": "C0002",
-    "segment": "A"
+    "segment": "A",
+    "phone": "0914942603"
   },
   {
     "customer_id": "C0003",
-    "segment": "B"
+    "segment": "B",
+    "phone": "0903356886"
   },
   {
     "customer_id": "C0004",
-    "segment": "A"
+    "segment": "A",
+    "phone": "0999529223"
   },
   {
     "customer_id": "C0005",
-    "segment": "A"
+    "segment": "A",
+    "phone": "0936913810"
   },
   {
     "customer_id": "C0006",
-    "segment": "A"
+    "segment": "A",
+    "phone": "0932868828"
   },
   {
     "customer_id": "C0007",
-    "segment": "B"
+    "segment": "B",
+    "phone": "0929958838"
   },
   {
     "customer_id": "C0008",
-    "segment": "B"
+    "segment": "B",
+    "phone": "0918728463"
   },
   {
     "customer_id": "C0009",
-    "segment": "A"
+    "segment": "A",
+    "phone": "0998847493"
   },
   {
     "customer_id": "C0010",
-    "segment": "A"
+    "segment": "A",
+    "phone": "0913756669"
   },
   {
     "customer_id": "C0011",
-    "segment": "B"
+    "segment": "B",
+    "phone": "0990825067"
   },
   {
     "customer_id": "C0012",
-    "segment": "A"
+    "segment": "A",
+    "phone": "0999410741"
   },
   {
     "customer_id": "C0013",
-    "segment": "B"
+    "segment": "B",
+    "phone": "0973197857"
   },
   {
     "customer_id": "C0014",
-    "segment": "A"
+    "segment": "A",
+    "phone": "0911668732"
   },
   {
     "customer_id": "C0015",
-    "segment": "A"
+    "segment": "A",
+    "phone": "0979254563"
   },
   {
     "customer_id": "C0016",
-    "segment": "A"
+    "segment": "A",
+    "phone": "0956629388"
   },
   {
     "customer_id": "C0017",
-    "segment": "A"
+    "segment": "A",
+    "phone": "0904265799"
   },
   {
     "customer_id": "C0018",
-    "segment": "B"
+    "segment": "B",
+    "phone": "0903999315"
   },
   {
     "customer_id": "C0019",
-    "segment": "B"
+    "segment": "B",
+    "phone": "0912575562"
   },
   {
     "customer_id": "C0020",
-    "segment": "B"
+    "segment": "B",
+    "phone": "0929345092"
   },
   {
     "customer_id": "C0021",
-    "segment": "A"
+    "segment": "A",
+    "phone": "0931227216"
   },
   {
     "customer_id": "C0022",
-    "segment": "A"
+    "segment": "A",
+    "phone": "0967827638"
   },
   {
     "customer_id": "C0023",
-    "segment": "A"
+    "segment": "A",
+    "phone": "0980801586"
   },
   {
     "customer_id": "C0024",
-    "segment": "B"
+    "segment": "B",
+    "phone": "0903561597"
   },
   {
     "customer_id": "C0025",
-    "segment": "B"
+    "segment": "B",
+    "phone": "0975329037"
   },
   {
     "customer_id": "C0026",
-    "segment": "A"
+    "segment": "A",
+    "phone": "0926687537"
   },
   {
     "customer_id": "C0027",
-    "segment": "B"
+    "segment": "B",
+    "phone": "0996102525"
   },
   {
     "customer_id": "C0028",
-    "segment": "A"
+    "segment": "A",
+    "phone": "0987226012"
   },
   {
     "customer_id": "C0029",
-    "segment": "A"
+    "segment": "A",
+    "phone": "0994130244"
   },
   {
     "customer_id": "C0030",
-    "segment": "A"
+    "segment": "A",
+    "phone": "0973140807"
   },
   {
     "customer_id": "C0031",
-    "segment": "B"
+    "segment": "B",
+    "phone": "0956306997"
   },
   {
     "customer_id": "C0032",
-    "segment": "A"
+    "segment": "A",
+    "phone": "0929587039"
   },
   {
     "customer_id": "C0033",
-    "segment": "A"
+    "segment": "A",
+    "phone": "0960291817"
   },
   {
     "customer_id": "C0034",
-    "segment": "A"
+    "segment": "A",
+    "phone": "0979089901"
   },
   {
     "customer_id": "C0035",
-    "segment": "B"
+    "segment": "B",
+    "phone": "0937338124"
   },
   {
     "customer_id": "C0036",
-    "segment": "A"
+    "segment": "A",
+    "phone": "0900872248"
   },
   {
     "customer_id": "C0037",
-    "segment": "B"
+    "segment": "B",
+    "phone": "0921429110"
   },
   {
     "customer_id": "C0038",
-    "segment": "A"
+    "segment": "A",
+    "phone": "0993702683"
   },
   {
     "customer_id": "C0039",
-    "segment": "A"
+    "segment": "A",
+    "phone": "0956722344"
   },
   {
     "customer_id": "C0040",
-    "segment": "B"
+    "segment": "B",
+    "phone": "0945667651"
   },
   {
     "customer_id": "C0041",
-    "segment": "A"
+    "segment": "A",
+    "phone": "0937295260"
   },
   {
     "customer_id": "C0042",
-    "segment": "A"
+    "segment": "A",
+    "phone": "0920868105"
   },
   {
     "customer_id": "C0043",
-    "segment": "A"
+    "segment": "A",
+    "phone": "0928898923"
   },
   {
     "customer_id": "C0044",
-    "segment": "A"
+    "segment": "A",
+    "phone": "0945176955"
   },
   {
     "customer_id": "C0045",
-    "segment": "A"
+    "segment": "A",
+    "phone": "0913718431"
   },
   {
     "customer_id": "C0046",
-    "segment": "A"
+    "segment": "A",
+    "phone": "0912448136"
   },
   {
     "customer_id": "C0047",
-    "segment": "A"
+    "segment": "A",
+    "phone": "0950992979"
   },
   {
     "customer_id": "C0048",
-    "segment": "B"
+    "segment": "B",
+    "phone": "0912981052"
   },
   {
     "customer_id": "C0049",
-    "segment": "A"
+    "segment": "A",
+    "phone": "0948181396"
   },
   {
     "customer_id": "C0050",
-    "segment": "A"
+    "segment": "A",
+    "phone": "0946164955"
   },
   {
     "customer_id": "C0051",
-    "segment": "B"
+    "segment": "B",
+    "phone": "0981030736"
   },
   {
     "customer_id": "C0052",
-    "segment": "B"
+    "segment": "B",
+    "phone": "0935503389"
   },
   {
     "customer_id": "C0053",
-    "segment": "B"
+    "segment": "B",
+    "phone": "0905831819"
   },
   {
     "customer_id": "C0054",
-    "segment": "B"
+    "segment": "B",
+    "phone": "0997942942"
   },
   {
     "customer_id": "C0055",
-    "segment": "A"
+    "segment": "A",
+    "phone": "0961662963"
   },
   {
     "customer_id": "C0056",
-    "segment": "B"
+    "segment": "B",
+    "phone": "0971971316"
   },
   {
     "customer_id": "C0057",
-    "segment": "A"
+    "segment": "A",
+    "phone": "0916753883"
   },
   {
     "customer_id": "C0058",
-    "segment": "A"
+    "segment": "A",
+    "phone": "0950806024"
   },
   {
     "customer_id": "C0059",
-    "segment": "B"
+    "segment": "B",
+    "phone": "0910576383"
   },
   {
     "customer_id": "C0060",
-    "segment": "B"
+    "segment": "B",
+    "phone": "0974093639"
   },
   {
     "customer_id": "C0061",
-    "segment": "B"
+    "segment": "B",
+    "phone": "0939349722"
   },
   {
     "customer_id": "C0062",
-    "segment": "B"
+    "segment": "B",
+    "phone": "0984374605"
   },
   {
     "customer_id": "C0063",
-    "segment": "B"
+    "segment": "B",
+    "phone": "0983016315"
   },
   {
     "customer_id": "C0064",
-    "segment": "A"
+    "segment": "A",
+    "phone": "0948537831"
   },
   {
     "customer_id": "C0065",
-    "segment": "A"
+    "segment": "A",
+    "phone": "0977490893"
   },
   {
     "customer_id": "C0066",
-    "segment": "A"
+    "segment": "A",
+    "phone": "0925808537"
   },
   {
     "customer_id": "C0067",
-    "segment": "A"
+    "segment": "A",
+    "phone": "0994566031"
   },
   {
     "customer_id": "C0068",
-    "segment": "B"
+    "segment": "B",
+    "phone": "0909335534"
   },
   {
     "customer_id": "C0069",
-    "segment": "B"
+    "segment": "B",
+    "phone": "0906150444"
   },
   {
     "customer_id": "C0070",
-    "segment": "B"
+    "segment": "B",
+    "phone": "0988753260"
   },
   {
     "customer_id": "C0071",
-    "segment": "B"
+    "segment": "B",
+    "phone": "0930587988"
   },
   {
     "customer_id": "C0072",
-    "segment": "A"
+    "segment": "A",
+    "phone": "0938840994"
   },
   {
     "customer_id": "C0073",
-    "segment": "B"
+    "segment": "B",
+    "phone": "0910709497"
   },
   {
     "customer_id": "C0074",
-    "segment": "A"
+    "segment": "A",
+    "phone": "0931244663"
   },
   {
     "customer_id": "C0075",
-    "segment": "B"
+    "segment": "B",
+    "phone": "0913556182"
   },
   {
     "customer_id": "C0076",
-    "segment": "B"
+    "segment": "B",
+    "phone": "0951019678"
   },
   {
     "customer_id": "C0077",
-    "segment": "A"
+    "segment": "A",
+    "phone": "0937308985"
   },
   {
     "customer_id": "C0078",
-    "segment": "A"
+    "segment": "A",
+    "phone": "0960855700"
   },
   {
     "customer_id": "C0079",
-    "segment": "A"
+    "segment": "A",
+    "phone": "0985320121"
   },
   {
     "customer_id": "C0080",
-    "segment": "A"
+    "segment": "A",
+    "phone": "0948966946"
   },
   {
     "customer_id": "C0081",
-    "segment": "A"
+    "segment": "A",
+    "phone": "0921831063"
   },
   {
     "customer_id": "C0082",
-    "segment": "B"
+    "segment": "B",
+    "phone": "0949684848"
   },
   {
     "customer_id": "C0083",
-    "segment": "A"
+    "segment": "A",
+    "phone": "0947683626"
   },
   {
     "customer_id": "C0084",
-    "segment": "B"
+    "segment": "B",
+    "phone": "0928119557"
   },
   {
     "customer_id": "C0085",
-    "segment": "B"
+    "segment": "B",
+    "phone": "0989949389"
   },
   {
     "customer_id": "C0086",
-    "segment": "A"
+    "segment": "A",
+    "phone": "0935833156"
   },
   {
     "customer_id": "C0087",
-    "segment": "B"
+    "segment": "B",
+    "phone": "0994196727"
   },
   {
     "customer_id": "C0088",
-    "segment": "B"
+    "segment": "B",
+    "phone": "0991744214"
   },
   {
     "customer_id": "C0089",
-    "segment": "B"
+    "segment": "B",
+    "phone": "0986977837"
   },
   {
     "customer_id": "C0090",
-    "segment": "A"
+    "segment": "A",
+    "phone": "0909583482"
   },
   {
     "customer_id": "C0091",
-    "segment": "A"
+    "segment": "A",
+    "phone": "0981756179"
   },
   {
     "customer_id": "C0092",
-    "segment": "A"
+    "segment": "A",
+    "phone": "0985225343"
   },
   {
     "customer_id": "C0093",
-    "segment": "B"
+    "segment": "B",
+    "phone": "0922969840"
   },
   {
     "customer_id": "C0094",
-    "segment": "B"
+    "segment": "B",
+    "phone": "0971691040"
   },
   {
     "customer_id": "C0095",
-    "segment": "B"
+    "segment": "B",
+    "phone": "0997861742"
   },
   {
     "customer_id": "C0096",
-    "segment": "A"
+    "segment": "A",
+    "phone": "0932857966"
   },
   {
     "customer_id": "C0097",
-    "segment": "B"
+    "segment": "B",
+    "phone": "0921931511"
   },
   {
     "customer_id": "C0098",
-    "segment": "A"
+    "segment": "A",
+    "phone": "0962043515"
   },
   {
     "customer_id": "C0099",
-    "segment": "B"
+    "segment": "B",
+    "phone": "0950929647"
   },
   {
     "customer_id": "C0100",
-    "segment": "B"
+    "segment": "B",
+    "phone": "0936231783"
   },
   {
     "customer_id": "C0101",
-    "segment": "A"
+    "segment": "A",
+    "phone": "0985899313"
   },
   {
     "customer_id": "C0102",
-    "segment": "B"
+    "segment": "B",
+    "phone": "0992363534"
   },
   {
     "customer_id": "C0103",
-    "segment": "B"
+    "segment": "B",
+    "phone": "0974752529"
   },
   {
     "customer_id": "C0104",
-    "segment": "B"
+    "segment": "B",
+    "phone": "0929476249"
   },
   {
     "customer_id": "C0105",
-    "segment": "B"
+    "segment": "B",
+    "phone": "0991887369"
   },
   {
     "customer_id": "C0106",
-    "segment": "B"
+    "segment": "B",
+    "phone": "0943524491"
   },
   {
     "customer_id": "C0107",
-    "segment": "B"
+    "segment": "B",
+    "phone": "0907507864"
   },
   {
     "customer_id": "C0108",
-    "segment": "A"
+    "segment": "A",
+    "phone": "0930742311"
   },
   {
     "customer_id": "C0109",
-    "segment": "A"
+    "segment": "A",
+    "phone": "0904308421"
   },
   {
     "customer_id": "C0110",
-    "segment": "A"
+    "segment": "A",
+    "phone": "0942339391"
   },
   {
     "customer_id": "C0111",
-    "segment": "A"
+    "segment": "A",
+    "phone": "0953843426"
   },
   {
     "customer_id": "C0112",
-    "segment": "A"
+    "segment": "A",
+    "phone": "0935935572"
   },
   {
     "customer_id": "C0113",
-    "segment": "A"
+    "segment": "A",
+    "phone": "0908883684"
   },
   {
     "customer_id": "C0114",
-    "segment": "B"
+    "segment": "B",
+    "phone": "0928317637"
   },
   {
     "customer_id": "C0115",
-    "segment": "A"
+    "segment": "A",
+    "phone": "0976125617"
   },
   {
     "customer_id": "C0116",
-    "segment": "A"
+    "segment": "A",
+    "phone": "0996356822"
   },
   {
     "customer_id": "C0117",
-    "segment": "A"
+    "segment": "A",
+    "phone": "0942235350"
   },
   {
     "customer_id": "C0118",
-    "segment": "B"
+    "segment": "B",
+    "phone": "0928538251"
   },
   {
     "customer_id": "C0119",
-    "segment": "A"
+    "segment": "A",
+    "phone": "0987971488"
   },
   {
     "customer_id": "C0120",
-    "segment": "B"
+    "segment": "B",
+    "phone": "0967005685"
   },
   {
     "customer_id": "C0121",
-    "segment": "B"
+    "segment": "B",
+    "phone": "0953100814"
   },
   {
     "customer_id": "C0122",
-    "segment": "B"
+    "segment": "B",
+    "phone": "0986282117"
   },
   {
     "customer_id": "C0123",
-    "segment": "B"
+    "segment": "B",
+    "phone": "0961586053"
   },
   {
     "customer_id": "C0124",
-    "segment": "A"
+    "segment": "A",
+    "phone": "0919175900"
   },
   {
     "customer_id": "C0125",
-    "segment": "B"
+    "segment": "B",
+    "phone": "0935551614"
   },
   {
     "customer_id": "C0126",
-    "segment": "B"
+    "segment": "B",
+    "phone": "0918740864"
   },
   {
     "customer_id": "C0127",
-    "segment": "B"
+    "segment": "B",
+    "phone": "0933101783"
   },
   {
     "customer_id": "C0128",
-    "segment": "A"
+    "segment": "A",
+    "phone": "0999990728"
   },
   {
     "customer_id": "C0129",
-    "segment": "B"
+    "segment": "B",
+    "phone": "0975345555"
   },
   {
     "customer_id": "C0130",
-    "segment": "B"
+    "segment": "B",
+    "phone": "0972340307"
   },
   {
     "customer_id": "C0131",
-    "segment": "A"
+    "segment": "A",
+    "phone": "0935264581"
   },
   {
     "customer_id": "C0132",
-    "segment": "A"
+    "segment": "A",
+    "phone": "0978461803"
   },
   {
     "customer_id": "C0133",
-    "segment": "A"
+    "segment": "A",
+    "phone": "0957503414"
   },
   {
     "customer_id": "C0134",
-    "segment": "A"
+    "segment": "A",
+    "phone": "0978320463"
   },
   {
     "customer_id": "C0135",
-    "segment": "A"
+    "segment": "A",
+    "phone": "0953606628"
   },
   {
     "customer_id": "C0136",
-    "segment": "B"
+    "segment": "B",
+    "phone": "0948586340"
   },
   {
     "customer_id": "C0137",
-    "segment": "A"
+    "segment": "A",
+    "phone": "0929436733"
   },
   {
     "customer_id": "C0138",
-    "segment": "B"
+    "segment": "B",
+    "phone": "0918566572"
   },
   {
     "customer_id": "C0139",
-    "segment": "B"
+    "segment": "B",
+    "phone": "0968387461"
   },
   {
     "customer_id": "C0140",
-    "segment": "A"
+    "segment": "A",
+    "phone": "0966238574"
   },
   {
     "customer_id": "C0141",
-    "segment": "A"
+    "segment": "A",
+    "phone": "0912201654"
   },
   {
     "customer_id": "C0142",
-    "segment": "A"
+    "segment": "A",
+    "phone": "0906323852"
   },
   {
     "customer_id": "C0143",
-    "segment": "A"
+    "segment": "A",
+    "phone": "0914716857"
   },
   {
     "customer_id": "C0144",
-    "segment": "B"
+    "segment": "B",
+    "phone": "0920514014"
   },
   {
     "customer_id": "C0145",
-    "segment": "A"
+    "segment": "A",
+    "phone": "0984214382"
   },
   {
     "customer_id": "C0146",
-    "segment": "A"
+    "segment": "A",
+    "phone": "0921472420"
   },
   {
     "customer_id": "C0147",
-    "segment": "A"
+    "segment": "A",
+    "phone": "0991332642"
   },
   {
     "customer_id": "C0148",
-    "segment": "A"
+    "segment": "A",
+    "phone": "0956661351"
   },
   {
     "customer_id": "C0149",
-    "segment": "A"
+    "segment": "A",
+    "phone": "0980048665"
   },
   {
     "customer_id": "C0150",
-    "segment": "B"
+    "segment": "B",
+    "phone": "0908526544"
   },
   {
     "customer_id": "C0151",
-    "segment": "B"
+    "segment": "B",
+    "phone": "0951642594"
   },
   {
     "customer_id": "C0152",
-    "segment": "B"
+    "segment": "B",
+    "phone": "0951220073"
   },
   {
     "customer_id": "C0153",
-    "segment": "A"
+    "segment": "A",
+    "phone": "0979978790"
   },
   {
     "customer_id": "C0154",
-    "segment": "A"
+    "segment": "A",
+    "phone": "0962820592"
   },
   {
     "customer_id": "C0155",
-    "segment": "B"
+    "segment": "B",
+    "phone": "0971016525"
   },
   {
     "customer_id": "C0156",
-    "segment": "A"
+    "segment": "A",
+    "phone": "0933744231"
   },
   {
     "customer_id": "C0157",
-    "segment": "B"
+    "segment": "B",
+    "phone": "0974252722"
   },
   {
     "customer_id": "C0158",
-    "segment": "B"
+    "segment": "B",
+    "phone": "0901540956"
   },
   {
     "customer_id": "C0159",
-    "segment": "B"
+    "segment": "B",
+    "phone": "0991306093"
   },
   {
     "customer_id": "C0160",
-    "segment": "B"
+    "segment": "B",
+    "phone": "0996733645"
   },
   {
     "customer_id": "C0161",
-    "segment": "A"
+    "segment": "A",
+    "phone": "0915374874"
   },
   {
     "customer_id": "C0162",
-    "segment": "B"
+    "segment": "B",
+    "phone": "0991497616"
   },
   {
     "customer_id": "C0163",
-    "segment": "A"
+    "segment": "A",
+    "phone": "0972070937"
   },
   {
     "customer_id": "C0164",
-    "segment": "A"
+    "segment": "A",
+    "phone": "0935812670"
   },
   {
     "customer_id": "C0165",
-    "segment": "B"
+    "segment": "B",
+    "phone": "0986028436"
   },
   {
     "customer_id": "C0166",
-    "segment": "B"
+    "segment": "B",
+    "phone": "0945657579"
   },
   {
     "customer_id": "C0167",
-    "segment": "A"
+    "segment": "A",
+    "phone": "0914972279"
   },
   {
     "customer_id": "C0168",
-    "segment": "B"
+    "segment": "B",
+    "phone": "0939392920"
   },
   {
     "customer_id": "C0169",
-    "segment": "B"
+    "segment": "B",
+    "phone": "0958353204"
   },
   {
     "customer_id": "C0170",
-    "segment": "A"
+    "segment": "A",
+    "phone": "0921227574"
   },
   {
     "customer_id": "C0171",
-    "segment": "A"
+    "segment": "A",
+    "phone": "0960897765"
   },
   {
     "customer_id": "C0172",
-    "segment": "B"
+    "segment": "B",
+    "phone": "0900435578"
   },
   {
     "customer_id": "C0173",
-    "segment": "B"
+    "segment": "B",
+    "phone": "0996917555"
   },
   {
     "customer_id": "C0174",
-    "segment": "B"
+    "segment": "B",
+    "phone": "0996593904"
   },
   {
     "customer_id": "C0175",
-    "segment": "B"
+    "segment": "B",
+    "phone": "0935351479"
   },
   {
     "customer_id": "C0176",
-    "segment": "B"
+    "segment": "B",
+    "phone": "0967187530"
   },
   {
     "customer_id": "C0177",
-    "segment": "B"
+    "segment": "B",
+    "phone": "0923978249"
   },
   {
     "customer_id": "C0178",
-    "segment": "B"
+    "segment": "B",
+    "phone": "0968139880"
   },
   {
     "customer_id": "C0179",
-    "segment": "B"
+    "segment": "B",
+    "phone": "0914282218"
   },
   {
     "customer_id": "C0180",
-    "segment": "A"
+    "segment": "A",
+    "phone": "0983926371"
   },
   {
     "customer_id": "C0181",
-    "segment": "A"
+    "segment": "A",
+    "phone": "0940056581"
   },
   {
     "customer_id": "C0182",
-    "segment": "A"
+    "segment": "A",
+    "phone": "0985758349"
   },
   {
     "customer_id": "C0183",
-    "segment": "A"
+    "segment": "A",
+    "phone": "0968137358"
   },
   {
     "customer_id": "C0184",
-    "segment": "A"
+    "segment": "A",
+    "phone": "0981734598"
   },
   {
     "customer_id": "C0185",
-    "segment": "B"
+    "segment": "B",
+    "phone": "0926697396"
   },
   {
     "customer_id": "C0186",
-    "segment": "A"
+    "segment": "A",
+    "phone": "0920513739"
   },
   {
     "customer_id": "C0187",
-    "segment": "A"
+    "segment": "A",
+    "phone": "0950185867"
   },
   {
     "customer_id": "C0188",
-    "segment": "A"
+    "segment": "A",
+    "phone": "0921682744"
   },
   {
     "customer_id": "C0189",
-    "segment": "A"
+    "segment": "A",
+    "phone": "0972394227"
   },
   {
     "customer_id": "C0190",
-    "segment": "B"
+    "segment": "B",
+    "phone": "0971182864"
   },
   {
     "customer_id": "C0191",
-    "segment": "A"
+    "segment": "A",
+    "phone": "0900076758"
   },
   {
     "customer_id": "C0192",
-    "segment": "B"
+    "segment": "B",
+    "phone": "0980388981"
   },
   {
     "customer_id": "C0193",
-    "segment": "B"
+    "segment": "B",
+    "phone": "0943507489"
   },
   {
     "customer_id": "C0194",
-    "segment": "B"
+    "segment": "B",
+    "phone": "0965579548"
   },
   {
     "customer_id": "C0195",
-    "segment": "A"
+    "segment": "A",
+    "phone": "0902614124"
   },
   {
     "customer_id": "C0196",
-    "segment": "A"
+    "segment": "A",
+    "phone": "0915014631"
   },
   {
     "customer_id": "C0197",
-    "segment": "B"
+    "segment": "B",
+    "phone": "0948718453"
   },
   {
     "customer_id": "C0198",
-    "segment": "A"
+    "segment": "A",
+    "phone": "0941273847"
   },
   {
     "customer_id": "C0199",
-    "segment": "A"
+    "segment": "A",
+    "phone": "0932138745"
   },
   {
     "customer_id": "C0200",
-    "segment": "A"
+    "segment": "A",
+    "phone": "0907774584"
   },
   {
     "customer_id": "C0201",
-    "segment": "B"
+    "segment": "B",
+    "phone": "0932329237"
   },
   {
     "customer_id": "C0202",
-    "segment": "B"
+    "segment": "B",
+    "phone": "0976149359"
   },
   {
     "customer_id": "C0203",
-    "segment": "B"
+    "segment": "B",
+    "phone": "0910570592"
   },
   {
     "customer_id": "C0204",
-    "segment": "A"
+    "segment": "A",
+    "phone": "0911496211"
   },
   {
     "customer_id": "C0205",
-    "segment": "A"
+    "segment": "A",
+    "phone": "0998234974"
   },
   {
     "customer_id": "C0206",
-    "segment": "A"
+    "segment": "A",
+    "phone": "0965228535"
   },
   {
     "customer_id": "C0207",
-    "segment": "B"
+    "segment": "B",
+    "phone": "0909289546"
   },
   {
     "customer_id": "C0208",
-    "segment": "A"
+    "segment": "A",
+    "phone": "0971498611"
   },
   {
     "customer_id": "C0209",
-    "segment": "A"
+    "segment": "A",
+    "phone": "0916879290"
   },
   {
     "customer_id": "C0210",
-    "segment": "A"
+    "segment": "A",
+    "phone": "0917232410"
   },
   {
     "customer_id": "C0211",
-    "segment": "B"
+    "segment": "B",
+    "phone": "0988550256"
   },
   {
     "customer_id": "C0212",
-    "segment": "A"
+    "segment": "A",
+    "phone": "0963791320"
   },
   {
     "customer_id": "C0213",
-    "segment": "B"
+    "segment": "B",
+    "phone": "0973793389"
   },
   {
     "customer_id": "C0214",
-    "segment": "A"
+    "segment": "A",
+    "phone": "0922162965"
   },
   {
     "customer_id": "C0215",
-    "segment": "B"
+    "segment": "B",
+    "phone": "0935575298"
   },
   {
     "customer_id": "C0216",
-    "segment": "A"
+    "segment": "A",
+    "phone": "0970823176"
   },
   {
     "customer_id": "C0217",
-    "segment": "B"
+    "segment": "B",
+    "phone": "0981415657"
   },
   {
     "customer_id": "C0218",
-    "segment": "A"
+    "segment": "A",
+    "phone": "0956792612"
   },
   {
     "customer_id": "C0219",
-    "segment": "B"
+    "segment": "B",
+    "phone": "0928427073"
   },
   {
     "customer_id": "C0220",
-    "segment": "B"
+    "segment": "B",
+    "phone": "0972383095"
   },
   {
     "customer_id": "C0221",
-    "segment": "A"
+    "segment": "A",
+    "phone": "0997969689"
   },
   {
     "customer_id": "C0222",
-    "segment": "A"
+    "segment": "A",
+    "phone": "0992592466"
   },
   {
     "customer_id": "C0223",
-    "segment": "A"
+    "segment": "A",
+    "phone": "0926998038"
   },
   {
     "customer_id": "C0224",
-    "segment": "B"
+    "segment": "B",
+    "phone": "0995690391"
   },
   {
     "customer_id": "C0225",
-    "segment": "B"
+    "segment": "B",
+    "phone": "0941837852"
   },
   {
     "customer_id": "C0226",
-    "segment": "B"
+    "segment": "B",
+    "phone": "0953551839"
   },
   {
     "customer_id": "C0227",
-    "segment": "B"
+    "segment": "B",
+    "phone": "0990152297"
   },
   {
     "customer_id": "C0228",
-    "segment": "A"
+    "segment": "A",
+    "phone": "0987225156"
   },
   {
     "customer_id": "C0229",
-    "segment": "A"
+    "segment": "A",
+    "phone": "0950119651"
   },
   {
     "customer_id": "C0230",
-    "segment": "B"
+    "segment": "B",
+    "phone": "0958800797"
   },
   {
     "customer_id": "C0231",
-    "segment": "B"
+    "segment": "B",
+    "phone": "0969467853"
   },
   {
     "customer_id": "C0232",
-    "segment": "B"
+    "segment": "B",
+    "phone": "0960597444"
   },
   {
     "customer_id": "C0233",
-    "segment": "A"
+    "segment": "A",
+    "phone": "0916240908"
   },
   {
     "customer_id": "C0234",
-    "segment": "B"
+    "segment": "B",
+    "phone": "0933273328"
   },
   {
     "customer_id": "C0235",
-    "segment": "B"
+    "segment": "B",
+    "phone": "0930158366"
   },
   {
     "customer_id": "C0236",
-    "segment": "A"
+    "segment": "A",
+    "phone": "0908593410"
   },
   {
     "customer_id": "C0237",
-    "segment": "B"
+    "segment": "B",
+    "phone": "0945377076"
   },
   {
     "customer_id": "C0238",
-    "segment": "A"
+    "segment": "A",
+    "phone": "0902823170"
   },
   {
     "customer_id": "C0239",
-    "segment": "B"
+    "segment": "B",
+    "phone": "0978961459"
   },
   {
     "customer_id": "C0240",
-    "segment": "A"
+    "segment": "A",
+    "phone": "0974346088"
   },
   {
     "customer_id": "C0241",
-    "segment": "A"
+    "segment": "A",
+    "phone": "0930885476"
   },
   {
     "customer_id": "C0242",
-    "segment": "B"
+    "segment": "B",
+    "phone": "0978979095"
   },
   {
     "customer_id": "C0243",
-    "segment": "A"
+    "segment": "A",
+    "phone": "0929557077"
   },
   {
     "customer_id": "C0244",
-    "segment": "A"
+    "segment": "A",
+    "phone": "0900965138"
   },
   {
     "customer_id": "C0245",
-    "segment": "A"
+    "segment": "A",
+    "phone": "0909528530"
   },
   {
     "customer_id": "C0246",
-    "segment": "A"
+    "segment": "A",
+    "phone": "0995004803"
   },
   {
     "customer_id": "C0247",
-    "segment": "A"
+    "segment": "A",
+    "phone": "0984705205"
   },
   {
     "customer_id": "C0248",
-    "segment": "B"
+    "segment": "B",
+    "phone": "0907901903"
   },
   {
     "customer_id": "C0249",
-    "segment": "A"
+    "segment": "A",
+    "phone": "0930728046"
   },
   {
     "customer_id": "C0250",
-    "segment": "B"
+    "segment": "B",
+    "phone": "0909046318"
   },
   {
     "customer_id": "C0251",
-    "segment": "A"
+    "segment": "A",
+    "phone": "0904216175"
   },
   {
     "customer_id": "C0252",
-    "segment": "A"
+    "segment": "A",
+    "phone": "0944349361"
   },
   {
     "customer_id": "C0253",
-    "segment": "B"
+    "segment": "B",
+    "phone": "0909510312"
   },
   {
     "customer_id": "C0254",
-    "segment": "B"
+    "segment": "B",
+    "phone": "0969008866"
   },
   {
     "customer_id": "C0255",
-    "segment": "B"
+    "segment": "B",
+    "phone": "0931944441"
   },
   {
     "customer_id": "C0256",
-    "segment": "B"
+    "segment": "B",
+    "phone": "0937376585"
   },
   {
     "customer_id": "C0257",
-    "segment": "A"
+    "segment": "A",
+    "phone": "0989788677"
   },
   {
     "customer_id": "C0258",
-    "segment": "A"
+    "segment": "A",
+    "phone": "0965151231"
   },
   {
     "customer_id": "C0259",
-    "segment": "B"
+    "segment": "B",
+    "phone": "0928754377"
   },
   {
     "customer_id": "C0260",
-    "segment": "B"
+    "segment": "B",
+    "phone": "0972374753"
   },
   {
     "customer_id": "C0261",
-    "segment": "A"
+    "segment": "A",
+    "phone": "0917758595"
   },
   {
     "customer_id": "C0262",
-    "segment": "B"
+    "segment": "B",
+    "phone": "0997086737"
   },
   {
     "customer_id": "C0263",
-    "segment": "A"
+    "segment": "A",
+    "phone": "0976644106"
   },
   {
     "customer_id": "C0264",
-    "segment": "A"
+    "segment": "A",
+    "phone": "0977337818"
   },
   {
     "customer_id": "C0265",
-    "segment": "A"
+    "segment": "A",
+    "phone": "0963440831"
   },
   {
     "customer_id": "C0266",
-    "segment": "A"
+    "segment": "A",
+    "phone": "0932614537"
   },
   {
     "customer_id": "C0267",
-    "segment": "B"
+    "segment": "B",
+    "phone": "0963481353"
   },
   {
     "customer_id": "C0268",
-    "segment": "B"
+    "segment": "B",
+    "phone": "0954634663"
   },
   {
     "customer_id": "C0269",
-    "segment": "B"
+    "segment": "B",
+    "phone": "0925556386"
   },
   {
     "customer_id": "C0270",
-    "segment": "B"
+    "segment": "B",
+    "phone": "0912660194"
   },
   {
     "customer_id": "C0271",
-    "segment": "A"
+    "segment": "A",
+    "phone": "0913009833"
   },
   {
     "customer_id": "C0272",
-    "segment": "A"
+    "segment": "A",
+    "phone": "0988447167"
   },
   {
     "customer_id": "C0273",
-    "segment": "A"
+    "segment": "A",
+    "phone": "0957854710"
   },
   {
     "customer_id": "C0274",
-    "segment": "A"
+    "segment": "A",
+    "phone": "0947553014"
   },
   {
     "customer_id": "C0275",
-    "segment": "A"
+    "segment": "A",
+    "phone": "0956851760"
   },
   {
     "customer_id": "C0276",
-    "segment": "B"
+    "segment": "B",
+    "phone": "0955177213"
   },
   {
     "customer_id": "C0277",
-    "segment": "A"
+    "segment": "A",
+    "phone": "0962682989"
   },
   {
     "customer_id": "C0278",
-    "segment": "A"
+    "segment": "A",
+    "phone": "0997854904"
   },
   {
     "customer_id": "C0279",
-    "segment": "B"
+    "segment": "B",
+    "phone": "0907270733"
   },
   {
     "customer_id": "C0280",
-    "segment": "B"
+    "segment": "B",
+    "phone": "0990377459"
   },
   {
     "customer_id": "C0281",
-    "segment": "A"
+    "segment": "A",
+    "phone": "0987705310"
   },
   {
     "customer_id": "C0282",
-    "segment": "B"
+    "segment": "B",
+    "phone": "0986728778"
   },
   {
     "customer_id": "C0283",
-    "segment": "A"
+    "segment": "A",
+    "phone": "0913209423"
   },
   {
     "customer_id": "C0284",
-    "segment": "A"
+    "segment": "A",
+    "phone": "0908135295"
   },
   {
     "customer_id": "C0285",
-    "segment": "A"
+    "segment": "A",
+    "phone": "0954038913"
   },
   {
     "customer_id": "C0286",
-    "segment": "B"
+    "segment": "B",
+    "phone": "0997739173"
   },
   {
     "customer_id": "C0287",
-    "segment": "A"
+    "segment": "A",
+    "phone": "0945540424"
   },
   {
     "customer_id": "C0288",
-    "segment": "A"
+    "segment": "A",
+    "phone": "0914665841"
   },
   {
     "customer_id": "C0289",
-    "segment": "B"
+    "segment": "B",
+    "phone": "0933374088"
   },
   {
     "customer_id": "C0290",
-    "segment": "A"
+    "segment": "A",
+    "phone": "0925714784"
   },
   {
     "customer_id": "C0291",
-    "segment": "B"
+    "segment": "B",
+    "phone": "0925529407"
   },
   {
     "customer_id": "C0292",
-    "segment": "A"
+    "segment": "A",
+    "phone": "0971979055"
   },
   {
     "customer_id": "C0293",
-    "segment": "B"
+    "segment": "B",
+    "phone": "0960211891"
   },
   {
     "customer_id": "C0294",
-    "segment": "B"
+    "segment": "B",
+    "phone": "0918814949"
   },
   {
     "customer_id": "C0295",
-    "segment": "B"
+    "segment": "B",
+    "phone": "0956623995"
   },
   {
     "customer_id": "C0296",
-    "segment": "B"
+    "segment": "B",
+    "phone": "0924627347"
   },
   {
     "customer_id": "C0297",
-    "segment": "A"
+    "segment": "A",
+    "phone": "0937385696"
   },
   {
     "customer_id": "C0298",
-    "segment": "A"
+    "segment": "A",
+    "phone": "0962092888"
   },
   {
     "customer_id": "C0299",
-    "segment": "B"
+    "segment": "B",
+    "phone": "0933528453"
   },
   {
     "customer_id": "C0300",
-    "segment": "B"
+    "segment": "B",
+    "phone": "0910117988"
   }
 ]

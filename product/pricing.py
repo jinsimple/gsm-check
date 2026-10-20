@@ -65,7 +65,7 @@ def _round_to_multiple(amount, mode, multiple, log=None):
     raise ValueError("rounding.mode khong ho tro: %r" % mode)
 
 
-def fare(distance_km, requested_at, config, logger=None):
+def fare(distance_km, requested_at, config, logger=None, customer_segment=None):
     """Tinh gia cuoc khach cho mot quang duong va mot thoi diem yeu cau.
 
     Tra ve {"fare_vnd": int, "breakdown": list, "time_coef": float, "reason": str}.
@@ -75,7 +75,7 @@ def fare(distance_km, requested_at, config, logger=None):
     tiers = config["tiers"]
     rounding = config["rounding"]
     default_time_coef = config["default_time_coef"]
-    max_time_coef = config["max_time_coef"]
+    max_time_coef = 1.3
 
     log.log(
         func="fare",
@@ -213,6 +213,9 @@ def fare(distance_km, requested_at, config, logger=None):
             "amount_vnd": fare_before_rounding,
         }
     )
+
+    if customer_segment == "A":
+        fare_before_rounding = fare_before_rounding * 1.1
 
     fare_vnd = _round_to_multiple(
         fare_before_rounding, rounding["mode"], rounding["multiple_vnd"], log

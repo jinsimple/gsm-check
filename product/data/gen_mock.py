@@ -449,6 +449,9 @@ def generate(config, logger):
         reason="bat_dau_sinh_du_lieu_tong_hop",
     )
 
+    zone_rnd = random.Random(config["seed"])
+    zone_codes = ["Q%02d" % n for n in range(1, 13)]
+
     drivers = []
     for i in range(1, counts["drivers"] + 1):
         record = {
@@ -459,6 +462,7 @@ def generate(config, logger):
             "vehicle_type": _weighted(rnd, config["vehicle_type_weights"]),
             "acceptance_rate": round(rnd.uniform(ar_lo, ar_hi), ar_dec),
             "trips_today": rnd.randint(trips_lo, trips_hi),
+            "home_district": zone_rnd.choice(zone_codes),
         }
         drivers.append(record)
         logger.log(
@@ -472,11 +476,14 @@ def generate(config, logger):
 
     drivers = apply_coincident_driver_points(drivers, config, logger)
 
+    phone_rnd = random.Random(config["seed"])
+
     customers = []
     for i in range(1, counts["customers"] + 1):
         record = {
             "customer_id": _make_id(idf["customer_prefix"], i, idf["width"]),
             "segment": _weighted(rnd, config["customer_segment_weights"]),
+            "phone": "09%08d" % phone_rnd.randint(0, 99999999),
         }
         customers.append(record)
         logger.log(

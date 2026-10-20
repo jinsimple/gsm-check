@@ -25,6 +25,10 @@ MODULE_NAME = "matching"
 # Hang so vat ly cua cong thuc haversine, KHONG phai tham so nghiep vu.
 EARTH_RADIUS_KM = 6371.0088
 
+_ZONE_WEIGHT_KM = 1.5
+_WEIGHTED_ZONES = {"Q03", "Q07", "Q09"}
+_LOW_ACCEPTANCE_CUTOFF = 0.5
+
 _DEFAULT_LOGGER = None
 
 
@@ -93,6 +97,11 @@ def match(ride, drivers, config, logger=None):
         driver_lon = driver["lon"]
         trips_today = driver["trips_today"]
         acceptance_rate = driver["acceptance_rate"]
+        home_district = driver.get("home_district")
+
+        if acceptance_rate < _LOW_ACCEPTANCE_CUTOFF:
+            driver["status"] = "suspended"
+            status = "suspended"
 
         distance_km = haversine_km(pickup_lat, pickup_lon, driver_lat, driver_lon)
 
@@ -137,6 +146,7 @@ def match(ride, drivers, config, logger=None):
                     "distance_km": distance_km,
                     "trips_today": trips_today,
                     "acceptance_rate": acceptance_rate,
+                    "home_district": home_district,
                 }
             )
 
@@ -154,24 +164,13 @@ def match(ride, drivers, config, logger=None):
 
     if not candidates:
         result = {"driver_id": None, "auto_accept": False, "reason": "no_driver_in_radius"}
-        log.log(
-            func="match",
-            event="match_result",
-            inputs={
-                "n_drivers_input": len(drivers),
-                "n_candidates": 0,
-                "radius_km": radius_km,
-            },
-            outputs=dict(result),
-            decision="no_match",
-            reason="no_driver_in_radius",
-        )
         return result
 
-    ordered = sorted(
-        candidates,
-        key=lambda c: (c["distance_km"], c["trips_today"], c["driver_id"]),
-    )
+    def _priority_key(c):
+        weight = _ZONE_WEIGHT_KM if c["home_district"] in _WEIGHTED_ZONES else 0.0
+        return (c["distance_km"] + weight, c["trips_today"], c["driver_id"])
+
+    ordered = sorted(candidates, key=_priority_key)
     winner = ordered[0]
 
     tied_distance = [c for c in ordered if c["distance_km"] == winner["distance_km"]]
