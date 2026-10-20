@@ -7,9 +7,9 @@
 | | |
 |---|---|
 | **Cổng đang mở** | **G3a ĐÓNG, `b-freeze` tại `cce80bf`.** Bách đã trả lời mục 4+5 (Q23) — **chờ Bách tự merge `security-pass`**, lead không tự merge |
-| **Vừa xong** | pm vòng 2 DUYỆT `b-freeze` (1 việc housekeeping T13 đã sửa — hash tái lập được từ 2 file đã commit). Bách trả lời Q23: M08 giữ Q17(A) không sửa B; qa đã được Bách cập nhật so theo tập bằng chứng |
-| **Bước tiếp theo** | Trong lúc chờ merge: **nháp `reports/BAO_CAO_SANDBOX.md`** — phần không phụ thuộc kết quả qa (mục tiêu, kiến trúc, cách đội làm việc, giới hạn đo, giả định tự chốt §7 checklist, việc cần thẩm quyền pháp lý) |
-| **Lệnh kiểm của bước tiếp theo** | — (soạn tài liệu) |
+| **Vừa xong** | **Nháp `reports/BAO_CAO_SANDBOX.md` xong 8 mục** (mục tiêu, kiến trúc, M01-M12, giới hạn, §7 checklist, việc pháp lý, chấm B theo §3B). Mục 4 (số đo qa) và TB-01/02/03 để trống **[CHỜ G3b]** |
+| **Bước tiếp theo** | Chờ Bách merge `security-pass` rồi `qa-score`. Khi có `reports/qa_score_*.md`: điền mục 4+8, gửi `pm` chấm lần cuối (mốc chấm thứ 4), rồi trình Bách |
+| **Lệnh kiểm của bước tiếp theo** | — (chờ merge) |
 | **⚠️ Từ lúc Bách báo đã merge** | Lead **không chạy gì** trên `product/`, **không** `git diff`/`log`/`show` trên `product/`. Chỉ đọc kết quả sau khi Bách merge `qa-score` |
 | **Lịch (chỉ thị 21:01)** | 20/10: T09g → T11 → B chạy trên A sạch → ổn định 3 lần → reviewer `auditor/` → `b-freeze` trước tối nay. **Nếu tối nay chưa `b-freeze`**: cắt ma trận còn 8 dòng (M01,M02,M04,M05,M07,M09,M10,M11), báo Bách trước khi cắt. 21/10: Bách merge + QA chấm, lead nháp G4. 22/10: hoàn thiện, pm duyệt, demo |
 | **Chế độ gọn** | Không đặt nguyên tắc mới trừ khi thiếu nó thì sai kết quả đo. Câu hỏi không chặn → vào báo cáo G4. Hỏi Bách tối đa 1 tin/cổng, mỗi câu kèm đề xuất. pm chỉ chấm 4 điểm: G2a, `b-freeze`, kết quả sau merge, G4. Không đọc log lớn vào ngữ cảnh. Báo cáo cổng tối đa 15 dòng |
