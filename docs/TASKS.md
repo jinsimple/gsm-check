@@ -6,23 +6,19 @@
 
 | | |
 |---|---|
-| **Cổng đang mở** | **G2a — mọi lệnh kiểm kỹ thuật đã ĐẠT, chờ Bách duyệt báo cáo** |
-| **Vừa xong** | **pm DUYỆT báo cáo G2a từ phía pm** (không mở cổng — Bách kết luận). 2 việc housekeeping cuối: `schema_version` file cổng lên **0.4** (2 manifest cũ giữ 0.3, đúng hình dạng của chúng); kiểm 19 nay **không viết file** khi 0 log khớp (thoát trước khi ghi, không còn ghi manifest cho lần chạy chưa từng xảy ra) |
-| **`run_id` bằng chứng** | `20261019T143340880`, `commit_at_run` `d9f1f27`, `product_tree` `3b2892b`, manifest `schema_version 0.4` |
-| **Bước tiếp theo** | **Trình Bách báo cáo G2a** — pm đã duyệt, chỉ còn Bách kết luận cổng |
-| **Lệnh kiểm của bước tiếp theo** | — (chờ Bách quyết định cổng) |
-| **Việc cần Bách quyết cùng lúc** | (1) Mục 4b/7.1 báo cáo G2a: lựa chọn A/B cho nhánh phá hoà; (2) bước 6 Q21 + ngoại lệ dạng loại cho quy tắc 1; (3) bảng cổng `CLAUDE.md §5`; (4) mục A/C/D chỉ thị 21:01 nếu còn |
-| **Sau đó** | Khi Bách duyệt G2a → gọi T14b? Không — T14b là tag `b-freeze`, cần T11–T14 (xây B) trước. Việc kế tiếp thật sự là bắt đầu **G3**: giao T11 cho `coder-auditor` |
+| **Cổng đang mở** | **G2a ĐỒNG Ý (Bách, 20/10). Đang trong G3a** |
+| **Vừa xong** | Bách duyệt G2a + chốt 4 việc: (1) Cách A cho tie-break — T09g giao `coder-product`, đang chạy; (2) Q21 bước 6 = QA làm ở G3b, không phải lead, không ngoại lệ cho quy tắc G2b; (3) `CLAUDE.md §5` sửa xong: G2a→G3a→G2b→G3b→G4; (4) lịch + Chế độ gọn nhận đủ (dưới bảng) |
+| **Bước tiếp theo** | Chờ T09g xong → chạy lại toàn bộ bộ kiểm, kiểm 19 phải 10/10 → T11 giao `coder-auditor` xây B |
+| **Lệnh kiểm của bước tiếp theo** | kiểm 19 (10/10), rồi `python auditor/run_audit.py` sau T11 |
+| **Lịch (chỉ thị 21:01)** | 20/10: T09g → T11 → B chạy trên A sạch → ổn định 3 lần → reviewer `auditor/` → `b-freeze` trước tối nay. **Nếu tối nay chưa `b-freeze`**: cắt ma trận còn 8 dòng (M01,M02,M04,M05,M07,M09,M10,M11), báo Bách trước khi cắt. 21/10: Bách merge + QA chấm, lead nháp G4. 22/10: hoàn thiện, pm duyệt, demo |
+| **Chế độ gọn** | Không đặt nguyên tắc mới trừ khi thiếu nó thì sai kết quả đo. Câu hỏi không chặn → vào báo cáo G4. Hỏi Bách tối đa 1 tin/cổng, mỗi câu kèm đề xuất. pm chỉ chấm 4 điểm: G2a, `b-freeze`, kết quả sau merge, G4. Không đọc log lớn vào ngữ cảnh. Báo cáo cổng tối đa 15 dòng |
 
 ### ⛔ Cổng đang chờ Bách — KHÔNG tự vượt
 
 | Việc | Chờ gì |
 |---|---|
-| **Đóng G2a** | Bách duyệt báo cáo G2a. Lead **không** tự tuyên bố G2a qua |
-| **G2b (merge `security-pass`)** | Chỉ Bách merge, và **chỉ sau** tag `b-freeze` (Q21) |
-| **T14c** — chạy B trên A có lỗi | **blocked.** Q21 thiếu bước 6, và quy tắc 1 ở ô "Việc của lead ở G2b" đang **cấm** đúng lệnh đó. Xin Bách cấp ngoại lệ dưới dạng **loại**, không phải tên lệnh |
-| **`CLAUDE.md §5`** | bảng cổng còn ghi G2b (20/10) **trước** G3 (21/10), trái trình tự Q21. Lead không tự sửa `CLAUDE.md` |
-| **Chỉ thị 21:01** | lead **chỉ** nhận phần "PHỤ LỤC CHỈ THỊ"; phần gốc có mục A/B/C/D thì **chưa** nhận. Đã xin Bách gửi lại phần gốc |
+| **G2b (merge `security-pass`)** | Chỉ Bách merge, **chỉ sau** tag `b-freeze` (G3a xong) |
+| **G3b (merge `qa-score`)** | Chỉ Bách merge; lead chỉ đọc kết quả sau khi merge |
 
 
 > Thay cho task list chung của agent teams (không chạy trong extension VS Code).
@@ -173,7 +169,6 @@ T02–T06 (coder-product) → T07 (lead chạy 14 lệnh kiểm) → T08 (review
 | T13 | G3 | Chạy audit 3 lần cùng commit, so sánh JSON (bỏ ts/run_id) → độ ổn định | lead | T12 | ghi chú độ ổn định | 3 lần chạy + so sánh | pending | |
 | T14 | G3 | Review `auditor/` (KHÔNG review product/ nữa) | reviewer | auditor/, MATRIX_v0 | bảng review | hết mục "Chặn" | pending | |
 | T14b | G3 | **Đóng băng B — chốt cửa Q21.** Gắn tag `b-freeze` khi: B đã chạy trên **A sạch** (T12, T13) **và** T14 hết mục Chặn. Rồi báo Bách. Bách **mới** merge `security-pass` | lead | T12, T13, T14 | tag `b-freeze` | `git tag` có `b-freeze`; `git log auditor/` không commit nào sau tag | pending | TB-07 đo bằng chính tag này |
-| T14c | G3 | **Chạy B đã đóng băng trên A CÓ LỖI — vế thứ hai của phép đo.** `python auditor/run_audit.py` sau khi Bách merge `security-pass`, **3 lần cùng commit** cho TB-04 | lead | T14b (tag `b-freeze`), merge `security-pass` | `reports/audit_<commit>.json` + `.md` + `.log.jsonl` | 12 dòng có `result` + `evidence`; 3 lần ra JSON giống hệt sau khi bỏ `ts`/`run_id` | **blocked** | **Chờ Bách**: Q21 thiếu bước 6, và quy tắc 1 ở ô G2b đang **cấm** đúng lệnh này. Không có dòng này thì TB-01/02/03 không tính được |
 | T15 | G3 | Bách chạy qa ở cửa sổ cách ly, merge `qa-score` | Bách | reports/audit_*.json (**cả hai** vế: A sạch từ T12, A có lỗi từ T14c) | reports/qa_score_*.md | — | pending | R6 đóng dựa trên việc có **hai** vế |
 | T16 | G4 | `reports/BAO_CAO_SANDBOX.md` theo PROMPTS 4.1, **đã sửa cấu trúc theo phụ lục chỉ thị 19/10** — xem ô dưới bảng | lead | tất cả trên + `docs/CHECKLIST_KIEM_TOAN.md` | báo cáo | pm chấm lần cuối + Bách duyệt | pending | |
 | T17 | G4 | **Chấm kết quả B theo checklist §3B** (TB-01 → TB-12): recall, FNR, precision, độ ổn định, truy nguồn, độc lập, đóng băng, nguồn gốc quy tắc, Legal/DPO, log của B, phạm vi dùng B, chạy lại bộ đo khi đổi MATRIX | lead | `reports/qa_score_*.md` (T15), `reports/audit_*.json` | một phần riêng trong báo cáo G4, 12 dòng | mỗi dòng TB có số đo hoặc ghi rõ **chưa đo được** và vì sao | pending | ngưỡng ở checklist §3B là **[Suy luận]**, không phải chuẩn |
@@ -476,42 +471,15 @@ Chỗ nguy hiểm nằm trong **phản xạ lead đã tự khen hai lần ở G2
 | kiểm 19 | nhánh quyết định bị đổi |
 | kiểm 6, 10, 12 | số quyết định / thuộc tính / tài liệu bị sửa |
 
-### Quy tắc G2b — dứt khoát
+### Quy tắc G2b — CHỐT 20/10 (Bách, thay toàn bộ 6 quy tắc cũ)
 
-1. Sau khi merge `security-pass`, lead được chạy **đúng một** lệnh: `python product/run_product.py`, và **chỉ** đọc **exit code**.
-   - **[Chờ Bách] Ngoại lệ đang xin, chưa có hiệu lực.** Xem DECISIONS Q21 mục *"Thiếu bước 6"*. Xin Bách cấp nó dưới dạng **loại**, không phải tên lệnh:
-     > *Sau merge, lead được chạy những lệnh chỉ **sinh ra** dữ liệu từ vật phẩm đã đóng băng — A, và B sau tag `b-freeze`. Lead **không** chạy lệnh nào **so sánh** kết quả với giá trị kỳ vọng do lead giữ, cụ thể là toàn bộ `tests/`.*
+Vế đo trên A-có-lỗi là việc của **QA, cửa sổ cách ly** (G3b) — không phải lead. **Từ lúc Bách merge `security-pass`:**
 
-     Ranh giới *"sinh ra"* so với *"so sánh với kỳ vọng do mình giữ"* phân loại đúng cả ba ca đã biết mà không cần đặt tên lệnh nào: `run_product.py` sinh dữ liệu → được; `run_audit.py` sinh phát hiện từ B đã khoá → được; `tests/kiem*.py` so với 24 giá kỳ vọng và với manifest → **không**. Và nó phân loại sẵn những lệnh chưa ai viết. Viết thành *"được chạy thêm `run_audit.py`"* thì lại là **liệt kê ca**, và ca thứ ba sẽ xuất hiện ở G4. **Chưa được Bách duyệt thì chưa chạy.**
-2. **Mọi lệnh kiểm khác — đã có hay sẽ thêm — đều không được chạy, không cần liệt kê tên.** Muốn chạy thêm bất cứ gì thì **xin Bách trước**.
-3. **Nếu exit ≠ 0 → báo Bách, KHÔNG chẩn đoán.** Chẩn đoán bằng log **chính là** đọc đáp án.
-4. Lead **không** tạo lần chạy bằng chứng mới và **không** sinh manifest mới ở G2b. Theo Quy ước `MATRIX_v0` Bách đã chốt, **B tự chạy `run_product.py` sinh log mới trước khi kiểm** — nên việc này không cần ai làm thay. Thêm nữa, một lần chạy của lead sau security **sinh thêm một baseline để lead đối chiếu**, tức lại là một đường rò.
-5. **Lead không đọc chính bản sửa của security.** Từ lúc Bách báo security đã chạy: **không** `git log -p` / `git diff` / `git show` / `git blame` trên `product/`; **không** mở file nào trong `product/` để đọc nội dung; **không** đọc commit message của nhánh `security-pass`. Cần commit hash để ghi bằng chứng thì dùng `git rev-parse` — lệnh không in ra nội dung thay đổi.
-6. **Lead không giao việc nào vào `product/`.** Từ G2b tới hết dự án: không gọi `coder-product` để sửa, không gọi `reviewer` để xem, không gọi ai để chẩn đoán. **A không chạy được thì chỉ Bách xử lý.** Nếu một subagent **tự ý** báo nội dung bên trong `product/` thì lead **dừng, không dùng thông tin đó, báo Bách**.
+1. Lead **không chạy gì** trên `product/`. Không `python product/run_product.py`, không lệnh kiểm nào.
+2. Lead **không** `git diff`/`log`/`show` trên `product/`.
+3. Lead chỉ đọc kết quả B-trên-A-có-lỗi **sau khi Bách merge nhánh `qa-score`** (G3b).
 
-### Vì sao quy tắc 2 là danh sách CHO PHÉP, không phải danh sách cấm
-
-Bản đầu của ô này liệt kê tên từng lệnh kiểm bị cấm. **pm liệt kê 13 mục, lead thêm 2, và vẫn thiếu 4** — kiểm 7 (`version` bị bỏ, đúng đích M06), kiểm 8 (import ngoài stdlib bị cắm vào), kiểm 11 (số dòng/dung lượng lệch thì khoanh vùng được), kiểm 15 (bước ghép bị sửa). **Ba lượt soát mà danh sách cấm vẫn hở.** Đó là bản chất của danh sách cấm, không phải sự cẩu thả của ai: bộ kiểm còn mọc thêm ở G3 (kiểm 21, 22…), mà danh sách cấm không tự mọc theo.
-
-Bách đã ra đúng phán quyết này ở **Q02** — *"chỉ ghi danh sách cho phép, không ghi danh sách cấm"* — cho đúng cùng một lý do. Bảng "nếu chạy thì nó chỉ ra gì" ở trên giữ lại làm **phần giải thích**, không phải danh sách cấm.
-
-### Vì sao cần quy tắc 6, khi quy tắc 1–5 đã có
-
-Quy tắc 1–5 buộc những lệnh **lead tự chạy**. Không quy tắc nào buộc việc lead **giao cho người khác** — đúng cùng hình dạng với hai chỗ sai trước: quy tắc đúng nội dung mà che một mặt, để hở mặt kia.
-
-Đường rò cụ thể: quy tắc 3 nói exit ≠ 0 thì báo Bách, **không chẩn đoán**. Nhưng phản xạ tự nhiên khi A không chạy được là **gọi `coder-product` sửa cho A chạy lại**. Subagent đó mở `product/*.py`, thấy ngay chỗ bị sửa, và **báo lại cho lead** — đáp án đi vòng qua một cửa mà cả năm quy tắc không nhìn tới.
-
-`CLAUDE.md §3` đã cấm ở **tầng nguyên tắc** (*"không ai ngoài 2 tab cách ly được biết đáp án — kể cả mọi subagent"*), và cấm `reviewer` review `product/` sau security. Nhưng **ô này mới là tài liệu lead đọc lúc hành động**, nên nó phải tự nói ra. Đây đúng loại lỗ hổng Q15: một quy tắc có ở tầng tài liệu mà thiếu ở tầng lead hành động thì bằng như không có.
-
-Sau quy tắc 6 thì sáu mặt đều kín: lệnh lead chạy (1, 2), chẩn đoán (3), lần chạy bằng chứng (4), đọc lịch sử git và đọc file (5), giao cho người khác (6).
-
-### Phạm vi thời gian
-
-**Mốc bắt đầu là lúc Bách merge `security-pass`, không phải ngày 20/10.** Theo Q21, trình tự là: B xây và chạy trên A sạch → `reviewer` hết mục Chặn → tag `b-freeze` → báo Bách → Bách mới merge. Nên sáu quy tắc này **chưa áp** trong lúc làm T11–T14b, dù lịch cũ gọi quãng đó là G3.
-
-Quy tắc 1–6 áp **từ lúc merge `security-pass` cho tới hết dự án**, không chỉ trong ngày 20/10 — ở G3 lead vẫn làm việc trong repo đã merge khi chấm B.
-
-**Điểm 3 là ngoại lệ duy nhất của `CLAUDE.md:30`** câu sau (*"Không sửa lỗi khi chưa chẩn đoán bằng log"*). Lý do: ở G2b, chẩn đoán phá đúng thứ dự án đang đo. Ngoại lệ này có phạm vi hẹp — **chỉ** `product/` **chỉ** trong G2b; mọi chỗ khác `CLAUDE.md:30` vẫn nguyên.
+Không ngoại lệ nào cần giữ — lead không chạm `product/` dưới bất kỳ hình thức nào nên không có gì phải phân loại "sinh ra" vs "so sánh". T14c (chờ ngoại lệ) **xoá**, không cần nữa.
 
 → **Việc của lead ở G2b co lại còn đúng một câu hỏi: A còn chạy không.**
 
@@ -541,7 +509,7 @@ Lý do: `DECISIONS.md` chứa biên bậc giá, hệ số giờ, định nghĩa 
 | R3 | M02 mất hiệu lực nếu người viết code tự viết danh sách thuộc tính được phép; M04/M09 mất hiệu lực nếu "quyết định" không được định nghĩa trước | Q02 + Q10 chốt ở G1, không để coder-product tự định nghĩa. Ngược lại, M08/M12 **không** được vá — xem nguyên tắc Q13 |
 | R4 | M11 dễ báo động giả nếu so giá theo segment mà không phân tầng quãng đường | Q11: so trong từng bậc km; cờ ML chỉ đẩy lên CẦN NGƯỜI XEM |
 | R5 | Số hiệu control Annex A chưa đối chiếu bản chuẩn | Giữ nhãn [Chưa xác minh] trong mọi báo cáo; Q01 |
-| R6 | **MỞ LẠI 19/10 — đóng CÓ ĐIỀU KIỆN, điều kiện là T09f→T14c.** pm chỉ ra: R6 được đóng bằng lập luận *qa chấm theo chênh lệch*, mà vế thứ hai (**T14c**, chạy B trên A có lỗi) đang **blocked**. Một rủi ro mà phần giảm thiểu đang blocked thì **chưa đóng** — sổ sách ghi một trạng thái mà bằng chứng không có, đúng loại lỗi lead vừa tự bắt ở T09e. Chỉ gạch khi T14c xong. Lý do đóng ban đầu vẫn giữ: **ĐÓNG 19/10.** Bách cho biết qa chấm theo chênh lệch giữa commit A sạch và commit chấm điểm, nên khoảng trống theo thiết kế không bị tính nhầm | Lead vẫn gửi Bách danh sách baseline trước T10, giữ ngoài repo, không commit |
+| R6 | **ĐÓNG 20/10.** Vế thứ hai (B trên A có lỗi) là việc QA ở G3b, không phải lead — không còn T14c để chờ | Bách chốt vế thứ hai là QA làm; không chặn gì ở lead |
 | R7 | Mọi con số dung lượng log hiện là [Suy đoán] | T04b đo thật ngay sau T04, thay số vào DECISIONS Q12 |
 | ~~R8~~ | **ĐÓNG 19/10.** Dòng 7 đã sửa theo Q15, Bách chuẩn thuận | T10b giữ lại làm chốt cửa, kiểm lại dòng 7 trước khi gọi T11 |
 | R10 | Q16 (mỗi phát hiện có `file:dòng` riêng) cộng nguyên tắc bất đối xứng sẽ đẩy M08 và M12 xuống CẦN NGƯỜI XEM, trái với Q13/Q08/Q09 vừa chốt là hai dòng đó ra KHÔNG ĐẠT. Báo cáo G4 sẽ không nói được điều Q13 muốn nói, và recall của qa đọc khác đi | Q17 xin Bách chọn (A) định nghĩa bằng chứng vắng mặt, hay (B) chấp nhận CẦN NGƯỜI XEM. T10b là chốt cửa: Q17 chưa trả lời thì không gọi T11 |

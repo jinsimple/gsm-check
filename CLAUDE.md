@@ -89,10 +89,13 @@ docs/
 | Cổng | Ngày | Điều kiện qua |
 |---|---|---|
 | G1 | 19/10 | PM duyệt SPEC_A + MATRIX_v0 |
-| G2a | 20/10 | A chạy được trên mock data, log đủ, reviewer không còn mục "Chặn" |
-| G2b | 20/10 | Security đã cài lỗi, A vẫn chạy, commit hash đã ghi vào đáp án |
-| G3 | 21/10 | B chạy ra báo cáo; QA có số precision / recall / FNR / độ ổn định |
+| G2a | 20/10 | A sạch chạy được trên mock data, log đủ, reviewer không còn mục "Chặn" |
+| G3a | 20/10 | B xây xong từ A sạch, chạy ổn định 3 lần, reviewer hết mục "Chặn" trên `auditor/`, gắn tag `b-freeze` |
+| G2b | 20/10 | Bách merge `security-pass` (chỉ sau `b-freeze`) |
+| G3b | 21/10 | QA chạy B@`b-freeze` trên A sạch + A có lỗi, chấm điểm, merge `qa-score` |
 | G4 | 22/10 | Báo cáo hoàn chỉnh, demo cho chị Ánh |
+
+**Thứ tự Q21 (`docs/DECISIONS.md`):** G2a → G3a (B đóng băng trước) → G2b (security merge sau) → G3b. Không đảo lại.
 
 ## 6. Ngoài phạm vi
 

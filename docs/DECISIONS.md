@@ -265,30 +265,11 @@ Vì sao trình tự này đúng hơn: nếu security merge trước, thì B đư
 
 → **Quy tắc "Việc của lead ở G2b" (6 quy tắc, R12) áp từ bước 5**, tức từ lúc Bách merge `security-pass`, không phải từ ngày 20/10.
 
-#### Thiếu bước 6 — CẦN BÁCH. Không chặn G2a, nhưng chặn G3
+#### Bước 6 — CHỐT 20/10 (Bách)
 
-**pm phát hiện bảng trình tự dừng ở bước 5, thiếu đúng bước làm nên toàn bộ phép đo: chạy B đã đóng băng trên A CÓ LỖI.** Lead xác minh và đúng cả ba vế:
+Vế thứ hai (B trên A có lỗi) là việc của **QA, ở cửa sổ cách ly** — không phải lead, không phải `auditor/run_audit.py` do lead chạy. **Không thêm ngoại lệ cho quy tắc 1.** T14c (blocked) **xoá**, không cần nữa.
 
-| Khẳng định | Kiểm bằng | Kết quả |
-|---|---|---|
-| Không dòng việc nào chạy `run_audit.py` sau merge | `grep run_audit.py docs/TASKS.md` | chỉ **T11** và **T12**, cả hai **trước** tag |
-| T12/T13 chạy trên **A sạch** | đọc dòng T12, T13 | đúng — chúng sinh **vế thứ nhất** |
-| Phép đo cần **hai** vế | `TASKS.md` R6 (**ĐÓNG 19/10**) | R6 đóng bằng đúng lập luận *"qa chấm theo **chênh lệch** giữa commit A sạch và commit chấm điểm"* |
-
-**Hệ quả: không có lần chạy sau merge thì không có vế thứ hai, nên recall / FNR / precision — tức TB-01, TB-02, TB-03 — không tính được.** Và R6 đã được **đóng** dựa trên việc có hai vế đó.
-
-**Nặng hơn: lần chạy cần thiết đó đang bị chính quy tắc của lead cấm.** Quy tắc 1 ghi lead được chạy **đúng một** lệnh sau merge, `python product/run_product.py`. Lead viết quy tắc đó để bịt đường rò, và nó **bịt luôn phép đo**. Đây là lần thứ ba trong buổi mà **hình thức** của một quy tắc, không phải nội dung, là chỗ sai.
-
-**→ Hai việc xin Bách:**
-
-1. **Bổ sung bước 6 vào Q21:** sau merge, lead chạy `python auditor/run_audit.py` trên A có lỗi, **ba lần cùng commit** (cho TB-04 độ ổn định), xuất `reports/audit_<commit>.*`.
-2. **Thêm vào quy tắc 1 một ngoại lệ CÓ PHẠM VI:** sau merge, lead được chạy thêm **đúng** `auditor/run_audit.py`.
-
-**Vì sao ngoại lệ này an toàn, và nó chỉ an toàn nhờ `b-freeze`.** `run_audit.py` là **phép đo**, không phải chẩn đoán: nó chạy bộ quy tắc đã bị tag `b-freeze` khoá, nên lead **không sửa được** B sau khi thấy kết quả — mà đó chính là điều TB-07 đo. Không có tag thì ngoại lệ này **sẽ là** đường rò, vì lead thấy B bỏ lọt cái gì rồi sửa B cho bắt được. **Thứ tự Bách chốt ở Q21 là thứ làm ngoại lệ này hợp lệ.**
-
-Lead **không tự thêm** ngoại lệ vào quy tắc độc lập của chính mình — tự nới quyền của mình là đúng loại việc phải xin. Đã thêm dòng việc **T14c** ở trạng thái **blocked**.
-
-**Một điểm pm bổ sung, mạnh hơn cách lead trình bày thứ tự cổng.** Lead nói trình tự mới *đúng hơn*. pm chỉ ra nó là trình tự **duy nhất khả thi**: R6 chốt qa chấm theo chênh lệch, nên B **buộc** phải chạy trên A sạch để sinh vế thứ nhất; mà B chỉ chạy được trên A sạch nếu B xong **trước** merge. Tức bảng cổng `CLAUDE.md §5` **không nhất quán với một quyết định Bách đã chốt từ trước**, chứ không phải chỉ là một lựa chọn kém hơn. Nói vậy thì Bách không phải cân nhắc lại gì.
+**Quy tắc bổ sung, áp từ lúc Bách merge `security-pass`:** tab `lead` **không chạy gì** trên `product/`, **không** `git diff`/`log`/`show` trên `product/`. Lead chỉ đọc kết quả B-trên-A-có-lỗi **sau khi Bách merge nhánh `qa-score`** (G3b). Đây thay cho 6 quy tắc G2b cũ — gọn hơn: không có ngoại lệ nào để giữ an toàn, vì lead không chạm `product/` sau merge dưới bất kỳ hình thức nào.
 
 ### Q22 — Bốn điểm trước đây chờ chị Ánh, nay nhóm tự chốt (Bách chỉ thị 19/10)
 
@@ -382,7 +363,9 @@ Code **đúng** ở cả hai ca, và log `tie_break` ghi nhận hoà thật (`ti
 
 **Nhưng kiểm 21 PASS không đóng được nhánh chết — nó chỉ chứng minh code đúng KHI bị buộc phải hoà, không làm số lần hoà thật trên `rides.json` tăng lên khỏi 0.** Việc có nên đưa dữ liệu hoà thật vào `mock_data.json` hay không là câu cho Bách, không phải việc lead tự quyết — giống cách T09e cần Bách duyệt cách sửa `gen_mock`, không phải thứ lead tự chọn rồi giao `coder-product` làm.
 
-→ Thêm **mục j** vào kiểm 19: *"nhánh phá hoà trong `match()` có hoà thật trên dữ liệu bằng chứng, không chỉ chẩn đoán"* — hiện **[Chưa xác minh trên dữ liệu mặc định]**, chờ Bách quyết có đưa hoà thật vào `mock_data.json` không.
+→ Thêm **mục j** vào kiểm 19: *"nhánh phá hoà trong `match()` có hoà thật trên dữ liệu bằng chứng, không chỉ chẩn đoán"*.
+
+**CHỐT 20/10 (Bách): CÁCH A.** Đưa hoà thật vào `mock_data.json` (v0.2 → v0.3), một phần nhỏ chuyến bị ảnh hưởng, không đặt cặp tài xế làm đa số chuyến hoà. Giữ nguyên 920 chuyến cũ (T09e/T09e-b); tên khoá chỉ tả hình học. T09g giao `coder-product`. Kiểm 19 phải 10/10. **Q19 không ngoại lệ.**
 
 ### Q20 — `reports/product_run_*.json` (Bách chốt 19/10)
 
