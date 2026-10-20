@@ -7,9 +7,9 @@
 | | |
 |---|---|
 | **Cổng đang mở** | **G2a ĐỒNG Ý (Bách, 20/10). Đang trong G3a** |
-| **Vừa xong** | Bách duyệt G2a + chốt 4 việc: (1) Cách A cho tie-break — T09g giao `coder-product`, đang chạy; (2) Q21 bước 6 = QA làm ở G3b, không phải lead, không ngoại lệ cho quy tắc G2b; (3) `CLAUDE.md §5` sửa xong: G2a→G3a→G2b→G3b→G4; (4) lịch + Chế độ gọn nhận đủ (dưới bảng) |
-| **Bước tiếp theo** | Chờ T09g xong → chạy lại toàn bộ bộ kiểm, kiểm 19 phải 10/10 → T11 giao `coder-auditor` xây B |
-| **Lệnh kiểm của bước tiếp theo** | kiểm 19 (10/10), rồi `python auditor/run_audit.py` sau T11 |
+| **Vừa xong** | **T09g xong (`4b90e1c`), kiểm 19 PASS 10/10 — lần đầu tiên không ngoại lệ.** `run_id` bằng chứng `20261020T010947062`. Toàn bộ bộ kiểm **0 FAIL** (15 kiểm máy + 17/18/20/21). Kiểm 17 flag 1 dương tính giả (`apply_coincident_driver_points` return cuối sau vòng lặp đã log) — thêm vào `MIEN17_RETURN`, cùng mẫu `_min_distance_to_drivers` |
+| **Bước tiếp theo** | Giao **T11** cho `coder-auditor` — xây `auditor/` từ `MATRIX_v0.md` + `INTERFACE.md` |
+| **Lệnh kiểm của bước tiếp theo** | `python auditor/run_audit.py` ra 12 dòng; chạy 3 lần cùng commit, so JSON sau khi bỏ `ts`/`run_id` |
 | **Lịch (chỉ thị 21:01)** | 20/10: T09g → T11 → B chạy trên A sạch → ổn định 3 lần → reviewer `auditor/` → `b-freeze` trước tối nay. **Nếu tối nay chưa `b-freeze`**: cắt ma trận còn 8 dòng (M01,M02,M04,M05,M07,M09,M10,M11), báo Bách trước khi cắt. 21/10: Bách merge + QA chấm, lead nháp G4. 22/10: hoàn thiện, pm duyệt, demo |
 | **Chế độ gọn** | Không đặt nguyên tắc mới trừ khi thiếu nó thì sai kết quả đo. Câu hỏi không chặn → vào báo cáo G4. Hỏi Bách tối đa 1 tin/cổng, mỗi câu kèm đề xuất. pm chỉ chấm 4 điểm: G2a, `b-freeze`, kết quả sau merge, G4. Không đọc log lớn vào ngữ cảnh. Báo cáo cổng tối đa 15 dòng |
 

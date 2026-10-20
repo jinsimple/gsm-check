@@ -53,6 +53,7 @@ MIEN17_RETURN = [
     # chinh con so nay, nen gia tri tra ve co bang chung; con `raise` thi la quyet
     # dinh ve du lieu nen van phai co log rieng.
     ('gen_mock.py', '_min_distance_to_drivers', 'return gia tri do: tang goi ghi clearance_check voi con so nay'),
+    ('gen_mock.py', 'apply_coincident_driver_points', 'return drivers: moi cap da ghi driver_point_override trong vong lap (T09g); return cuoi tra ve danh sach da sua, khong phai quyet dinh moi'),
     ('logger.py',  'load_json_config',   'return thanh cong: tang goi ghi config_loaded'),
     ('pricing.py', '_round_to_multiple', 'return gia tri: fare() ghi fare_rounding voi gia truoc/sau'),
 ]
